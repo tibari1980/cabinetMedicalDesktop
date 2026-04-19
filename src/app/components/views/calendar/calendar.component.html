@@ -86,16 +86,52 @@
         </button>
       </div>
 
-      <div class="p-8 space-y-6">
-        <!-- Patient Selection -->
-        <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Sélectionner un Patient</label>
+      <div class="p-8 space-y-6 max-h-[60vh] overflow-y-auto">
+        <!-- Patient Selection Toggle -->
+        <div class="flex items-center justify-between p-1 bg-surface-container-low rounded-2xl mb-2">
+          <button (click)="isNewPatient = false" 
+                  [class]="!isNewPatient ? 'bg-white shadow-sm text-primary' : 'text-on-surface-variant'"
+                  class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">Patient Existant</button>
+          <button (click)="isNewPatient = true" 
+                  [class]="isNewPatient ? 'bg-white shadow-sm text-primary' : 'text-on-surface-variant'"
+                  class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">Nouveau Patient</button>
+        </div>
+
+        <!-- Existing Patient Selection -->
+        <div class="space-y-1" *ngIf="!isNewPatient">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rechercher un Patient</label>
           <select [(ngModel)]="newApt.patientId" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
             <option *ngFor="let p of patients" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
           </select>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
+        <!-- New Patient Form -->
+        <div class="space-y-4 animate-fade-in" *ngIf="isNewPatient">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
+              <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom">
+            </div>
+            <div class="space-y-1">
+              <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
+              <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Prénom">
+            </div>
+          </div>
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Numéro de Téléphone *</label>
+            <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 600-000000">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Date de Naissance *</label>
+            <input type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Adresse Postale *</label>
+            <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner rows-2" placeholder="Adresse complète"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-outline-variant/5">
           <div class="space-y-1">
             <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Heure</label>
             <input type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">

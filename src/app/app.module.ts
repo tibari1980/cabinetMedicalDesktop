@@ -17,6 +17,7 @@ import { DashboardComponent } from './components/views/dashboard/dashboard.compo
 import { PatientsComponent } from './components/views/patients/patients.component';
 import { AdminComponent } from './components/views/admin/admin.component';
 import { CalendarComponent } from './components/views/calendar/calendar.component';
+import { MedicalRecordDetailComponent } from './components/views/patients/medical-record-detail/medical-record-detail.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { CalendarComponent } from './components/views/calendar/calendar.componen
     DashboardComponent,
     PatientsComponent,
     AdminComponent,
-    CalendarComponent
+    CalendarComponent,
+    MedicalRecordDetailComponent
   ],
   imports: [
     BrowserModule,

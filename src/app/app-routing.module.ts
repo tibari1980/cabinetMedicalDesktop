@@ -9,6 +9,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { UserRole } from './models/user.model';
 
 import { CalendarComponent } from './components/views/calendar/calendar.component';
+import { MedicalRecordDetailComponent } from './components/views/patients/medical-record-detail/medical-record-detail.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'patients', component: PatientsComponent },
+      { path: 'patients/:id/record', component: MedicalRecordDetailComponent },
       { 
         path: 'admin', 
         component: AdminComponent, 

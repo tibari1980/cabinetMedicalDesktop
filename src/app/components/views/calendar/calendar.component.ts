@@ -6,6 +6,8 @@ import { Appointment, AppointmentType, AppointmentStatus } from '../../../models
 import { Patient } from '../../../models/patient.model';
 import { ClinicInfo } from '../../../models/clinic.model';
 
+import { MedicalRecordService } from '../../../services/medical-record.service';
+
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html'
@@ -19,16 +21,23 @@ export class CalendarComponent implements OnInit {
 
   // Form state
   showModal = false;
+  isNewPatient = false;
+  
   newApt: Partial<Appointment> = {
     type: AppointmentType.CONSULTATION,
     status: AppointmentStatus.CONFIRMED,
     duration: 30
   };
 
+  newPatient: Partial<Patient> = {
+    gender: 'M'
+  };
+
   constructor(
     private appointmentService: AppointmentService,
     private clinicService: ClinicService,
-    private patientService: PatientService
+    private patientService: PatientService,
+    private medicalRecordService: MedicalRecordService
   ) {}
 
   ngOnInit() {
@@ -84,11 +93,36 @@ export class CalendarComponent implements OnInit {
   }
 
   submitAppointment() {
-    if (this.newApt.patientId) {
+    if (this.isNewPatient) {
+      // Create New Patient first
+      const patientId = Math.floor(Math.random() * 10000);
+      const patient: Patient = {
+        id: patientId,
+        firstName: this.newPatient.firstName || '',
+        lastName: this.newPatient.lastName || '',
+        phone: this.newPatient.phone || '',
+        birthDate: this.newPatient.birthDate || '',
+        address: this.newPatient.address || '',
+        gender: this.newPatient.gender || 'M',
+        email: '',
+        lastVisit: 'Aujourd\'hui'
+      };
+      
+      this.patientService.addPatient(patient);
+      this.medicalRecordService.initializeRecord(patientId.toString());
+      
+      this.newApt.patientId = patientId.toString();
+      this.newApt.patientName = `${patient.firstName} ${patient.lastName}`;
+    } else {
       const patient = this.patients.find(p => p.id.toString() === this.newApt.patientId?.toString());
       this.newApt.patientName = patient ? `${patient.firstName} ${patient.lastName}` : 'Patient Inconnu';
+    }
+
+    if (this.newApt.patientId) {
       this.appointmentService.addAppointment(this.newApt as Appointment);
       this.showModal = false;
+      this.isNewPatient = false;
+      this.newPatient = { gender: 'M' };
     }
   }
 

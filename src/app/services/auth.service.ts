@@ -15,7 +15,7 @@ export class AuthService {
   private mockUsers: User[] = [
     { id: '1', username: 'superadmin', firstName: 'Jean', lastName: 'Dupont', role: UserRole.SUPER_ADMIN, email: 'admin@medconnect.pro' },
     { id: '2', username: 'admin', firstName: 'Sophie', lastName: 'Martin', role: UserRole.ADMIN, email: 'sophie@clinique.ma' },
-    { id: '3', username: 'doctor', firstName: 'Sarah', lastName: 'Miller', role: UserRole.DOCTOR, email: 'dr.miller@clinique.ma' },
+    { id: '3', username: 'doctor', firstName: 'Sarah', lastName: 'Miller', role: UserRole.DOCTOR, email: 'dr.miller@clinique.ma', specialty: 'Cardiologue' },
     { id: '4', username: 'secretary', firstName: 'Amine', lastName: 'Bennani', role: UserRole.SECRETARY, email: 'amine@clinique.ma' }
   ];
 

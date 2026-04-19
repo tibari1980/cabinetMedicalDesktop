@@ -60,7 +60,12 @@
         </div>
         <div class="overflow-hidden">
           <p class="text-xs font-bold text-on-surface truncate">{{ authService.currentUserValue?.firstName }}</p>
-          <p class="text-[9px] text-on-surface-variant uppercase tracking-tighter">{{ authService.currentUserValue?.role }}</p>
+          <p class="text-[9px] text-on-surface-variant uppercase tracking-tighter" *ngIf="!authService.currentUserValue?.specialty">
+            {{ authService.currentUserValue?.role }}
+          </p>
+          <p class="text-[9px] text-primary font-bold uppercase tracking-tighter truncate" *ngIf="authService.currentUserValue?.specialty">
+            {{ authService.currentUserValue?.specialty }}
+          </p>
         </div>
       </div>
     </div>

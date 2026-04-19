@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { Patient } from '../models/patient.model';
 import { AuthService } from './auth.service';
 import { AuditService } from './audit.service';
@@ -11,31 +12,61 @@ import { AuditAction } from '../models/audit.model';
 })
 export class PatientService {
   private dataUrl = 'assets/data/patients.json';
+  private patientsSubject = new BehaviorSubject<Patient[]>([]);
+  public patients$ = this.patientsSubject.asObservable();
 
   constructor(
     private http: HttpClient,
     private authService: AuthService,
     private auditService: AuditService
-  ) {}
-
-  getPatients(): Observable<Patient[]> {
-    return this.http.get<Patient[]>(this.dataUrl);
+  ) {
+    this.loadInitialPatients();
   }
 
-  getPatientById(id: number): Observable<Patient | undefined> {
-    return new Observable(observer => {
-      this.getPatients().subscribe(patients => {
-        const patient = patients.find(p => p.id === id);
+  private loadInitialPatients() {
+    const localPatients = localStorage.getItem('mc_patients');
+    if (localPatients) {
+      this.patientsSubject.next(JSON.parse(localPatients));
+    } else {
+      this.http.get<Patient[]>(this.dataUrl).subscribe(patients => {
+        this.saveToLocal(patients);
+      });
+    }
+  }
+
+  getPatients(): Observable<Patient[]> {
+    return this.patients$;
+  }
+
+  addPatient(patient: Patient) {
+    const current = this.patientsSubject.value;
+    const updated = [...current, patient];
+    this.saveToLocal(updated);
+    
+    this.auditService.log(
+      this.authService.currentUserValue,
+      AuditAction.CREATE_PATIENT,
+      `Nouveau patient créé : ${patient.firstName} ${patient.lastName}`
+    );
+  }
+
+  getPatientById(id: number | string): Observable<Patient | undefined> {
+    return this.patients$.pipe(
+      map(patients => patients.find(p => p.id.toString() === id.toString())),
+      tap(patient => {
         if (patient) {
           this.auditService.log(
-            this.authService.currentUserValue, 
-            AuditAction.VIEW_PATIENT, 
+            this.authService.currentUserValue,
+            AuditAction.VIEW_PATIENT,
             `Consultation de la fiche patient : ${patient.firstName} ${patient.lastName}`
           );
         }
-        observer.next(patient);
-        observer.complete();
-      });
-    });
+      })
+    );
+  }
+
+  private saveToLocal(patients: Patient[]) {
+    localStorage.setItem('mc_patients', JSON.stringify(patients));
+    this.patientsSubject.next(patients);
   }
 }

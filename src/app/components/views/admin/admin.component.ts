@@ -15,7 +15,7 @@ export class AdminComponent {
   logs$ = this.auditService.logs$;
 
   staff: User[] = [
-    { id: '1', username: 'dr.miller', firstName: 'Sarah', lastName: 'Miller', role: UserRole.DOCTOR, email: 'dr.miller@clinique.ma' },
+    { id: '1', username: 'dr.miller', firstName: 'Sarah', lastName: 'Miller', role: UserRole.DOCTOR, email: 'dr.miller@clinique.ma', specialty: 'Cardiologue' },
     { id: '2', username: 'amine.b', firstName: 'Amine', lastName: 'Bennani', role: UserRole.SECRETARY, email: 'amine@clinique.ma' },
     { id: '3', username: 'admin.sophie', firstName: 'Sophie', lastName: 'Martin', role: UserRole.ADMIN, email: 'sophie@clinique.ma' }
   ];
@@ -28,6 +28,8 @@ export class AdminComponent {
     private authService: AuthService
   ) {
     this.clinicInfo = { ...this.clinicService.getClinicValue() };
+    const savedStaff = localStorage.getItem('mc_staff');
+    if (savedStaff) this.staff = JSON.parse(savedStaff);
   }
 
   saveClinicInfo() {
@@ -38,6 +40,16 @@ export class AdminComponent {
       `Mise à jour des informations du cabinet : ${this.clinicInfo.name}`
     );
     alert('Paramètres enregistrés localement avec succès !');
+  }
+
+  saveStaff() {
+    localStorage.setItem('mc_staff', JSON.stringify(this.staff));
+    this.auditService.log(
+      this.authService.currentUserValue,
+      AuditAction.EDIT_SETTINGS,
+      `Mise à jour de la spécialité du personnel`
+    );
+    alert('Spécialités enregistrées !');
   }
 
   onLogoChange(event: any) {

@@ -11,6 +11,7 @@ export interface User {
   firstName: string;
   lastName: string;
   role: UserRole;
+  specialty?: string; // Optionnel pour Secrétaire, requis pour Docteur
   clinicId?: string;
   email?: string;
   avatar?: string;

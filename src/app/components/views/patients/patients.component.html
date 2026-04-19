@@ -62,7 +62,8 @@
               <span class="px-3 py-1 text-[9px] font-extrabold uppercase tracking-widest bg-tertiary/10 text-tertiary rounded-full">Actif</span>
             </td>
             <td class="px-8 py-6 text-right">
-              <button class="text-on-surface-variant/30 hover:text-primary transition-all p-2 rounded-xl hover:bg-primary/5">
+              <button [routerLink]="['/patients', patient.id, 'record']"
+                      class="text-on-surface-variant/30 hover:text-primary transition-all p-2 rounded-xl hover:bg-primary/5">
                 <span class="material-symbols-outlined">visibility</span>
               </button>
             </td>
