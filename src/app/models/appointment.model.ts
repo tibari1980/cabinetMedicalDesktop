@@ -22,4 +22,5 @@ export interface Appointment {
   type: AppointmentType;
   status: AppointmentStatus;
   note?: string;
+  fee?: number;
 }

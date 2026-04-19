@@ -41,6 +41,7 @@ export interface Consultation {
   };
   
   status: ConsultationStatus;
+  fee?: number; // Honoraires de la consultation
 }
 
 export interface MedicalRecord {

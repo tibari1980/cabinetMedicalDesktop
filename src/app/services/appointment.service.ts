@@ -28,7 +28,7 @@ export class AppointmentService {
     
     this.auditService.log(
       this.authService.currentUserValue,
-      AuditAction.CREATE_PATIENT, // On réutilise ou on pourrait créer un nouvel enum RDV
+      AuditAction.CREATE_APPOINTMENT,
       `Nouveau rendez-vous créé pour ${apt.patientName} le ${apt.date} à ${apt.time}`
     );
   }

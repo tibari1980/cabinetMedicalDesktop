@@ -1,19 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientService } from '../../../../services/patient.service';
 import { MedicalRecordService } from '../../../../services/medical-record.service';
 import { AuthService } from '../../../../services/auth.service';
 import { Patient } from '../../../../models/patient.model';
 import { MedicalRecord, Consultation, ConsultationStatus, VitalSigns } from '../../../../models/medical-record.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-medical-record-detail',
   templateUrl: './medical-record-detail.component.html'
 })
-export class MedicalRecordDetailComponent implements OnInit {
+export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
   patient!: Patient;
   record!: MedicalRecord;
   activeConsultation: Consultation | null = null;
+  private sub!: Subscription;
   
   constructor(
     private route: ActivatedRoute,
@@ -26,7 +28,7 @@ export class MedicalRecordDetailComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.patientService.getPatientById(id).subscribe(p => {
+      this.sub = this.patientService.getPatientById(id).subscribe(p => {
         if (p) {
           this.patient = p;
           this.loadRecord(id);
@@ -35,6 +37,10 @@ export class MedicalRecordDetailComponent implements OnInit {
         }
       });
     }
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
   loadRecord(patientId: string) {
@@ -94,3 +100,4 @@ export class MedicalRecordDetailComponent implements OnInit {
     this.activeConsultation = null;
   }
 }
+

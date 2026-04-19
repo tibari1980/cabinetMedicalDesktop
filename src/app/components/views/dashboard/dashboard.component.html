@@ -2,9 +2,9 @@
   <section class="flex justify-between items-end">
     <div>
       <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Tableau de Bord</h2>
-      <p class="text-on-surface-variant mt-1">Résumé de l'activité pour le {{ today | date:'dd MMM yyyy' }}</p>
+      <p class="text-on-surface-variant mt-1 italic">Résumé de l'activité pour le {{ today | date:'dd MMM yyyy' }}</p>
     </div>
-    <button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-transform hover:brightness-110">
+    <button (click)="openBookingModal()" class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-transform hover:brightness-110">
       <span class="material-symbols-outlined text-lg">add</span>
       Nouveau Rendez-vous
     </button>
@@ -17,13 +17,13 @@
       <div class="relative">
         <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">Total Patients</p>
         <div class="flex items-end gap-2">
-          <span class="text-4xl font-extrabold text-on-surface">{{ patients.length }}</span>
-          <span class="text-tertiary font-bold text-xs mb-1 flex items-center">
+          <span class="text-4xl font-extrabold text-on-surface">{{ totalPatients }}</span>
+          <span class="text-tertiary font-bold text-xs mb-1 flex items-center" *ngIf="totalPatients > 0">
             <span class="material-symbols-outlined text-sm">trending_up</span>
-            12%
+            Actif
           </span>
         </div>
-        <p class="text-[10px] text-on-surface-variant mt-2 font-semibold">Flux quotidien</p>
+        <p class="text-[10px] text-on-surface-variant mt-2 font-semibold">Flux quotidien actif</p>
       </div>
     </div>
 
@@ -32,10 +32,10 @@
       <div class="relative">
         <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">Revenu du Jour</p>
         <div class="flex items-end gap-2">
-          <span class="text-4xl font-extrabold text-on-surface">12,450</span>
+          <span class="text-4xl font-extrabold text-on-surface">{{ revenueToday | number:'1.0-0' }}</span>
           <span class="text-on-surface-variant font-semibold text-xs mb-1">DH</span>
         </div>
-        <p class="text-[10px] text-on-surface-variant mt-2 font-semibold">Objectif: 15,000 DH</p>
+        <p class="text-[10px] text-on-surface-variant mt-2 font-semibold">Réel (basé sur honoraires)</p>
       </div>
     </div>
 
@@ -44,9 +44,9 @@
       <div class="relative">
         <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">RDV en Attente</p>
         <div class="flex items-end gap-2">
-          <span class="text-4xl font-extrabold text-on-surface">18</span>
+          <span class="text-4xl font-extrabold text-on-surface">{{ pendingCount }}</span>
         </div>
-        <p class="text-[10px] text-error mt-2 font-semibold font-bold">8 critiques</p>
+        <p class="text-[10px] text-error mt-2 font-semibold font-bold">Aujourd'hui</p>
       </div>
     </div>
 
@@ -55,10 +55,10 @@
       <div class="relative">
         <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">Occupation Cabinet</p>
         <div class="flex items-end gap-2">
-          <span class="text-4xl font-extrabold text-on-surface">84%</span>
+          <span class="text-4xl font-extrabold text-on-surface">{{ occupationRate }}%</span>
         </div>
         <div class="w-full bg-surface-container-high h-1.5 rounded-full mt-4">
-          <div class="bg-primary h-1.5 rounded-full" style="width: 84%"></div>
+          <div class="bg-primary h-1.5 rounded-full transition-all duration-500" [style.width.%]="occupationRate"></div>
         </div>
       </div>
     </div>
@@ -76,23 +76,23 @@
       </div>
       
       <div class="space-y-4">
-        <div *ngFor="let patient of patients.slice(0, 3)" 
+        <div *ngFor="let apt of waitingList.slice(0, 3)" 
              class="glass-panel p-6 rounded-2xl flex items-start justify-between border border-white/50 ambient-glow hover:bg-white/90 transition-all cursor-pointer group">
           <div class="flex gap-5">
             <div class="w-14 h-14 rounded-2xl bg-surface-container-high text-primary flex items-center justify-center font-extrabold text-lg transition-colors group-hover:bg-primary group-hover:text-white">
-              {{ patient.firstName[0] }}{{ patient.lastName[0] }}
+              {{ apt.patientName[0] }}
             </div>
             <div>
-              <h4 class="font-bold text-on-surface text-lg leading-tight">{{ patient.firstName }} {{ patient.lastName }}</h4>
-              <p class="text-on-surface-variant text-sm mt-1">Consultation • Suivi Post-Opératoire</p>
+              <h4 class="font-bold text-on-surface text-lg leading-tight">{{ apt.patientName }}</h4>
+              <p class="text-on-surface-variant text-sm mt-1">{{ apt.type }}</p>
               <div class="flex gap-4 mt-3">
                 <span class="flex items-center gap-1.5 text-xs font-bold px-3 py-1 bg-error-container text-on-error-container rounded-full">
                   <span class="material-symbols-outlined text-sm">alarm</span>
-                  10:30
+                  {{ apt.time }}
                 </span>
                 <span class="flex items-center gap-1.5 text-xs font-bold px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full">
-                  <span class="material-symbols-outlined text-sm">meeting_room</span>
-                  Salle 0{{ patient.id + 1 }}
+                  <span class="material-symbols-outlined text-sm">payments</span>
+                  {{ apt.fee }} DH
                 </span>
               </div>
             </div>
@@ -101,47 +101,109 @@
             <span class="material-symbols-outlined">more_vert</span>
           </button>
         </div>
+
+        <div *ngIf="waitingList.length === 0" class="py-12 bg-surface-container-low/20 rounded-2xl border border-dashed border-outline-variant/30 text-center">
+          <p class="text-sm text-on-surface-variant opacity-50 font-medium">Aucun patient en attente pour le moment.</p>
+        </div>
       </div>
     </section>
 
     <aside class="space-y-8">
       <div class="bg-surface-container-lowest p-6 rounded-3xl ambient-glow">
-        <h3 class="text-lg font-bold text-on-surface mb-6">File d'Attente</h3>
+        <h3 class="text-lg font-bold text-on-surface mb-6">File d'Attente Active</h3>
         <div class="space-y-6">
-          <div class="flex gap-4 relative pb-6 border-l-2 border-outline-variant/10 ml-2 pl-6">
-            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-white shadow-sm"></div>
+          <div *ngFor="let apt of waitingList.slice(0, 4)" class="flex gap-4 relative pb-6 border-l-2 border-outline-variant/10 ml-2 pl-6">
+            <div [class.bg-primary]="apt.status === 'Confirmé'" class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-4 border-white shadow-sm"></div>
             <div class="flex-1">
-              <p class="text-sm font-bold text-on-surface">Sarah Connor</p>
-              <p class="text-xs text-on-surface-variant mt-0.5">En consultation</p>
-              <span class="text-[9px] font-extrabold text-primary block mt-2 uppercase tracking-widest">En cours</span>
+              <p class="text-sm font-bold text-on-surface">{{ apt.patientName }}</p>
+              <p class="text-xs text-on-surface-variant mt-0.5">{{ apt.time }}</p>
+              <span [class.text-primary]="apt.status === 'Confirmé'" class="text-[9px] font-extrabold text-on-surface-variant/50 block mt-2 uppercase tracking-widest">{{ apt.status }}</span>
             </div>
           </div>
-          <div class="flex gap-4 relative pb-6 border-l-2 border-outline-variant/10 ml-2 pl-6">
-            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-4 border-white shadow-sm"></div>
-            <div class="flex-1">
-              <p class="text-sm font-bold text-on-surface">Badr Hari</p>
-              <p class="text-xs text-on-surface-variant mt-0.5">Vérification dossier</p>
-              <span class="text-[9px] font-extrabold text-on-surface-variant/50 block mt-2 uppercase tracking-widest">En attente</span>
-            </div>
+          <div *ngIf="waitingList.length === 0" class="text-center py-4">
+             <p class="text-xs text-on-surface-variant/40 italic">File vide</p>
           </div>
         </div>
-        <button class="w-full mt-6 py-3 bg-surface-container-high text-on-surface-variant font-bold text-xs rounded-xl hover:bg-surface-container-highest transition-colors uppercase tracking-widest">
+        <button routerLink="/calendar" class="w-full mt-6 py-3 bg-surface-container-high text-on-surface-variant font-bold text-xs rounded-xl hover:bg-surface-container-highest transition-colors uppercase tracking-widest">
           Gérer la file d'attente
         </button>
       </div>
 
       <div class="bg-gradient-to-br from-primary to-primary-container p-6 rounded-3xl relative overflow-hidden text-white shadow-xl shadow-primary/20 group">
-        <div class="relative z-10 transition-transform group-hover:translate-z-10 bg-opacity-0">
-          <span class="material-symbols-outlined text-primary-fixed text-3xl mb-4">tips_and_updates</span>
+        <div class="relative z-10">
+          <span class="material-symbols-outlined text-white text-3xl mb-4">tips_and_updates</span>
           <h4 class="text-lg font-bold leading-tight">Optimisation Post-Op</h4>
-          <p class="text-primary-fixed/80 text-xs mt-3 leading-relaxed">Les récentes études suggèrent une mobilisation précoce dans les 6 heures pour une meilleure récupération.</p>
-          <a class="inline-flex items-center gap-2 mt-6 text-xs font-bold border-b border-primary-fixed pb-1 hover:text-primary-fixed transition-all cursor-pointer">
-            Lire l'article
-            <span class="material-symbols-outlined text-[10px]">arrow_forward</span>
-          </a>
+          <p class="text-white/80 text-xs mt-3 leading-relaxed">Pensez à valider les honoraires pour un suivi CA précis sur votre tableau de bord.</p>
         </div>
         <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
       </div>
     </aside>
+  </div>
+</div>
+
+<!-- Booking Modal (Expert Workflow) -->
+<div *ngIf="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm animate-fade-in" (click)="showModal = false"></div>
+  <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden">
+    <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
+      <div>
+        <h3 class="text-xl font-bold text-on-surface">Nouveau Rendez-vous</h3>
+        <p class="text-xs text-on-surface-variant font-medium mt-1">Planification directe depuis le Dashboard</p>
+      </div>
+      <button (click)="showModal = false" class="text-on-surface-variant/40 hover:text-error transition-colors">
+        <span class="material-symbols-outlined text-3xl">close</span>
+      </button>
+    </div>
+
+    <div class="p-8 space-y-6 max-h-[60vh] overflow-y-auto">
+      <div class="flex items-center justify-between p-1 bg-surface-container-low rounded-2xl mb-2">
+        <button (click)="isNewPatient = false" 
+                [class]="!isNewPatient ? 'bg-white shadow-sm text-primary' : 'text-on-surface-variant'"
+                class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">Patient Existant</button>
+        <button (click)="isNewPatient = true" 
+                [class]="isNewPatient ? 'bg-white shadow-sm text-primary' : 'text-on-surface-variant'"
+                class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">Nouveau Patient</button>
+      </div>
+
+      <div class="space-y-1" *ngIf="!isNewPatient">
+        <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rechercher un Patient</label>
+        <select [(ngModel)]="newApt.patientId" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+          <option *ngFor="let p of patients" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
+        </select>
+      </div>
+
+      <div class="space-y-4 animate-fade-in" *ngIf="isNewPatient">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
+            <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
+            <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Prénom">
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Tél *</label>
+          <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 ...">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 pt-4 border-t border-outline-variant/5">
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Heure</label>
+          <input type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm outline-none">
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Honoraires (DH)</label>
+          <input type="number" [(ngModel)]="newApt.fee" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm font-black text-primary focus:ring-2 focus:ring-primary/10 outline-none shadow-inner">
+        </div>
+      </div>
+    </div>
+
+    <div class="p-8 bg-surface-container-low/20 flex gap-4">
+      <button (click)="showModal = false" class="flex-1 py-4 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">Annuler</button>
+      <button (click)="submitAppointment()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:brightness-110 transition-all">Confirmer le RDV</button>
+    </div>
   </div>
 </div>

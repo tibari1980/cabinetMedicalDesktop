@@ -18,6 +18,7 @@ import { PatientsComponent } from './components/views/patients/patients.componen
 import { AdminComponent } from './components/views/admin/admin.component';
 import { CalendarComponent } from './components/views/calendar/calendar.component';
 import { MedicalRecordDetailComponent } from './components/views/patients/medical-record-detail/medical-record-detail.component';
+import { PrescriptionComponent } from './components/views/patients/prescription/prescription.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { MedicalRecordDetailComponent } from './components/views/patients/medica
     PatientsComponent,
     AdminComponent,
     CalendarComponent,
-    MedicalRecordDetailComponent
+    MedicalRecordDetailComponent,
+    PrescriptionComponent
   ],
   imports: [
     BrowserModule,

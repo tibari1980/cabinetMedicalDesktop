@@ -4,7 +4,7 @@
       <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Base Patients</h2>
       <p class="text-on-surface-variant mt-1">Gestion et historique des fiches patients</p>
     </div>
-    <button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-transform hover:brightness-110">
+    <button (click)="openNewPatientModal()" class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-transform hover:brightness-110">
       <span class="material-symbols-outlined text-lg">person_add</span>
       Nouveau Patient
     </button>
@@ -14,7 +14,8 @@
     <div class="p-6 border-b border-outline-variant/10 flex items-center justify-between bg-surface-container-low/30">
       <div class="relative w-72 group">
         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-sm">search</span>
-        <input class="w-full bg-white border border-outline-variant/20 rounded-xl py-2 pl-10 pr-4 text-xs focus:ring-2 focus:ring-primary/10 outline-none transition-all" 
+        <input [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()"
+               class="w-full bg-white border border-outline-variant/20 rounded-xl py-2 pl-10 pr-4 text-xs focus:ring-2 focus:ring-primary/10 outline-none transition-all" 
                placeholder="Rechercher par nom, téléphone..." type="text"/>
       </div>
       <div class="flex gap-2">
@@ -39,7 +40,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-outline-variant/5">
-          <tr *ngFor="let patient of patients" class="hover:bg-surface-container-low/20 transition-all group">
+          <tr *ngFor="let patient of filteredPatients" class="hover:bg-surface-container-low/20 transition-all group">
             <td class="px-8 py-6">
               <div class="flex items-center gap-4">
                 <div class="w-11 h-11 rounded-2xl bg-surface-container-high flex items-center justify-center font-extrabold text-primary transition-all group-hover:bg-primary group-hover:text-white">
@@ -73,7 +74,7 @@
     </div>
     
     <div class="p-6 bg-surface-container-low/20 border-t border-outline-variant/10 flex items-center justify-between">
-      <p class="text-[11px] text-on-surface-variant font-medium">Affichage de {{ patients.length }} dossiers cliniques sécurisés</p>
+      <p class="text-[11px] text-on-surface-variant font-medium">Affichage de {{ filteredPatients.length }} / {{ patients.length }} dossiers cliniques sécurisés</p>
       <nav class="flex gap-2">
         <button class="p-2 border border-outline-variant/20 rounded-xl bg-white hover:bg-surface-container-high transition-all">
           <span class="material-symbols-outlined text-xs">chevron_left</span>
@@ -82,6 +83,69 @@
           <span class="material-symbols-outlined text-xs">chevron_right</span>
         </button>
       </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Patient Creation Modal -->
+<div *ngIf="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm animate-fade-in" (click)="showModal = false"></div>
+  <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden">
+    <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
+      <div>
+        <h3 class="text-xl font-bold text-on-surface">Nouveau Patient</h3>
+        <p class="text-xs text-on-surface-variant font-medium mt-1">Création d'un dossier médical complet</p>
+      </div>
+      <button (click)="showModal = false" class="text-on-surface-variant/40 hover:text-error transition-colors">
+        <span class="material-symbols-outlined text-3xl">close</span>
+      </button>
+    </div>
+
+    <div class="p-8 space-y-5 max-h-[60vh] overflow-y-auto">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
+          <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom de famille">
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
+          <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Prénom">
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Numéro de Téléphone *</label>
+        <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 600-000000">
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Date de Naissance *</label>
+          <input type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner">
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Genre</label>
+          <select [(ngModel)]="newPatient.gender" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none">
+            <option value="Masculin">Masculin</option>
+            <option value="Féminin">Féminin</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Adresse Postale *</label>
+        <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" rows="2" placeholder="Adresse complète du patient"></textarea>
+      </div>
+
+      <div class="space-y-1">
+        <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Email (optionnel)</label>
+        <input [(ngModel)]="newPatient.email" type="email" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="email@exemple.com">
+      </div>
+    </div>
+
+    <div class="p-8 bg-surface-container-low/20 flex gap-4">
+      <button (click)="showModal = false" class="flex-1 py-4 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">Annuler</button>
+      <button (click)="submitNewPatient()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:brightness-110 transition-all">Créer le Dossier</button>
     </div>
   </div>
 </div>

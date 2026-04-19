@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, catchError } from 'rxjs/operators';
 import { Patient } from '../models/patient.model';
 import { AuthService } from './auth.service';
 import { AuditService } from './audit.service';
@@ -28,7 +28,12 @@ export class PatientService {
     if (localPatients) {
       this.patientsSubject.next(JSON.parse(localPatients));
     } else {
-      this.http.get<Patient[]>(this.dataUrl).subscribe(patients => {
+      this.http.get<Patient[]>(this.dataUrl).pipe(
+        catchError(() => {
+          console.warn('Impossible de charger patients.json, démarrage avec une liste vide.');
+          return of([]);
+        })
+      ).subscribe(patients => {
         this.saveToLocal(patients);
       });
     }
@@ -48,6 +53,21 @@ export class PatientService {
       AuditAction.CREATE_PATIENT,
       `Nouveau patient créé : ${patient.firstName} ${patient.lastName}`
     );
+  }
+
+  updatePatient(patient: Patient) {
+    const current = this.patientsSubject.value;
+    const index = current.findIndex(p => p.id === patient.id);
+    if (index !== -1) {
+      current[index] = patient;
+      this.saveToLocal([...current]);
+
+      this.auditService.log(
+        this.authService.currentUserValue,
+        AuditAction.EDIT_PATIENT,
+        `Mise à jour de la fiche patient : ${patient.firstName} ${patient.lastName}`
+      );
+    }
   }
 
   getPatientById(id: number | string): Observable<Patient | undefined> {
@@ -70,3 +90,4 @@ export class PatientService {
     this.patientsSubject.next(patients);
   }
 }
+

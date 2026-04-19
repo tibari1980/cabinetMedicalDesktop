@@ -15,8 +15,13 @@
       </div>
     </div>
     <div class="flex gap-3 no-print">
+      <button [routerLink]="['/patients', patient.id, 'prescription']"
+              class="flex items-center gap-2 px-6 py-3 bg-tertiary text-white rounded-2xl font-bold text-sm hover:brightness-110 shadow-lg shadow-tertiary/20 transition-all">
+        <span class="material-symbols-outlined text-lg">description</span>
+        Générer Ordonnance
+      </button>
       <button (click)="startNewConsultation()" *ngIf="!activeConsultation"
-              class="flex items-center gap-2 px-8 py-3 bg-primary text-white rounded-2xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
+              class="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
         <span class="material-symbols-outlined text-lg">medical_services</span>
         Nouvelle Consultation
       </button>

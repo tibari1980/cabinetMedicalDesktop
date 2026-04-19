@@ -1,23 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppointmentService } from '../../../services/appointment.service';
 import { ClinicService } from '../../../services/clinic.service';
 import { PatientService } from '../../../services/patient.service';
 import { Appointment, AppointmentType, AppointmentStatus } from '../../../models/appointment.model';
 import { Patient } from '../../../models/patient.model';
 import { ClinicInfo } from '../../../models/clinic.model';
-
 import { MedicalRecordService } from '../../../services/medical-record.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html'
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
   selectedDate: Date = new Date();
   clinicSettings!: ClinicInfo;
   timeSlots: string[] = [];
   dayAppointments: Appointment[] = [];
   patients: Patient[] = [];
+  private subs: Subscription[] = [];
 
   // Form state
   showModal = false;
@@ -30,7 +31,7 @@ export class CalendarComponent implements OnInit {
   };
 
   newPatient: Partial<Patient> = {
-    gender: 'M'
+    gender: 'Masculin'
   };
 
   constructor(
@@ -41,16 +42,22 @@ export class CalendarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.clinicService.clinic$.subscribe(settings => {
+    const sub1 = this.clinicService.clinic$.subscribe(settings => {
       this.clinicSettings = settings;
       this.generateTimeSlots();
     });
 
-    this.patientService.getPatients().subscribe(p => this.patients = p);
+    const sub2 = this.patientService.getPatients().subscribe(p => this.patients = p);
     
-    this.appointmentService.appointments$.subscribe(() => {
+    const sub3 = this.appointmentService.appointments$.subscribe(() => {
       this.loadDayAppointments();
     });
+
+    this.subs.push(sub1, sub2, sub3);
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(s => s.unsubscribe());
   }
 
   generateTimeSlots() {
@@ -67,7 +74,9 @@ export class CalendarComponent implements OnInit {
   }
 
   changeDate(days: number) {
-    this.selectedDate = new Date(this.selectedDate.setDate(this.selectedDate.getDate() + days));
+    const current = new Date(this.selectedDate);
+    current.setDate(current.getDate() + days);
+    this.selectedDate = current;
     this.loadDayAppointments();
   }
 
@@ -94,8 +103,7 @@ export class CalendarComponent implements OnInit {
 
   submitAppointment() {
     if (this.isNewPatient) {
-      // Create New Patient first
-      const patientId = Math.floor(Math.random() * 10000);
+      const patientId = Date.now();
       const patient: Patient = {
         id: patientId,
         firstName: this.newPatient.firstName || '',
@@ -103,9 +111,9 @@ export class CalendarComponent implements OnInit {
         phone: this.newPatient.phone || '',
         birthDate: this.newPatient.birthDate || '',
         address: this.newPatient.address || '',
-        gender: this.newPatient.gender || 'M',
+        gender: this.newPatient.gender || 'Masculin',
         email: '',
-        lastVisit: 'Aujourd\'hui'
+        lastVisit: new Date().toISOString()
       };
       
       this.patientService.addPatient(patient);
@@ -122,7 +130,7 @@ export class CalendarComponent implements OnInit {
       this.appointmentService.addAppointment(this.newApt as Appointment);
       this.showModal = false;
       this.isNewPatient = false;
-      this.newPatient = { gender: 'M' };
+      this.newPatient = { gender: 'Masculin' };
     }
   }
 
@@ -130,3 +138,4 @@ export class CalendarComponent implements OnInit {
     window.print();
   }
 }
+

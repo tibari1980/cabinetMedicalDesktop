@@ -50,7 +50,7 @@ export class MedicalRecordService {
 
       this.auditService.log(
         this.authService.currentUserValue,
-        AuditAction.EDIT_SETTINGS, // On n'a pas encore de log spécifique consultation
+        AuditAction.CREATE_CONSULTATION,
         `Nouvelle consultation enregistrée pour le patient ID: ${patientId}`
       );
     }
