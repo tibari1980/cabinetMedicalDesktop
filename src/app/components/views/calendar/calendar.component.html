@@ -1,0 +1,136 @@
+<div class="space-y-6">
+  <!-- Header with Date Navigation -->
+  <section class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-[2.5rem] shadow-sm border border-outline-variant/10 ambient-glow gap-4 no-print">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-2">
+        <button (click)="changeDate(-1)" class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <div class="text-center min-w-[150px]">
+          <h2 class="text-xl font-bold text-on-surface">{{ selectedDate | date:'EEEE dd MMMM' }}</h2>
+          <p class="text-[10px] text-primary uppercase font-bold tracking-widest">{{ selectedDate | date:'yyyy' }}</p>
+        </div>
+        <button (click)="changeDate(1)" class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+      <button (click)="resetToToday()" class="text-xs font-bold text-primary px-4 py-2 bg-primary/5 rounded-full hover:bg-primary/10 transition-all">
+        Aujourd'hui
+      </button>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button (click)="printAgenda()" class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high text-on-surface-variant rounded-xl font-bold text-sm hover:brightness-95 transition-all">
+        <span class="material-symbols-outlined text-lg">print</span>
+        Imprimer
+      </button>
+      <button (click)="openNewAptModal()" class="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
+        <span class="material-symbols-outlined text-lg">add</span>
+        Nouveau RDV
+      </button>
+    </div>
+  </section>
+
+  <!-- Calendar Grid -->
+  <div class="bg-white rounded-[2.5rem] shadow-sm border border-outline-variant/10 overflow-hidden ambient-glow relative">
+    <div class="grid grid-cols-[100px_1fr] divide-x divide-outline-variant/5">
+      
+      <!-- Time Labels Column -->
+      <div class="bg-surface-container-lowest/50 py-4">
+        <div *ngFor="let slot of timeSlots" class="h-20 flex flex-col items-center justify-start pt-2 border-b border-outline-variant/5 text-on-surface-variant/40">
+          <span class="text-xs font-bold">{{ slot }}</span>
+        </div>
+      </div>
+
+      <!-- Appointments Column -->
+      <div class="relative py-4">
+        <div *ngFor="let slot of timeSlots" class="h-20 border-b border-outline-variant/5 group relative px-4 flex items-center">
+          <!-- Hover indicator to add RDV -->
+          <button (click)="openNewAptModal(slot)" 
+                  class="absolute inset-0 opacity-0 group-hover:opacity-100 bg-primary/5 flex items-center justify-center transition-opacity z-10 no-print">
+            <span class="material-symbols-outlined text-primary text-xl">add_circle</span>
+          </button>
+
+          <!-- Appointment Cards -->
+          <div *ngFor="let apt of getAppointmentsForSlot(slot)" 
+               class="absolute inset-y-1 left-4 right-4 bg-primary-container text-primary rounded-2xl p-4 shadow-sm border border-primary/10 flex items-center justify-between group/card hover:scale-[1.01] transition-all z-20 cursor-pointer">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center font-bold shadow-sm">
+                {{ apt.patientName[0] }}
+              </div>
+              <div>
+                <p class="text-sm font-extrabold leading-tight">{{ apt.patientName }}</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-[9px] font-bold uppercase tracking-widest bg-white/50 px-2 py-0.5 rounded-md">{{ apt.type }}</span>
+                  <span class="text-[9px] font-bold opacity-60">• {{ apt.duration }} min</span>
+                </div>
+              </div>
+            </div>
+            <div class="text-right flex items-center gap-3">
+              <span class="text-[9px] font-extrabold bg-tertiary-container text-tertiary px-3 py-1 rounded-full uppercase">{{ apt.status }}</span>
+              <button class="material-symbols-outlined opacity-0 group-hover/card:opacity-100 transition-opacity">more_vert</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointment Creation Modal -->
+  <div *ngIf="showModal" class="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-surface/80 backdrop-blur-md animate-fade-in no-print">
+    <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl border border-outline-variant/10 overflow-hidden animate-scale-up">
+      <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
+        <h3 class="text-xl font-bold text-on-surface">Prendre un Rendez-vous</h3>
+        <button (click)="showModal = false" class="text-on-surface-variant hover:text-error transition-colors">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="p-8 space-y-6">
+        <!-- Patient Selection -->
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Sélectionner un Patient</label>
+          <select [(ngModel)]="newApt.patientId" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+            <option *ngFor="let p of patients" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Heure</label>
+            <input type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Durée (min)</label>
+            <input type="number" [(ngModel)]="newApt.duration" step="15" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Type de Consultation</label>
+          <select [(ngModel)]="newApt.type" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+            <option value="Consultation Générale">Consultation Générale</option>
+            <option value="Suivi">Suivi</option>
+            <option value="Urgence">Urgence</option>
+            <option value="Examen / Analyse">Examen / Analyse</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="p-8 bg-surface-container-lowest border-t border-outline-variant/10 flex gap-4">
+        <button (click)="showModal = false" class="flex-1 py-4 bg-surface-container-high rounded-2xl font-bold text-sm text-on-surface-variant hover:brightness-95 transition-all">Annuler</button>
+        <button (click)="submitAppointment()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/10 transition-all">Enregistrer le RDV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Print Only Styles -->
+<style>
+  @media print {
+    .no-print { display: none !important; }
+    body { background: white !important; }
+    main { margin: 0 !important; padding: 0 !important; }
+    .glass-panel, .ambient-glow { box-shadow: none !important; border: 1px solid #eee !important; }
+  }
+</style>

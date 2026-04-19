@@ -8,6 +8,8 @@ import { AppLayoutComponent } from './components/layout/app-layout/app-layout.co
 import { AuthGuard } from './guards/auth.guard';
 import { UserRole } from './models/user.model';
 
+import { CalendarComponent } from './components/views/calendar/calendar.component';
+
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
@@ -23,8 +25,7 @@ const routes: Routes = [
         component: AdminComponent, 
         data: { roles: [UserRole.SUPER_ADMIN, UserRole.ADMIN] } 
       },
-      // Placeholder for other routes
-      { path: 'calendar', component: DashboardComponent }, 
+      { path: 'calendar', component: CalendarComponent },
       { path: 'records', component: PatientsComponent }
     ]
   },

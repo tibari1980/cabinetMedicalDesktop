@@ -16,6 +16,7 @@ import { LoginComponent } from './components/views/login/login.component';
 import { DashboardComponent } from './components/views/dashboard/dashboard.component';
 import { PatientsComponent } from './components/views/patients/patients.component';
 import { AdminComponent } from './components/views/admin/admin.component';
+import { CalendarComponent } from './components/views/calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AdminComponent } from './components/views/admin/admin.component';
     LoginComponent,
     DashboardComponent,
     PatientsComponent,
-    AdminComponent
+    AdminComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,

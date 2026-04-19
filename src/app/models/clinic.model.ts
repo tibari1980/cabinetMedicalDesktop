@@ -3,6 +3,8 @@ export interface ClinicInfo {
   address?: string;
   phone?: string;
   email?: string;
-  logo?: string; // Format Base64 pour stockage local
+  logo?: string;
   version?: string;
+  openingHour: number; // ex: 8 pour 08:00
+  closingHour: number; // ex: 18 pour 18:00
 }

@@ -15,7 +15,9 @@ export class ClinicService {
     phone: '+212 522-000000',
     email: 'contact@clinique-test.ma',
     version: 'v1.0.4 PRO',
-    logo: '' // Pas de logo par défaut
+    logo: '',
+    openingHour: 8,
+    closingHour: 18
   };
 
   constructor() {

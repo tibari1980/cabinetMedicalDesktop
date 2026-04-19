@@ -16,6 +16,14 @@
       <span class="text-sm">Dashboard</span>
     </a>
 
+    <!-- Calendar: Accessible to ALL -->
+    <a routerLink="/calendar" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaCalendar="routerLinkActive"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" 
+            [style.font-variation-settings]="getIconSettings(rlaCalendar.isActive)">calendar_month</span>
+      <span class="text-sm">Agenda</span>
+    </a>
+
     <!-- Patients: Pro & Secretary -->
     <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.SECRETARY])"
        routerLink="/patients" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaPatients="routerLinkActive"

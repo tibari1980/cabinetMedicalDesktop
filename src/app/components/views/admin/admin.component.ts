@@ -11,7 +11,7 @@ import { UserRole, User } from '../../../models/user.model';
   templateUrl: './admin.component.html'
 })
 export class AdminComponent {
-  clinicInfo: ClinicInfo = { name: '' };
+  clinicInfo: ClinicInfo = { name: '', openingHour: 8, closingHour: 18 };
   logs$ = this.auditService.logs$;
 
   staff: User[] = [
