@@ -1,0 +1,143 @@
+<div class="space-y-8 pb-20">
+  <section class="flex justify-between items-end">
+    <div>
+      <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Administration & Sécurité</h2>
+      <p class="text-on-surface-variant mt-1">Gestion locale, Branding et Traçabilité permanente</p>
+    </div>
+  </section>
+
+  <!-- CLINIC BRANDING SECTION -->
+  <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-1 space-y-6">
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 ambient-glow relative overflow-hidden">
+        <h3 class="text-lg font-bold text-on-surface mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">id_card</span>
+          Identité du Cabinet
+        </h3>
+        
+        <!-- Logo Upload -->
+        <div class="mb-8 group relative flex flex-col items-center">
+          <div class="w-24 h-24 rounded-3xl bg-surface-container-high overflow-hidden flex items-center justify-center border-2 border-dashed border-outline-variant/30 group-hover:border-primary transition-all cursor-pointer relative">
+            <img *ngIf="clinicInfo.logo" [src]="clinicInfo.logo" class="w-full h-full object-contain p-2">
+            <span *ngIf="!clinicInfo.logo" class="material-symbols-outlined text-3xl text-on-surface-variant/50">add_photo_alternate</span>
+            <input type="file" (change)="onLogoChange($event)" class="absolute inset-0 opacity-0 cursor-pointer">
+          </div>
+          <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mt-3">Logo du Cabinet</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Nom de la Clinique</label>
+            <input [(ngModel)]="clinicInfo.name" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none transition-all" placeholder="Nom du cabinet">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Adresse</label>
+            <input [(ngModel)]="clinicInfo.address" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none transition-all" placeholder="Adresse complète">
+          </div>
+          <button (click)="saveClinicInfo()" 
+                  class="w-full mt-4 bg-primary text-white py-3 rounded-xl font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/10">
+            Enregistrer les infos
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-tertiary to-tertiary-container p-8 rounded-[2.5rem] text-white shadow-xl shadow-tertiary/20">
+        <span class="material-symbols-outlined text-3xl mb-4">security</span>
+        <h4 class="text-xl font-bold leading-tight">Confidentialité Totale</h4>
+        <p class="text-white/80 text-xs mt-3 leading-relaxed">
+          Toutes les données saisies ici sont enregistrées localement sur ce poste. 
+          Aucune donnée ne sort du cabinet. MedConnect Pro garantit une isolation parfaite par rapport au Cloud.
+        </p>
+        <div class="mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest bg-white/10 p-2 rounded-lg">
+          <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+          Stockage Interne Sécurisé
+        </div>
+      </div>
+    </div>
+
+    <!-- AUDIT TRAIL SECTION -->
+    <div class="lg:col-span-2 space-y-6">
+      <div class="bg-white rounded-[2.5rem] shadow-sm border border-outline-variant/10 overflow-hidden ambient-glow">
+        <div class="p-8 border-b border-outline-variant/10 flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-error">history</span>
+              Journal de Traçabilité Permanente
+            </h3>
+            <p class="text-xs text-on-surface-variant mt-1">Historique non modifiable des actions système</p>
+          </div>
+          <div class="flex items-center gap-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest bg-slate-50 px-3 py-1 rounded-full">
+            <span class="material-symbols-outlined text-sm">database</span>
+            Base de données interne
+          </div>
+        </div>
+
+        <div class="max-h-[600px] overflow-y-auto">
+          <table class="w-full text-left">
+            <thead class="sticky top-0 bg-white/90 backdrop-blur-md z-10 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/70 border-b border-outline-variant/5">
+              <tr>
+                <th class="px-8 py-4">Horodatage</th>
+                <th class="px-8 py-4">Utilisateur</th>
+                <th class="px-8 py-4">Action</th>
+                <th class="px-8 py-4">Détails</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/5">
+              <tr *ngFor="let log of logs$ | async" class="hover:bg-slate-50/50 transition-all text-xs">
+                <td class="px-8 py-4 font-medium text-on-surface-variant">
+                  {{ log.timestamp | date:'dd/MM HH:mm:ss' }}
+                </td>
+                <td class="px-8 py-4">
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-on-surface">{{ log.userName }}</span>
+                  </div>
+                </td>
+                <td class="px-8 py-4">
+                  <span class="px-2 py-0.5 rounded-md font-bold text-[9px] uppercase tracking-tighter"
+                        [class.bg-blue-100]="log.action.includes('CONNEXION')"
+                        [class.text-blue-700]="log.action.includes('CONNEXION')"
+                        [class.bg-amber-100]="log.action.includes('MODIF')"
+                        [class.text-amber-700]="log.action.includes('MODIF')"
+                        [class.bg-green-100]="log.action.includes('CRÉATION')"
+                        [class.text-green-700]="log.action.includes('CRÉATION')">
+                    {{ log.action }}
+                  </span>
+                </td>
+                <td class="px-8 py-4 text-on-surface-variant font-medium">
+                  {{ log.details }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="(logs$ | async)?.length === 0" class="p-20 text-center space-y-4">
+            <span class="material-symbols-outlined text-4xl text-outline-variant/30">list_alt</span>
+            <p class="text-on-surface-variant text-sm font-medium">Aucun log enregistré pour le moment.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] border border-outline-variant/5 shadow-sm">
+        <h3 class="text-lg font-bold text-on-surface mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">group</span>
+          Équipe & Accès
+        </h3>
+        <div class="space-y-4">
+          <div *ngFor="let member of staff" class="flex items-center justify-between p-4 bg-surface-container-low/50 rounded-2xl hover:bg-white transition-all cursor-pointer group">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl bg-primary-container text-primary flex items-center justify-center font-bold">
+                {{ member.firstName[0] }}{{ member.lastName[0] }}
+              </div>
+              <div>
+                <p class="text-sm font-bold text-on-surface">{{ member.firstName }} {{ member.lastName }}</p>
+                <p class="text-[10px] text-on-surface-variant font-label uppercase tracking-widest">{{ member.role }}</p>
+              </div>
+            </div>
+            <button class="text-on-surface-variant/30 group-hover:text-primary transition-all">
+              <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

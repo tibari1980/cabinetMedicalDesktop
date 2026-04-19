@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MedConnect Dashboard | Clinical Sanctuary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#d8e2ff",
+                    "secondary-fixed": "#d3e4fa",
+                    "inverse-primary": "#adc7ff",
+                    "on-surface-variant": "#424752",
+                    "secondary-container": "#d0e1f7",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#004e1c",
+                    "on-primary-container": "#bfd2ff",
+                    "surface-variant": "#e1e3e4",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#006928",
+                    "tertiary-fixed-dim": "#73dc82",
+                    "on-background": "#191c1d",
+                    "surface-container-high": "#e7e8e9",
+                    "on-error": "#ffffff",
+                    "on-tertiary-container": "#7fe98c",
+                    "surface": "#f8f9fa",
+                    "primary": "#00408b",
+                    "on-tertiary-fixed": "#002108",
+                    "inverse-surface": "#2e3132",
+                    "surface-container": "#edeeef",
+                    "on-secondary-fixed": "#0c1d2d",
+                    "surface-tint": "#0d5bbc",
+                    "primary-container": "#0057b8",
+                    "on-surface": "#191c1d",
+                    "secondary-fixed-dim": "#b7c8de",
+                    "on-primary-fixed": "#001a41",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#adc7ff",
+                    "tertiary-fixed": "#8ffa9b",
+                    "on-tertiary-fixed-variant": "#00531e",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#d9dadb",
+                    "on-secondary-container": "#546477",
+                    "outline": "#727784",
+                    "secondary": "#506072",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-secondary-fixed-variant": "#38485a",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-primary-fixed-variant": "#004493",
+                    "background": "#f8f9fa",
+                    "outline-variant": "#c2c6d4",
+                    "surface-container-low": "#f3f4f5",
+                    "surface-bright": "#f8f9fa",
+                    "error-container": "#ffdad6",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        .tonal-separation {
+            background-color: #f3f4f5; /* surface-container-low */
+        }
+        .ambient-glow {
+            box-shadow: 0 40px 40px -20px rgba(25, 28, 29, 0.04);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; /* surface */
+            color: #191c1d; /* on-surface */
+        }
+    </style>
+</head>
+<body class="antialiased">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 bg-slate-50 dark:bg-slate-950 flex flex-col py-8 px-4 space-y-2 z-50">
+<div class="mb-6 px-4">
+<h1 class="text-lg font-bold text-blue-900 dark:text-blue-100">MedConnect</h1>
+<p class="text-xs text-slate-500 font-label">Clinical Sanctuary</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active State Dashboard -->
+<a class="bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-400 font-semibold shadow-sm flex items-center gap-3 px-4 py-3 rounded-xl transition-transform active:opacity-80 scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm">Dashboard</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all transition-transform active:opacity-80 scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="text-sm">Calendar</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all transition-transform active:opacity-80 scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+<span class="text-sm">Patients</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all transition-transform active:opacity-80 scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="text-sm">Records</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-slate-200/50 space-y-1">
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all transition-transform active:opacity-80 scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="text-sm">Support</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/50 dark:hover:bg-slate-800/50 transition-all transition-transform active:opacity-80 scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm">Log Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar Shell -->
+<header class="sticky top-0 w-full z-40 bg-white/75 backdrop-blur-3xl flex items-center justify-between px-8 py-3 shadow-[0_40px_40px_rgba(25,28,29,0.04)]">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="w-full bg-slate-100/50 border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-blue-700/20 transition-all" placeholder="Search patients or records..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 hover:bg-slate-100/50 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100/50 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100/50 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right">
+<p class="text-sm font-semibold text-slate-900">Dr. Julian Vance</p>
+<p class="text-[10px] text-slate-500 font-label tracking-wider uppercase">Senior Surgeon</p>
+</div>
+<img alt="User profile" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow-sm" data-alt="close-up portrait of a professional male doctor in his 40s wearing a white lab coat with a warm and confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2Is0kygbvdHikyv1SFbeEqh3TgoBgBV5bvtKnczF4EhOo__uKQOtqVbMW1Q8UiD-KOKQTbJ4ssGmxt3Gs0cnevP3_HidD6VBpSesplyyrnk_azj9oZ1vYFMIyokzumREsBzQd33UO8xWe9hK7RFoRM6-kZcVxyyeMM4cFtjM9_OKENRvTRUrIzjelawjylpioQg4gHbqd4HOWY0aEjO5PNwiosABHTvmKM3iIx-xnlaomRL87236U0vk-NzhLiBG1jZKhTpAb4g"/>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 space-y-8 max-w-7xl mx-auto">
+<!-- Welcome Header -->
+<section class="flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-bold tracking-tight text-on-surface">Daily Overview</h2>
+<p class="text-on-surface-variant mt-1">Status report for Oct 24, 2023</p>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow-lg shadow-blue-900/10 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                    New Appointment
+                </button>
+</section>
+<!-- Stats Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Patient Stat -->
+<div class="bg-surface-container-lowest p-6 rounded-xl ambient-glow relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+<div class="relative">
+<p class="text-on-surface-variant font-label text-sm mb-4">Total Patients</p>
+<div class="flex items-end gap-2">
+<span class="text-4xl font-extrabold text-on-surface">42</span>
+<span class="text-tertiary font-bold text-sm mb-1 flex items-center">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+                                12%
+                            </span>
+</div>
+<p class="text-[10px] text-slate-400 mt-2 uppercase tracking-widest font-semibold">Today's throughput</p>
+</div>
+</div>
+<!-- Revenue Stat -->
+<div class="bg-surface-container-lowest p-6 rounded-xl ambient-glow relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary-container/20 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+<div class="relative">
+<p class="text-on-surface-variant font-label text-sm mb-4">Daily Revenue</p>
+<div class="flex items-end gap-2">
+<span class="text-4xl font-extrabold text-on-surface">$12,450</span>
+</div>
+<p class="text-[10px] text-slate-400 mt-2 uppercase tracking-widest font-semibold">Projected: $15,000</p>
+</div>
+</div>
+<!-- Pending Reports -->
+<div class="bg-surface-container-lowest p-6 rounded-xl ambient-glow relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-tertiary-fixed/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+<div class="relative">
+<p class="text-on-surface-variant font-label text-sm mb-4">Lab Reports</p>
+<div class="flex items-end gap-2">
+<span class="text-4xl font-extrabold text-on-surface">18</span>
+</div>
+<p class="text-[10px] text-slate-400 mt-2 uppercase tracking-widest font-semibold">8 awaiting review</p>
+</div>
+</div>
+<!-- Occupancy -->
+<div class="bg-surface-container-lowest p-6 rounded-xl ambient-glow relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-fixed/30 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+<div class="relative">
+<p class="text-on-surface-variant font-label text-sm mb-4">Ward Occupancy</p>
+<div class="flex items-end gap-2">
+<span class="text-4xl font-extrabold text-on-surface">84%</span>
+</div>
+<div class="w-full bg-slate-100 h-1.5 rounded-full mt-4">
+<div class="bg-primary h-1.5 rounded-full w-[84%]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Urgent Appointments (Left 2 Columns) -->
+<section class="lg:col-span-2 space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="priority_high" style="font-variation-settings: 'FILL' 1;">priority_high</span>
+                            Urgent Appointments
+                        </h3>
+<a class="text-sm font-semibold text-primary hover:underline" href="#">View Schedule</a>
+</div>
+<div class="space-y-4">
+<!-- Urgent Card 1 -->
+<div class="glass-panel p-6 rounded-xl flex items-start justify-between border border-white/50 ambient-glow hover:bg-white/90 transition-colors cursor-pointer">
+<div class="flex gap-5">
+<img alt="Patient profile" class="w-14 h-14 rounded-xl object-cover" data-alt="portrait of a young woman with a concerned expression, soft natural lighting, medical setting background blur" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrXtLQGXUw2LHvC33mNaSKmVKNyl1y2feOGfs8wLdBOoggsF3gCLZPeWiFYzVafB7n9zq5QwZVaMvwdfvjH_8-g9ukf3-6o2X1vrXLnL7Io42LrYg8RqosGAaaRaujwuJuBjuEGgFjsi6x-XW40X-NDk6wOU7S5AcOArpLVG5bgLFGcWIMAwNdSl1bdghS4qncfvSMX_108aL8rc09ahwmQjSPexhDgSV-co9_0P4Re9PrEFPZg274W6F53XSEIRDT1_BqsEO_ew"/>
+<div>
+<h4 class="font-bold text-on-surface text-lg">Eleanor Rigby</h4>
+<p class="text-on-surface-variant text-sm mt-1">Cardiac Assessment • Post-Op Follow-up</p>
+<div class="flex gap-4 mt-3">
+<span class="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 bg-error-container text-on-error-container rounded-full">
+<span class="material-symbols-outlined text-sm" data-icon="alarm">alarm</span>
+                                            10:30 AM
+                                        </span>
+<span class="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
+<span class="material-symbols-outlined text-sm" data-icon="meeting_room">meeting_room</span>
+                                            Room 402
+                                        </span>
+</div>
+</div>
+</div>
+<button class="text-slate-400 hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<!-- Urgent Card 2 -->
+<div class="glass-panel p-6 rounded-xl flex items-start justify-between border border-white/50 ambient-glow hover:bg-white/90 transition-colors cursor-pointer">
+<div class="flex gap-5">
+<img alt="Patient profile" class="w-14 h-14 rounded-xl object-cover" data-alt="middle-aged man in casual clothes, neutral medical headshot, professional studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHTDjo7p5VaEcm-Rw0kVXO4EYM1Dk6wRzpHTTCABGX5YG_LTIsXtaJ55Ktf0cm2r0saCFXfSqNdgVnxPbnMvgDMf-jATiIxZiYExpQ2Q4TKdyd46bS1QmvCbR50yFIvY9-fQf-C8MfZufN7zAckZ9QAS5Y1ir0mFxd502dcBOfl62j87OCr3GN0FEjlP8Px7mcbb1vo6phbyWgbr-lz9j8t4Vp2Fht9ijwWsKH77iQkWd7rFA6KNDH-inJP8gWhssvSgJYzF06gw"/>
+<div>
+<h4 class="font-bold text-on-surface text-lg">Marcus Chambers</h4>
+<p class="text-on-surface-variant text-sm mt-1">Acute Abdominal Pain • Immediate Triage</p>
+<div class="flex gap-4 mt-3">
+<span class="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 bg-error-container text-on-error-container rounded-full">
+<span class="material-symbols-outlined text-sm" data-icon="alarm">alarm</span>
+                                            11:15 AM
+                                        </span>
+<span class="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
+<span class="material-symbols-outlined text-sm" data-icon="meeting_room">meeting_room</span>
+                                            ER Bay 2
+                                        </span>
+</div>
+</div>
+</div>
+<button class="text-slate-400 hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Stock Alerts Section -->
+<div class="pt-4 space-y-6">
+<h3 class="text-xl font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="inventory_2">inventory_2</span>
+                            Supply Chain Status
+                        </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-5 rounded-xl flex items-center justify-between border border-transparent hover:border-outline-variant/30 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="vaccines">vaccines</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Insulin Aspart</p>
+<p class="text-xs text-on-surface-variant">4 units remaining</p>
+</div>
+</div>
+<span class="text-xs font-bold text-error bg-error/10 px-2 py-1 rounded">CRITICAL</span>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl flex items-center justify-between border border-transparent hover:border-outline-variant/30 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="medication">medication</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">Amoxicillin 500mg</p>
+<p class="text-xs text-on-surface-variant">240 units remaining</p>
+</div>
+</div>
+<span class="text-xs font-bold text-secondary bg-secondary-container/50 px-2 py-1 rounded">LOW</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Sidebar Content -->
+<aside class="space-y-8">
+<!-- Patient Queue / Activity -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl ambient-glow">
+<h3 class="text-lg font-bold text-on-surface mb-6">Patient Queue</h3>
+<div class="space-y-6">
+<div class="flex gap-4 relative pb-6 border-l-2 border-slate-100 ml-2 pl-6">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-white shadow-sm"></div>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">Sarah Connor</p>
+<p class="text-xs text-on-surface-variant mt-0.5">X-Ray Department</p>
+<span class="text-[10px] font-bold text-slate-400 block mt-2 uppercase">In Transit</span>
+</div>
+</div>
+<div class="flex gap-4 relative pb-6 border-l-2 border-slate-100 ml-2 pl-6">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-tertiary border-4 border-white shadow-sm"></div>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">James Gordon</p>
+<p class="text-xs text-on-surface-variant mt-0.5">Consultation Finished</p>
+<span class="text-[10px] font-bold text-tertiary block mt-2 uppercase">Discharged</span>
+</div>
+</div>
+<div class="flex gap-4 relative ml-2 pl-6">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-4 border-white shadow-sm"></div>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">Diane Prince</p>
+<p class="text-xs text-on-surface-variant mt-0.5">Check-in Process</p>
+<span class="text-[10px] font-bold text-slate-400 block mt-2 uppercase">Waiting</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-3 bg-surface-container text-on-secondary-container font-bold text-sm rounded-xl hover:bg-surface-container-high transition-colors">
+                            Manage Full Queue
+                        </button>
+</div>
+<!-- Clinical Tip Card (Editorial feel) -->
+<div class="bg-gradient-to-br from-blue-900 to-primary p-6 rounded-2xl relative overflow-hidden text-white shadow-xl shadow-blue-900/20">
+<div class="relative z-10">
+<span class="material-symbols-outlined text-blue-300 text-3xl mb-4" data-icon="tips_and_updates">tips_and_updates</span>
+<h4 class="text-lg font-bold leading-tight">Optimizing Post-Op Recovery Protocols</h4>
+<p class="text-blue-200/80 text-sm mt-3 leading-relaxed">Recent studies suggest that early mobilization within 6 hours significantly reduces venous thromboembolism risks.</p>
+<a class="inline-flex items-center gap-2 mt-6 text-sm font-bold border-b border-blue-400 pb-1 hover:text-blue-300 transition-colors" href="#">
+                                Read Research
+                                <span class="material-symbols-outlined text-xs" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<!-- Abstract decoration -->
+<div class="absolute -bottom-10 -right-10 w-40 h-40 bg-white/5 rounded-full blur-2xl"></div>
+<div class="absolute top-0 left-0 w-full h-full opacity-10" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAB4D3W8I6QDrY3tdQmt1zrCsW5F5dd4N-Vt6x62NjSd8tAPc5pw9TbDq6xN6FqC47ohX-iOgXYUaYeWedAXHB7I_5AbvusE7Xw_tqG9md4sOxBrTEBfr4Lc3ZzqMdIkbXKHlXVEu8B6ihdVS5yzw4M5A2U1LhbP5qnf3yMyFZCSuuXulpigH1S3rGbaNkF3LWKM1HMXa08H66ErErmO2Go5m4N1k_yei7JpdaHJzX_xb_gHx8AzFzf-_3g4nCsAofxVUtVdlDPJg');"></div>
+</div>
+</aside>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Only for Home/Dashboard as per instructions) -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="group bg-primary text-white p-4 rounded-full shadow-2xl flex items-center gap-0 hover:gap-3 transition-all duration-300 hover:pr-6">
+<span class="material-symbols-outlined" data-icon="chat" style="font-variation-settings: 'FILL' 1;">chat</span>
+<span class="max-w-0 overflow-hidden group-hover:max-w-[200px] whitespace-nowrap transition-all duration-300 font-bold text-sm">
+                MedConnect Assistant
+            </span>
+</button>
+</div>
+</body></html>

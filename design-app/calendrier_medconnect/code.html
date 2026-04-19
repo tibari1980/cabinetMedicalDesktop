@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MedConnect | Clinical Sanctuary Calendar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(7, 1fr);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(24px);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#d8e2ff",
+                      "secondary-fixed": "#d3e4fa",
+                      "inverse-primary": "#adc7ff",
+                      "on-surface-variant": "#424752",
+                      "secondary-container": "#d0e1f7",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary": "#004e1c",
+                      "on-primary-container": "#bfd2ff",
+                      "surface-variant": "#e1e3e4",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-container": "#006928",
+                      "tertiary-fixed-dim": "#73dc82",
+                      "on-background": "#191c1d",
+                      "surface-container-high": "#e7e8e9",
+                      "on-error": "#ffffff",
+                      "on-tertiary-container": "#7fe98c",
+                      "surface": "#f8f9fa",
+                      "primary": "#00408b",
+                      "on-tertiary-fixed": "#002108",
+                      "inverse-surface": "#2e3132",
+                      "surface-container": "#edeeef",
+                      "on-secondary-fixed": "#0c1d2d",
+                      "surface-tint": "#0d5bbc",
+                      "primary-container": "#0057b8",
+                      "on-surface": "#191c1d",
+                      "secondary-fixed-dim": "#b7c8de",
+                      "on-primary-fixed": "#001a41",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#adc7ff",
+                      "tertiary-fixed": "#8ffa9b",
+                      "on-tertiary-fixed-variant": "#00531e",
+                      "on-secondary": "#ffffff",
+                      "surface-dim": "#d9dadb",
+                      "on-secondary-container": "#546477",
+                      "outline": "#727784",
+                      "secondary": "#506072",
+                      "error": "#ba1a1a",
+                      "surface-container-highest": "#e1e3e4",
+                      "on-secondary-fixed-variant": "#38485a",
+                      "inverse-on-surface": "#f0f1f2",
+                      "on-primary-fixed-variant": "#004493",
+                      "background": "#f8f9fa",
+                      "outline-variant": "#c2c6d4",
+                      "surface-container-low": "#f3f4f5",
+                      "surface-bright": "#f8f9fa",
+                      "error-container": "#ffdad6",
+                      "on-error-container": "#93000a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- TopNavBar -->
+<header class="sticky top-0 w-full z-40 bg-white/75 backdrop-blur-3xl shadow-[0_40px_40px_rgba(25,28,29,0.04)] flex items-center justify-between px-8 py-3">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight text-blue-800">MedConnect</span>
+<div class="hidden md:flex items-center bg-surface-container-low px-4 py-2 rounded-full w-96">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full outline-none" placeholder="Search patients or schedules..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-100/50 rounded-full transition-all">
+<span class="material-symbols-outlined text-slate-500">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-100/50 rounded-full transition-all">
+<span class="material-symbols-outlined text-slate-500">settings</span>
+</button>
+<button class="p-2 hover:bg-slate-100/50 rounded-full transition-all">
+<span class="material-symbols-outlined text-slate-500">help</span>
+</button>
+<div class="ml-2 w-8 h-8 rounded-full overflow-hidden bg-primary-container">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="Close-up portrait of a professional male doctor in a white lab coat with a warm and approachable smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgLHrV826OQZ5k2b105s4MDocNn2Y0E2Uhyg_t7SryXK33AB6eo02DKmgzkkQgyPfa47bSwRtpmSOKrMElLadHkEiqnS4Jh1_auAvZ1ZebW-_9ybviVC11MgBONdU9tyXEPb1_yw8kQsgUMiumYlzbxKMKZ49SW9UUvSRbcCLm9aS-M6bJ-wTvB0LRG7Yw61KuYzSmDhwvPebTcrsO850HOWtfjM9k-OP_giBVqp3jkhzrU8A20eSFaud8aDmB96PvLLx9o9Mk2A"/>
+</div>
+</div>
+</header>
+<div class="flex min-h-[calc(100vh-64px)]">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 sticky top-16 left-0 border-r-0 bg-slate-50 flex flex-col py-8 px-4 space-y-2">
+<div class="px-4 mb-6">
+<h2 class="text-lg font-bold text-blue-900">MedConnect</h2>
+<p class="text-xs text-slate-500">Clinical Sanctuary</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 hover:bg-white/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white text-blue-700 font-semibold shadow-sm transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-sm font-medium">Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 hover:bg-white/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">person_search</span>
+<span class="text-sm font-medium">Patients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 hover:bg-white/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-sm font-medium">Records</span>
+</a>
+</nav>
+<div class="pt-8 border-t border-outline-variant/10 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 hover:bg-white/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 hover:bg-white/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined text-error">logout</span>
+<span class="text-sm font-medium">Log Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area (Canvas) -->
+<main class="flex-1 p-8 overflow-y-auto">
+<!-- Calendar Header / Controls -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+<div>
+<h1 class="text-3xl font-bold tracking-tight text-on-surface mb-1">October 23 – 29, 2023</h1>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="text-sm font-medium">Weekly View</span>
+<div class="flex items-center gap-1">
+<button class="p-1 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-lg">chevron_left</span></button>
+<button class="px-3 py-1 text-xs font-semibold hover:bg-surface-container rounded transition-colors">Today</button>
+<button class="p-1 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-lg">chevron_right</span></button>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-surface-container-low p-1 rounded-full flex">
+<button class="px-4 py-1.5 text-xs font-semibold bg-white shadow-sm rounded-full text-primary">Week</button>
+<button class="px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:text-on-surface">Day</button>
+</div>
+<button class="bg-gradient-to-r from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 shadow-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-xl">add_circle</span>
+<span>New Appointment</span>
+</button>
+</div>
+</div>
+<!-- Dashboard Grid Layout -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Sidebar / mini calendar / status filter -->
+<div class="col-span-12 lg:col-span-3 space-y-8">
+<!-- Status Legends -->
+<div class="bg-surface-container-low p-6 rounded-xl space-y-4">
+<h3 class="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Status Filters</h3>
+<div class="space-y-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="w-3 h-3 rounded-full bg-tertiary"></div>
+<span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">Confirmed</span>
+<span class="ml-auto text-xs text-on-surface-variant bg-surface-container rounded-full px-2">24</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">Pending</span>
+<span class="ml-auto text-xs text-on-surface-variant bg-surface-container rounded-full px-2">8</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">Cancelled</span>
+<span class="ml-auto text-xs text-on-surface-variant bg-surface-container rounded-full px-2">3</span>
+</label>
+</div>
+</div>
+<!-- mini card stats -->
+<div class="relative overflow-hidden bg-primary-container p-6 rounded-xl text-white">
+<div class="relative z-10">
+<p class="text-xs opacity-80 font-medium mb-1">Today's Load</p>
+<h4 class="text-2xl font-bold">12 Patients</h4>
+<div class="mt-4 flex -space-x-2">
+<img alt="Patient" class="w-8 h-8 rounded-full border-2 border-primary-container" data-alt="Portrait of a young woman with a neutral expression against a plain backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcl4RvjeXifRb07gVKlwY0XjhAfOcuMo35wTb5K5cMYNuScME7WUtwV-Lo1dpJdP4luT6tYYiS30o3RB7ViolhWzr8H7U0CS_kMOtOtjGLYjlMKVE3XShvslSgcMC2Rbl1FXaQXmJkXrABOlj1_2a3Zn1i8P8o4yqdWpAGq70SEFq4e6hrvGo2Hjnz3hL-u2G4-9ffuo7Igs9fbKeYtp8xOqalSM16ICehDg0jJB8zRxeiTKGlXNiH5A-8nDS-KvmYrLifkt2xPQ"/>
+<img alt="Patient" class="w-8 h-8 rounded-full border-2 border-primary-container" data-alt="Close up of a middle-aged man with short hair and a slight smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyZlpdPVqru0XBqUL4XwSeoiv--5wayTNXvD5FYL1MahQR4dUl4kn1nVIQfKaFMKm3BHYJt59rQ7LSiOgpYmqpPF4r4m2VVEI7sZwL-R3268xOaqcxKdvHHkr4tsQDWEvTvS1qweRMLoUJn62j64axVwQXU1TseypkQaMWmeiquj0979ZBUDvKKAzhoollfS6dAUkeF77iGb9p2nJEBWkrK5iVLQeG48FEaIq97x6QH2jEg9UmBDdXo-d056E1vfaSO7lu6LIqrw"/>
+<img alt="Patient" class="w-8 h-8 rounded-full border-2 border-primary-container" data-alt="Studio portrait of an elderly man with wisdom in his eyes and grey hair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV6GRLjbyj_oMO2XQ7gcdhLvAF2JEwPuOTK34udMrqhq6gYGkAzH5K4NobPstpbU6nRtQ9g1M0vwLcKbyYrMy1MumasXfF2oJmoPgDhArw8MJ05hewT-ZVOQ72HdNQLi8rDdEFfay7KM-6LPoNg9GJt7zrld-Yx9-hZlxTZxvaRRYObvZK78DpdiaZcQ3G-pgFMFA9cKFtYbpEV165xDgdV-07K-zBwjBiDWc6SwNhaWAxdnY95UUvtG18wQY7fr8CRgudT35rCQ"/>
+<div class="w-8 h-8 rounded-full border-2 border-primary-container bg-surface/20 flex items-center justify-center text-[10px] font-bold">+9</div>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-8xl" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+</div>
+</div>
+</div>
+<!-- Calendar Main Container -->
+<div class="col-span-12 lg:col-span-9">
+<div class="bg-surface-container-lowest rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.02)] overflow-hidden">
+<!-- Calendar Days Header -->
+<div class="calendar-grid bg-surface-container-low border-b border-outline-variant/10">
+<div class="h-16"></div> <!-- Empty corner -->
+<div class="h-16 flex flex-col items-center justify-center border-l border-outline-variant/5">
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Mon</span>
+<span class="text-lg font-bold">23</span>
+</div>
+<div class="h-16 flex flex-col items-center justify-center border-l border-outline-variant/5 bg-primary-fixed/30 relative">
+<div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
+<span class="text-[10px] uppercase font-bold tracking-widest text-primary">Tue</span>
+<span class="text-lg font-bold text-primary">24</span>
+</div>
+<div class="h-16 flex flex-col items-center justify-center border-l border-outline-variant/5">
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Wed</span>
+<span class="text-lg font-bold text-on-surface">25</span>
+</div>
+<div class="h-16 flex flex-col items-center justify-center border-l border-outline-variant/5">
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Thu</span>
+<span class="text-lg font-bold">26</span>
+</div>
+<div class="h-16 flex flex-col items-center justify-center border-l border-outline-variant/5">
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Fri</span>
+<span class="text-lg font-bold">27</span>
+</div>
+<div class="h-16 flex flex-col items-center justify-center border-l border-outline-variant/5">
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Sat</span>
+<span class="text-lg font-bold">28</span>
+</div>
+<div class="h-16 flex flex-col items-center justify-center border-l border-outline-variant/5">
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Sun</span>
+<span class="text-lg font-bold">29</span>
+</div>
+</div>
+<!-- Calendar Body -->
+<div class="calendar-grid h-[600px] overflow-y-auto no-scrollbar relative">
+<!-- Time Column -->
+<div class="flex flex-col">
+<div class="h-20 flex items-start justify-center pt-2 border-b border-outline-variant/5"><span class="text-[10px] font-bold text-outline">08:00</span></div>
+<div class="h-20 flex items-start justify-center pt-2 border-b border-outline-variant/5"><span class="text-[10px] font-bold text-outline">09:00</span></div>
+<div class="h-20 flex items-start justify-center pt-2 border-b border-outline-variant/5"><span class="text-[10px] font-bold text-outline">10:00</span></div>
+<div class="h-20 flex items-start justify-center pt-2 border-b border-outline-variant/5"><span class="text-[10px] font-bold text-outline">11:00</span></div>
+<div class="h-20 flex items-start justify-center pt-2 border-b border-outline-variant/5"><span class="text-[10px] font-bold text-outline">12:00</span></div>
+<div class="h-20 flex items-start justify-center pt-2 border-b border-outline-variant/5"><span class="text-[10px] font-bold text-outline">13:00</span></div>
+<div class="h-20 flex items-start justify-center pt-2 border-b border-outline-variant/5"><span class="text-[10px] font-bold text-outline">14:00</span></div>
+<div class="h-20 flex items-start justify-center pt-2 border-b border-outline-variant/5"><span class="text-[10px] font-bold text-outline">15:00</span></div>
+</div>
+<!-- Day Columns with appointments -->
+<!-- Monday -->
+<div class="border-l border-outline-variant/5 relative">
+<!-- Confirmed Appt -->
+<div class="absolute top-20 left-1 right-1 h-32 bg-tertiary/10 border-l-4 border-tertiary rounded-lg p-2 overflow-hidden hover:bg-tertiary/20 transition-all cursor-pointer">
+<p class="text-[10px] font-bold text-tertiary mb-1">09:00 - 10:30</p>
+<p class="text-xs font-bold text-on-surface">Alice Henderson</p>
+<p class="text-[10px] text-on-surface-variant truncate">Physical Therapy Session</p>
+</div>
+</div>
+<!-- Tuesday (Active Day) -->
+<div class="border-l border-outline-variant/5 bg-primary-fixed/5 relative">
+<!-- Current Time Indicator -->
+<div class="absolute top-[180px] left-0 right-0 z-10">
+<div class="w-full h-px bg-error flex items-center">
+<div class="w-2 h-2 rounded-full bg-error -ml-1 shadow-sm shadow-error/40"></div>
+</div>
+</div>
+<!-- Pending Appt -->
+<div class="absolute top-4 left-1 right-1 h-16 bg-secondary-container/50 border-l-4 border-secondary rounded-lg p-2 overflow-hidden hover:bg-secondary-container transition-all cursor-pointer">
+<p class="text-[10px] font-bold text-on-secondary-container">08:15</p>
+<p class="text-xs font-bold text-on-surface">Mark Walters</p>
+</div>
+<!-- Confirmed Appt -->
+<div class="absolute top-44 left-1 right-1 h-28 bg-tertiary/10 border-l-4 border-tertiary rounded-lg p-2 overflow-hidden hover:bg-tertiary/20 transition-all cursor-pointer">
+<p class="text-[10px] font-bold text-tertiary mb-1">10:30 - 11:45</p>
+<p class="text-xs font-bold text-on-surface">Robert King</p>
+<p class="text-[10px] text-on-surface-variant">Post-Op Review</p>
+</div>
+</div>
+<!-- Wednesday -->
+<div class="border-l border-outline-variant/5 relative">
+<!-- Cancelled Appt -->
+<div class="absolute top-20 left-1 right-1 h-20 bg-error-container/30 border-l-4 border-error/50 rounded-lg p-2 overflow-hidden grayscale">
+<p class="text-[10px] font-bold text-error line-through">09:00</p>
+<p class="text-xs font-bold text-on-surface opacity-50 line-through">Sarah Miller</p>
+<p class="text-[10px] text-on-surface-variant">Canceled</p>
+</div>
+</div>
+<!-- Thursday -->
+<div class="border-l border-outline-variant/5 relative">
+<!-- Confirmed Appt -->
+<div class="absolute top-[320px] left-1 right-1 h-32 bg-tertiary/10 border-l-4 border-tertiary rounded-lg p-2 overflow-hidden hover:bg-tertiary/20 transition-all cursor-pointer">
+<p class="text-[10px] font-bold text-tertiary mb-1">12:00 - 13:30</p>
+<p class="text-xs font-bold text-on-surface">Lunch Meeting</p>
+<p class="text-[10px] text-on-surface-variant">St. Jude Medical Board</p>
+</div>
+</div>
+<!-- Friday -->
+<div class="border-l border-outline-variant/5 relative"></div>
+<!-- Saturday -->
+<div class="border-l border-outline-variant/5 bg-slate-50/30 relative"></div>
+<!-- Sunday -->
+<div class="border-l border-outline-variant/5 bg-slate-50/30 relative"></div>
+</div>
+</div>
+<!-- Upcoming List (Asymmetric Detail) -->
+<div class="mt-10">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-on-surface">Daily Insight</h3>
+<button class="text-xs font-bold text-primary hover:underline transition-all">View Analytics</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white p-6 rounded-2xl border border-outline-variant/10 shadow-sm flex items-start gap-4">
+<div class="p-3 rounded-xl bg-tertiary-fixed text-tertiary-container">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div>
+<p class="text-2xl font-bold">88%</p>
+<p class="text-xs text-on-surface-variant font-medium">Confirmation Rate</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-2xl border border-outline-variant/10 shadow-sm flex items-start gap-4">
+<div class="p-3 rounded-xl bg-primary-fixed text-primary-container">
+<span class="material-symbols-outlined">avg_pace</span>
+</div>
+<div>
+<p class="text-2xl font-bold">22m</p>
+<p class="text-xs text-on-surface-variant font-medium">Avg Consultation</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-2xl border border-outline-variant/10 shadow-sm flex items-start gap-4">
+<div class="p-3 rounded-xl bg-error-container text-on-error-container">
+<span class="material-symbols-outlined">event_busy</span>
+</div>
+<div>
+<p class="text-2xl font-bold">2</p>
+<p class="text-xs text-on-surface-variant font-medium">No-Shows Today</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

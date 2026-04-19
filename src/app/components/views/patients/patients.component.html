@@ -1,0 +1,86 @@
+<div class="space-y-6">
+  <section class="flex justify-between items-end">
+    <div>
+      <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Base Patients</h2>
+      <p class="text-on-surface-variant mt-1">Gestion et historique des fiches patients</p>
+    </div>
+    <button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-transform hover:brightness-110">
+      <span class="material-symbols-outlined text-lg">person_add</span>
+      Nouveau Patient
+    </button>
+  </section>
+
+  <div class="bg-surface-container-lowest rounded-3xl ambient-glow overflow-hidden shadow-sm">
+    <div class="p-6 border-b border-outline-variant/10 flex items-center justify-between bg-surface-container-low/30">
+      <div class="relative w-72 group">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-sm">search</span>
+        <input class="w-full bg-white border border-outline-variant/20 rounded-xl py-2 pl-10 pr-4 text-xs focus:ring-2 focus:ring-primary/10 outline-none transition-all" 
+               placeholder="Rechercher par nom, téléphone..." type="text"/>
+      </div>
+      <div class="flex gap-2">
+        <button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all border border-outline-variant/20">
+          <span class="material-symbols-outlined text-sm">filter_list</span>
+        </button>
+        <button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all border border-outline-variant/20">
+          <span class="material-symbols-outlined text-sm">download</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
+        <thead class="bg-surface-container-low/50 text-on-surface-variant text-[10px] font-bold uppercase tracking-widest">
+          <tr>
+            <th class="px-8 py-5">Identité du Patient</th>
+            <th class="px-8 py-5">Contact & Canal</th>
+            <th class="px-8 py-5">Dernière Consultation</th>
+            <th class="px-8 py-5">Statut</th>
+            <th class="px-8 py-5 text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/5">
+          <tr *ngFor="let patient of patients" class="hover:bg-surface-container-low/20 transition-all group">
+            <td class="px-8 py-6">
+              <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-2xl bg-surface-container-high flex items-center justify-center font-extrabold text-primary transition-all group-hover:bg-primary group-hover:text-white">
+                  {{ patient.firstName[0] }}{{ patient.lastName[0] }}
+                </div>
+                <div>
+                  <p class="font-bold text-on-surface group-hover:text-primary transition-colors text-base leading-tight">{{ patient.firstName }} {{ patient.lastName }}</p>
+                  <p class="text-[11px] text-on-surface-variant mt-0.5">{{ patient.gender }} • {{ patient.birthDate | date:'dd MMM yyyy' }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-8 py-6">
+              <p class="text-sm font-semibold text-on-surface">{{ patient.phone }}</p>
+              <p class="text-xs text-on-surface-variant">{{ patient.email }}</p>
+            </td>
+            <td class="px-8 py-6">
+              <span class="text-sm text-on-surface-variant font-medium">{{ patient.lastVisit | date:'fullDate' }}</span>
+            </td>
+            <td class="px-8 py-6">
+              <span class="px-3 py-1 text-[9px] font-extrabold uppercase tracking-widest bg-tertiary/10 text-tertiary rounded-full">Actif</span>
+            </td>
+            <td class="px-8 py-6 text-right">
+              <button class="text-on-surface-variant/30 hover:text-primary transition-all p-2 rounded-xl hover:bg-primary/5">
+                <span class="material-symbols-outlined">visibility</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="p-6 bg-surface-container-low/20 border-t border-outline-variant/10 flex items-center justify-between">
+      <p class="text-[11px] text-on-surface-variant font-medium">Affichage de {{ patients.length }} dossiers cliniques sécurisés</p>
+      <nav class="flex gap-2">
+        <button class="p-2 border border-outline-variant/20 rounded-xl bg-white hover:bg-surface-container-high transition-all">
+          <span class="material-symbols-outlined text-xs">chevron_left</span>
+        </button>
+        <button class="p-2 border border-outline-variant/20 rounded-xl bg-white hover:bg-surface-container-high transition-all">
+          <span class="material-symbols-outlined text-xs">chevron_right</span>
+        </button>
+      </nav>
+    </div>
+  </div>
+</div>

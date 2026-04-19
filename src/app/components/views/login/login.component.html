@@ -1,0 +1,75 @@
+<div class="min-h-screen bg-slate-50 flex items-center justify-center p-6 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2000');">
+  <div class="absolute inset-0 bg-primary/10 backdrop-blur-sm"></div>
+  
+  <div class="relative w-full max-w-md animate-fade-in-up">
+    <!-- Brand -->
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-3xl shadow-xl mb-4 ambient-glow">
+        <span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+      </div>
+      <h1 class="text-4xl font-extrabold text-on-surface tracking-tight">MedConnect</h1>
+      <p class="text-on-surface-variant font-medium mt-2">Gestion Immédiate du Cabinet</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="glass-panel p-10 rounded-[2.5rem] shadow-2xl border border-white/50 bg-white/70 backdrop-blur-xl">
+      <h2 class="text-2xl font-bold text-on-surface mb-8 text-center">Connexion</h2>
+      
+      <form (submit)="onSubmit()" class="space-y-6">
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">Identifiant</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50">person</span>
+            <input [(ngModel)]="username" name="username" type="text" required
+                   class="w-full bg-white/50 border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-4 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30"
+                   placeholder="Entrez votre nom d'utilisateur">
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">Mot de Passe</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50">lock</span>
+            <input [(ngModel)]="password" name="password" type="password" required
+                   class="w-full bg-white/50 border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-4 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30"
+                   placeholder="••••••••">
+          </div>
+        </div>
+
+        <div *ngIf="error" class="bg-error/10 text-error text-xs font-bold p-3 rounded-xl flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">error</span>
+          {{ error }}
+        </div>
+
+        <button type="submit" 
+                class="w-full bg-primary text-white py-4 rounded-2xl font-bold hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+          Se Connecter
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
+      </form>
+
+      <!-- Quick Session Selector for Demo -->
+      <div class="mt-8 pt-6 border-t border-outline-variant/10">
+        <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest text-center mb-4 text-primary">Mode Démonstration : Choisir un Profil</p>
+        <div class="grid grid-cols-2 gap-3">
+          <button (click)="selectDemoUser('doctor')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
+            👨‍⚕️ Docteur
+          </button>
+          <button (click)="selectDemoUser('secretary')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
+            👩‍💼 Secrétaire
+          </button>
+          <button (click)="selectDemoUser('admin')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
+            🔐 Admin Cabinet
+          </button>
+          <button (click)="selectDemoUser('superadmin')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
+            🌐 Super Admin
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-center mt-8 text-on-surface-variant/60 text-[11px] font-medium">
+      Projet MedConnect v1.0 • Solution Locale Sécurisée
+    </p>
+  </div>
+</div>

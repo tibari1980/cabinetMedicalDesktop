@@ -1,0 +1,28 @@
+<div class="min-h-screen bg-surface flex overflow-hidden">
+  
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Canvas -->
+  <main class="ml-64 flex-1 h-screen overflow-y-auto overflow-x-hidden">
+    
+    <!-- Top Bar -->
+    <app-navbar></app-navbar>
+
+    <!-- Page Content -->
+    <div class="p-8 max-w-7xl mx-auto animate-fade-in-up">
+      <router-outlet></router-outlet>
+    </div>
+
+    <!-- Assistant FAB -->
+    <div class="fixed bottom-8 right-8 z-50">
+      <button class="group bg-primary text-white p-4 rounded-full shadow-2xl flex items-center gap-0 hover:gap-3 transition-all duration-300 hover:pr-6 hover:brightness-110">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span>
+        <span class="max-w-0 overflow-hidden group-hover:max-w-[200px] whitespace-nowrap transition-all duration-300 font-bold text-sm">
+          Assistant Médical AI
+        </span>
+      </button>
+    </div>
+
+  </main>
+</div>

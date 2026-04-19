@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MedConnect Patient Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#d8e2ff",
+                    "secondary-fixed": "#d3e4fa",
+                    "inverse-primary": "#adc7ff",
+                    "on-surface-variant": "#424752",
+                    "secondary-container": "#d0e1f7",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#004e1c",
+                    "on-primary-container": "#bfd2ff",
+                    "surface-variant": "#e1e3e4",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#006928",
+                    "tertiary-fixed-dim": "#73dc82",
+                    "on-background": "#191c1d",
+                    "surface-container-high": "#e7e8e9",
+                    "on-error": "#ffffff",
+                    "on-tertiary-container": "#7fe98c",
+                    "surface": "#f8f9fa",
+                    "primary": "#00408b",
+                    "on-tertiary-fixed": "#002108",
+                    "inverse-surface": "#2e3132",
+                    "surface-container": "#edeeef",
+                    "on-secondary-fixed": "#0c1d2d",
+                    "surface-tint": "#0d5bbc",
+                    "primary-container": "#0057b8",
+                    "on-surface": "#191c1d",
+                    "secondary-fixed-dim": "#b7c8de",
+                    "on-primary-fixed": "#001a41",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#adc7ff",
+                    "tertiary-fixed": "#8ffa9b",
+                    "on-tertiary-fixed-variant": "#00531e",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#d9dadb",
+                    "on-secondary-container": "#546477",
+                    "outline": "#727784",
+                    "secondary": "#506072",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-secondary-fixed-variant": "#38485a",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-primary-fixed-variant": "#004493",
+                    "background": "#f8f9fa",
+                    "outline-variant": "#c2c6d4",
+                    "surface-container-low": "#f3f4f5",
+                    "surface-bright": "#f8f9fa",
+                    "error-container": "#ffdad6",
+                    "on-error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 bg-slate-50 dark:bg-slate-950 flex flex-col py-8 px-4 h-full space-y-2 z-50">
+<div class="mb-10 px-4">
+<h1 class="text-lg font-bold text-blue-900 dark:text-blue-100">MedConnect</h1>
+<p class="text-xs text-slate-500">Clinical Sanctuary</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-white/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-white/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="text-sm font-medium">Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 text-blue-700 dark:text-blue-400 font-semibold shadow-sm rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+<span class="text-sm">Patients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-white/50 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="text-sm font-medium">Records</span>
+</a>
+</nav>
+<div class="pt-8 border-t border-slate-200/50 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="text-sm font-medium">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-900 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm font-medium">Log Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- TopAppBar Anchor -->
+<header class="sticky top-0 w-full z-40 bg-white/75 backdrop-blur-3xl shadow-[0_40px_40px_rgba(25,28,29,0.04)] flex items-center justify-between px-8 py-3">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tight text-blue-800">Patients</span>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full text-sm w-80 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search medical records..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-500 hover:bg-slate-100/50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100/50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100/50 rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+</div>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img class="h-full w-full object-cover" data-alt="close-up portrait of a professional male doctor in a white lab coat with a warm friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPmTK1Xcxih9JuSVlhoqszIEPfmH7xST8tbhwqaBgIsxpn5cNcM5G9pBcd3hrPVKPQQZshOKHoGESHEAr9JunUJcsZpeUTB7j9gS6BsNyz_iFOPsnfKCI9SmTGvU_sdnVvPwg_mOHDsTgXljqjO1c5OM1x0gmYa2Wj-5rK6vZBk4Yu7xhUrctel6699YbgcYz0TqZc2frRcmGITZP33DE0VTPZq94XWB1xVBKHCAZqRsE6nQwOpRKo_WHBKYkCe9Qh9nINt64Jrg"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<section class="p-8 max-w-7xl mx-auto">
+<!-- Page Header & Action -->
+<div class="flex justify-between items-end mb-10">
+<div>
+<h2 class="text-3xl font-bold tracking-tight text-on-surface mb-2">Patient Directory</h2>
+<p class="text-on-surface-variant">Manage and monitor your central clinical sanctuary records.</p>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 shadow-lg shadow-primary/10 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Add Patient
+                </button>
+</div>
+<!-- Stats Overview Bento (Brief) -->
+<div class="grid grid-cols-4 gap-6 mb-10">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<p class="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-2">Total Patients</p>
+<p class="text-3xl font-bold text-primary">1,284</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<p class="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-2">Appointments Today</p>
+<p class="text-3xl font-bold text-tertiary">24</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<p class="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-2">New Records (24h)</p>
+<p class="text-3xl font-bold text-secondary">12</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<p class="text-on-surface-variant text-xs font-semibold uppercase tracking-wider mb-2">Urgent Reviews</p>
+<p class="text-3xl font-bold text-error">3</p>
+</div>
+</div>
+<!-- List View: Patients -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-outline-variant/5">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest border-none">Patient ID</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest border-none">Name</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest border-none">Phone Number</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest border-none">Last Visit</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest border-none">Status</th>
+<th class="px-6 py-4 text-right border-none"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-variant/30">
+<!-- Patient 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-5">
+<span class="font-mono text-sm text-secondary font-medium">#MC-4921</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold">JD</div>
+<div>
+<p class="font-semibold text-on-surface">Julianne Dorsey</p>
+<p class="text-xs text-on-surface-variant">Female, 34 yrs</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">+1 (555) 012-9934</td>
+<td class="px-6 py-5">
+<div class="text-sm">
+<p class="font-medium text-on-surface">Oct 24, 2023</p>
+<p class="text-xs text-on-surface-variant">General Checkup</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-fixed-dim/20 text-tertiary">Stable</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Patient 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-5">
+<span class="font-mono text-sm text-secondary font-medium">#MC-8210</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="professional headshot of a middle-aged man with short dark hair and a calm reliable expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdg8bdpkE7ehGyyqALZqqEYzObKU3GylokN38ypzmCylVtOaejKupxyKTa6Dn_pWJrUYcRG8IEtzp0d6VIYxr6Jwfy0RaBZgSbMhbIVciDBuLAL1HAxChC8WOExnfCrGBxYc5yTMu65FbnCWbaZq_9dSJFQu836bjM3hatptiZ5D3rXi8hIDJKtTB6FmQOQzpXWyKsYzdKF-s3Sm14l32z-cBRs9tLlLkWZaZun3zEFTWUVfztn71M-MfmhkOVXTPUEZr5XFd_qw"/>
+<div>
+<p class="font-semibold text-on-surface">Marcus Thorne</p>
+<p class="text-xs text-on-surface-variant">Male, 52 yrs</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">+1 (555) 832-1102</td>
+<td class="px-6 py-5">
+<div class="text-sm">
+<p class="font-medium text-on-surface">Oct 21, 2023</p>
+<p class="text-xs text-on-surface-variant">Cardiology</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-container text-on-error-container">Urgent Review</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Patient 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-5">
+<span class="font-mono text-sm text-secondary font-medium">#MC-3345</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary font-bold">ES</div>
+<div>
+<p class="font-semibold text-on-surface">Elena Sterling</p>
+<p class="text-xs text-on-surface-variant">Female, 28 yrs</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">+1 (555) 441-0091</td>
+<td class="px-6 py-5">
+<div class="text-sm">
+<p class="font-medium text-on-surface">Oct 19, 2023</p>
+<p class="text-xs text-on-surface-variant">Vaccination</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-fixed-dim/20 text-tertiary">Stable</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Patient 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-5">
+<span class="font-mono text-sm text-secondary font-medium">#MC-7712</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="close up studio portrait of a woman with curly hair looking thoughtfully into the distance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3qKDW9fZCDjnw_XTDgLFB2qYF2b1-h7LD88vDJnwcTtRCxq6zynvIBlJT_MKcRKQLVGMTQxjqhKdwh7a0U2WWqeQOYqxKSlj4iBb9gcBsISolPHxm4YbhcmuP-SfDmN8NGtwSS95c6yeWQZDwiI1IXElP8DE0hYkmFtzuxs5s8r0pQ6-z2c8Fi9JL83u0WwFPSPnoPijhjmn4ihk7X7GNbwLCwA4qMun-njDQuwdL-9bZXhwFcGTv-Ezbt8Ohz4Qt0PRkrwMzHA"/>
+<div>
+<p class="font-semibold text-on-surface">Sarah Jenkins</p>
+<p class="text-xs text-on-surface-variant">Female, 41 yrs</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">+1 (555) 902-8832</td>
+<td class="px-6 py-5">
+<div class="text-sm">
+<p class="font-medium text-on-surface">Oct 15, 2023</p>
+<p class="text-xs text-on-surface-variant">Post-Op Follow-up</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-container text-on-secondary-container">In Therapy</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between border-t border-surface-variant/20 bg-surface-container-low/20">
+<p class="text-xs text-on-surface-variant">Showing 1 to 10 of 1,284 patients</p>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-white transition-all disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="px-3 py-1 rounded-lg bg-primary text-white text-xs font-bold">1</button>
+<button class="px-3 py-1 rounded-lg hover:bg-white text-on-surface-variant text-xs transition-all">2</button>
+<button class="px-3 py-1 rounded-lg hover:bg-white text-on-surface-variant text-xs transition-all">3</button>
+<button class="p-2 rounded-lg border border-outline-variant/30 text-on-surface-variant hover:bg-white transition-all">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Contextual FAB (Hidden on this view per guidelines but available if needed elsewhere) -->
+<!-- <button class="fixed bottom-8 right-8 bg-primary-container text-on-primary-container w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+                <span class="material-symbols-outlined">edit</span>
+            </button> -->
+</section>
+</main>
+</body></html>

@@ -1,0 +1,29 @@
+<header class="sticky top-0 w-full z-40 glass-panel flex items-center justify-between px-8 py-3 border-b border-outline-variant/10 ambient-glow">
+  <div class="flex items-center gap-4 flex-1">
+    <div class="relative w-full max-w-md group">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-lg transition-colors group-focus-within:text-primary">search</span>
+      <input class="w-full bg-surface-container-low/50 border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/10 transition-all outline-none" 
+             placeholder="Rechercher patients, dossiers, factures..." type="text"/>
+    </div>
+  </div>
+  
+  <div class="flex items-center gap-3">
+    <button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all relative">
+      <span class="material-symbols-outlined">notifications</span>
+      <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+    </button>
+    <button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all">
+      <span class="material-symbols-outlined">settings</span>
+    </button>
+    <div class="h-8 w-[1px] bg-outline-variant/20 mx-2"></div>
+    <div class="flex items-center gap-3 px-2">
+      <div class="text-right hidden md:block">
+        <p class="text-sm font-bold text-on-surface">{{ authService.currentUserValue?.firstName }} {{ authService.currentUserValue?.lastName }}</p>
+        <p class="text-[10px] text-on-surface-variant font-label tracking-widest uppercase">{{ authService.currentUserValue?.role }}</p>
+      </div>
+      <div class="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden bg-primary-container text-primary flex items-center justify-center font-bold">
+        {{ authService.currentUserValue?.firstName?.[0] }}{{ authService.currentUserValue?.lastName?.[0] }}
+      </div>
+    </div>
+  </div>
+</header>

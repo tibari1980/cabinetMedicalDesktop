@@ -1,0 +1,65 @@
+<aside class="h-screen w-64 fixed left-0 bg-surface-container-low flex flex-col py-8 px-4 space-y-2 z-50 border-r border-outline-variant/10">
+  <div class="mb-8 px-4" *ngIf="clinicService.clinic$ | async as clinic">
+    <div class="flex items-center gap-3 mb-2">
+      <img *ngIf="clinic.logo" [src]="clinic.logo" class="w-10 h-10 object-contain rounded-lg">
+      <h1 class="text-2xl font-extrabold text-primary tracking-tight truncate">{{ clinic.name }}</h1>
+    </div>
+    <p class="text-[10px] text-on-surface-variant font-label uppercase tracking-widest mt-1">Édition Professionnelle</p>
+  </div>
+  
+  <nav class="flex-1 space-y-1">
+    <!-- Dashboard: Accessible to ALL -->
+    <a routerLink="/dashboard" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaDash="routerLinkActive"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" 
+            [style.font-variation-settings]="getIconSettings(rlaDash.isActive)">dashboard</span>
+      <span class="text-sm">Dashboard</span>
+    </a>
+
+    <!-- Patients: Pro & Secretary -->
+    <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.SECRETARY])"
+       routerLink="/patients" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaPatients="routerLinkActive"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+            [style.font-variation-settings]="getIconSettings(rlaPatients.isActive)">person_search</span>
+      <span class="text-sm">Patients</span>
+    </a>
+
+    <!-- Records: Doctors only -->
+    <a *ngIf="authService.hasRole([UserRole.DOCTOR, UserRole.SUPER_ADMIN])"
+       routerLink="/records" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaRecords="routerLinkActive"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+            [style.font-variation-settings]="getIconSettings(rlaRecords.isActive)">assignment</span>
+      <span class="text-sm">Dossiers</span>
+    </a>
+
+    <!-- Admin: Super Admin & Admin -->
+    <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])"
+       routerLink="/admin" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaAdmin="routerLinkActive"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+            [style.font-variation-settings]="getIconSettings(rlaAdmin.isActive)">settings_account_box</span>
+      <span class="text-sm">Gestion Staff</span>
+    </a>
+  </nav>
+  
+  <div class="pt-4 border-t border-outline-variant/10 space-y-1">
+    <div class="px-4 py-2 mb-2">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold text-xs">
+          {{ authService.currentUserValue?.firstName?.[0] }}{{ authService.currentUserValue?.lastName?.[0] }}
+        </div>
+        <div class="overflow-hidden">
+          <p class="text-xs font-bold text-on-surface truncate">{{ authService.currentUserValue?.firstName }}</p>
+          <p class="text-[9px] text-on-surface-variant uppercase tracking-tighter">{{ authService.currentUserValue?.role }}</p>
+        </div>
+      </div>
+    </div>
+    
+    <a (click)="authService.logout()" class="text-error flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-error-container/20 transition-all cursor-pointer group">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110">logout</span>
+      <span class="text-sm font-semibold">Déconnexion</span>
+    </a>
+  </div>
+</aside>

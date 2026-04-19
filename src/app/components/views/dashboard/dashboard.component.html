@@ -1,0 +1,147 @@
+<div class="space-y-8">
+  <section class="flex justify-between items-end">
+    <div>
+      <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Tableau de Bord</h2>
+      <p class="text-on-surface-variant mt-1">Résumé de l'activité pour le {{ today | date:'dd MMM yyyy' }}</p>
+    </div>
+    <button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-transform hover:brightness-110">
+      <span class="material-symbols-outlined text-lg">add</span>
+      Nouveau Rendez-vous
+    </button>
+  </section>
+
+  <!-- Bento Grid Stats -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="bg-surface-container-lowest p-6 rounded-2xl ambient-glow relative overflow-hidden group">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+      <div class="relative">
+        <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">Total Patients</p>
+        <div class="flex items-end gap-2">
+          <span class="text-4xl font-extrabold text-on-surface">{{ patients.length }}</span>
+          <span class="text-tertiary font-bold text-xs mb-1 flex items-center">
+            <span class="material-symbols-outlined text-sm">trending_up</span>
+            12%
+          </span>
+        </div>
+        <p class="text-[10px] text-on-surface-variant mt-2 font-semibold">Flux quotidien</p>
+      </div>
+    </div>
+
+    <div class="bg-surface-container-lowest p-6 rounded-2xl ambient-glow relative overflow-hidden group">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-tertiary/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+      <div class="relative">
+        <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">Revenu du Jour</p>
+        <div class="flex items-end gap-2">
+          <span class="text-4xl font-extrabold text-on-surface">12,450</span>
+          <span class="text-on-surface-variant font-semibold text-xs mb-1">DH</span>
+        </div>
+        <p class="text-[10px] text-on-surface-variant mt-2 font-semibold">Objectif: 15,000 DH</p>
+      </div>
+    </div>
+
+    <div class="bg-surface-container-lowest p-6 rounded-2xl ambient-glow relative overflow-hidden group">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-error/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+      <div class="relative">
+        <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">RDV en Attente</p>
+        <div class="flex items-end gap-2">
+          <span class="text-4xl font-extrabold text-on-surface">18</span>
+        </div>
+        <p class="text-[10px] text-error mt-2 font-semibold font-bold">8 critiques</p>
+      </div>
+    </div>
+
+    <div class="bg-surface-container-lowest p-6 rounded-2xl ambient-glow relative overflow-hidden group">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-primary-container/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
+      <div class="relative">
+        <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">Occupation Cabinet</p>
+        <div class="flex items-end gap-2">
+          <span class="text-4xl font-extrabold text-on-surface">84%</span>
+        </div>
+        <div class="w-full bg-surface-container-high h-1.5 rounded-full mt-4">
+          <div class="bg-primary h-1.5 rounded-full" style="width: 84%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Dashboard Content -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <section class="lg:col-span-2 space-y-6">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xl font-bold text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">priority_high</span>
+          Consultations Urgentes
+        </h3>
+        <a class="text-xs font-bold text-primary hover:underline cursor-pointer" routerLink="/calendar">Voir l'agenda complet</a>
+      </div>
+      
+      <div class="space-y-4">
+        <div *ngFor="let patient of patients.slice(0, 3)" 
+             class="glass-panel p-6 rounded-2xl flex items-start justify-between border border-white/50 ambient-glow hover:bg-white/90 transition-all cursor-pointer group">
+          <div class="flex gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-surface-container-high text-primary flex items-center justify-center font-extrabold text-lg transition-colors group-hover:bg-primary group-hover:text-white">
+              {{ patient.firstName[0] }}{{ patient.lastName[0] }}
+            </div>
+            <div>
+              <h4 class="font-bold text-on-surface text-lg leading-tight">{{ patient.firstName }} {{ patient.lastName }}</h4>
+              <p class="text-on-surface-variant text-sm mt-1">Consultation • Suivi Post-Opératoire</p>
+              <div class="flex gap-4 mt-3">
+                <span class="flex items-center gap-1.5 text-xs font-bold px-3 py-1 bg-error-container text-on-error-container rounded-full">
+                  <span class="material-symbols-outlined text-sm">alarm</span>
+                  10:30
+                </span>
+                <span class="flex items-center gap-1.5 text-xs font-bold px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full">
+                  <span class="material-symbols-outlined text-sm">meeting_room</span>
+                  Salle 0{{ patient.id + 1 }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <button class="text-on-surface-variant/30 hover:text-primary transition-colors p-1">
+            <span class="material-symbols-outlined">more_vert</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="space-y-8">
+      <div class="bg-surface-container-lowest p-6 rounded-3xl ambient-glow">
+        <h3 class="text-lg font-bold text-on-surface mb-6">File d'Attente</h3>
+        <div class="space-y-6">
+          <div class="flex gap-4 relative pb-6 border-l-2 border-outline-variant/10 ml-2 pl-6">
+            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-white shadow-sm"></div>
+            <div class="flex-1">
+              <p class="text-sm font-bold text-on-surface">Sarah Connor</p>
+              <p class="text-xs text-on-surface-variant mt-0.5">En consultation</p>
+              <span class="text-[9px] font-extrabold text-primary block mt-2 uppercase tracking-widest">En cours</span>
+            </div>
+          </div>
+          <div class="flex gap-4 relative pb-6 border-l-2 border-outline-variant/10 ml-2 pl-6">
+            <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-4 border-white shadow-sm"></div>
+            <div class="flex-1">
+              <p class="text-sm font-bold text-on-surface">Badr Hari</p>
+              <p class="text-xs text-on-surface-variant mt-0.5">Vérification dossier</p>
+              <span class="text-[9px] font-extrabold text-on-surface-variant/50 block mt-2 uppercase tracking-widest">En attente</span>
+            </div>
+          </div>
+        </div>
+        <button class="w-full mt-6 py-3 bg-surface-container-high text-on-surface-variant font-bold text-xs rounded-xl hover:bg-surface-container-highest transition-colors uppercase tracking-widest">
+          Gérer la file d'attente
+        </button>
+      </div>
+
+      <div class="bg-gradient-to-br from-primary to-primary-container p-6 rounded-3xl relative overflow-hidden text-white shadow-xl shadow-primary/20 group">
+        <div class="relative z-10 transition-transform group-hover:translate-z-10 bg-opacity-0">
+          <span class="material-symbols-outlined text-primary-fixed text-3xl mb-4">tips_and_updates</span>
+          <h4 class="text-lg font-bold leading-tight">Optimisation Post-Op</h4>
+          <p class="text-primary-fixed/80 text-xs mt-3 leading-relaxed">Les récentes études suggèrent une mobilisation précoce dans les 6 heures pour une meilleure récupération.</p>
+          <a class="inline-flex items-center gap-2 mt-6 text-xs font-bold border-b border-primary-fixed pb-1 hover:text-primary-fixed transition-all cursor-pointer">
+            Lire l'article
+            <span class="material-symbols-outlined text-[10px]">arrow_forward</span>
+          </a>
+        </div>
+        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+      </div>
+    </aside>
+  </div>
+</div>

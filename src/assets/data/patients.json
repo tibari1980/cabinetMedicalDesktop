@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "firstName": "Jean",
+    "lastName": "Dupont",
+    "email": "jean.dupont@email.com",
+    "phone": "06 12 34 56 78",
+    "birthDate": "1985-05-15",
+    "gender": "Masculin",
+    "address": "123 Rue de la République, Paris",
+    "lastVisit": "2024-03-20",
+    "nextAppointment": "2024-04-25"
+  },
+  {
+    "id": 2,
+    "firstName": "Marie",
+    "lastName": "Curie",
+    "email": "marie.curie@email.com",
+    "phone": "06 98 76 54 32",
+    "birthDate": "1867-11-07",
+    "gender": "Féminin",
+    "address": "45 Avenue des Sciences, Lyon",
+    "lastVisit": "2024-04-10",
+    "nextAppointment": "2024-04-20"
+  },
+  {
+    "id": 3,
+    "firstName": "Albert",
+    "lastName": "Einstein",
+    "email": "albert.e@email.com",
+    "phone": "06 00 11 22 33",
+    "birthDate": "1879-03-14",
+    "gender": "Masculin",
+    "address": "14 Rue du Relativité, Genève",
+    "lastVisit": "2024-01-15",
+    "nextAppointment": "2024-05-02"
+  }
+]
