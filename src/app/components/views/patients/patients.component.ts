@@ -76,5 +76,9 @@ export class PatientsComponent implements OnInit, OnDestroy {
     this.showModal = false;
     this.newPatient = { gender: 'Masculin' };
   }
+
+  trackByPatient(index: number, patient: Patient): string {
+    return patient.id.toString();
+  }
 }
 

@@ -137,5 +137,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
   printAgenda() {
     window.print();
   }
-}
 
+  trackBySlot(index: number, slot: string): string {
+    return slot;
+  }
+
+  trackByAppointment(index: number, apt: Appointment): string {
+    return apt.id.toString();
+  }
+
+  trackByPatient(index: number, patient: Patient): string {
+    return patient.id.toString();
+  }
+}

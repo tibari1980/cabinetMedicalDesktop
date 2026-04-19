@@ -3,14 +3,14 @@
   <section class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-[2.5rem] shadow-sm border border-outline-variant/10 ambient-glow gap-4 no-print">
     <div class="flex items-center gap-6">
       <div class="flex items-center gap-2">
-        <button (click)="changeDate(-1)" class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant">
+        <button (click)="changeDate(-1)" aria-label="Jour précédent" class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant">
           <span class="material-symbols-outlined">chevron_left</span>
         </button>
         <div class="text-center min-w-[150px]">
           <h2 class="text-xl font-bold text-on-surface">{{ selectedDate | date:'EEEE dd MMMM' }}</h2>
           <p class="text-[10px] text-primary uppercase font-bold tracking-widest">{{ selectedDate | date:'yyyy' }}</p>
         </div>
-        <button (click)="changeDate(1)" class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant">
+        <button (click)="changeDate(1)" aria-label="Jour suivant" class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant">
           <span class="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
@@ -37,22 +37,22 @@
       
       <!-- Time Labels Column -->
       <div class="bg-surface-container-lowest/50 py-4">
-        <div *ngFor="let slot of timeSlots" class="h-20 flex flex-col items-center justify-start pt-2 border-b border-outline-variant/5 text-on-surface-variant/40">
+        <div *ngFor="let slot of timeSlots; trackBy: trackBySlot" class="h-20 flex flex-col items-center justify-start pt-2 border-b border-outline-variant/5 text-on-surface-variant/40">
           <span class="text-xs font-bold">{{ slot }}</span>
         </div>
       </div>
 
       <!-- Appointments Column -->
       <div class="relative py-4">
-        <div *ngFor="let slot of timeSlots" class="h-20 border-b border-outline-variant/5 group relative px-4 flex items-center">
+        <div *ngFor="let slot of timeSlots; trackBy: trackBySlot" class="h-20 border-b border-outline-variant/5 group relative px-4 flex items-center">
           <!-- Hover indicator to add RDV -->
-          <button (click)="openNewAptModal(slot)" 
+          <button (click)="openNewAptModal(slot)" aria-label="Ajouter rendez-vous à ce créneau"
                   class="absolute inset-0 opacity-0 group-hover:opacity-100 bg-primary/5 flex items-center justify-center transition-opacity z-10 no-print">
             <span class="material-symbols-outlined text-primary text-xl">add_circle</span>
           </button>
 
           <!-- Appointment Cards -->
-          <div *ngFor="let apt of getAppointmentsForSlot(slot)" 
+          <div *ngFor="let apt of getAppointmentsForSlot(slot); trackBy: trackByAppointment" 
                class="absolute inset-y-1 left-4 right-4 bg-primary-container text-primary rounded-2xl p-4 shadow-sm border border-primary/10 flex items-center justify-between group/card hover:scale-[1.01] transition-all z-20 cursor-pointer">
             <div class="flex items-center gap-4">
               <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center font-bold shadow-sm">
@@ -81,7 +81,7 @@
     <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl border border-outline-variant/10 overflow-hidden animate-scale-up">
       <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
         <h3 class="text-xl font-bold text-on-surface">Prendre un Rendez-vous</h3>
-        <button (click)="showModal = false" class="text-on-surface-variant hover:text-error transition-colors">
+        <button (click)="showModal = false" aria-label="Fermer" class="text-on-surface-variant hover:text-error transition-colors">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
@@ -99,9 +99,9 @@
 
         <!-- Existing Patient Selection -->
         <div class="space-y-1" *ngIf="!isNewPatient">
-          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rechercher un Patient</label>
-          <select [(ngModel)]="newApt.patientId" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
-            <option *ngFor="let p of patients" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
+          <label for="cal-sel-pat" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rechercher un Patient</label>
+          <select id="cal-sel-pat" [(ngModel)]="newApt.patientId" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+            <option *ngFor="let p of patients; trackBy: trackByPatient" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
           </select>
         </div>
 
@@ -109,42 +109,42 @@
         <div class="space-y-4 animate-fade-in" *ngIf="isNewPatient">
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-1">
-              <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
-              <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom">
+              <label for="cal-nom" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
+              <input id="cal-nom" [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom">
             </div>
             <div class="space-y-1">
-              <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
-              <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Prénom">
+              <label for="cal-pren" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
+              <input id="cal-pren" [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Prénom">
             </div>
           </div>
           <div class="space-y-1">
-            <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Numéro de Téléphone *</label>
-            <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 600-000000">
+            <label for="cal-tel" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Numéro de Téléphone *</label>
+            <input id="cal-tel" [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 600-000000">
           </div>
           <div class="space-y-1">
-            <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Date de Naissance *</label>
-            <input type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner">
+            <label for="cal-date" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Date de Naissance *</label>
+            <input id="cal-date" type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner">
           </div>
           <div class="space-y-1">
-            <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Adresse Postale *</label>
-            <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner rows-2" placeholder="Adresse complète"></textarea>
+            <label for="cal-addr" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Adresse Postale *</label>
+            <textarea id="cal-addr" [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner rows-2" placeholder="Adresse complète"></textarea>
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-4 pt-4 border-t border-outline-variant/5">
           <div class="space-y-1">
-            <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Heure</label>
-            <input type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+            <label for="cal-time" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Heure</label>
+            <input id="cal-time" type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
           </div>
           <div class="space-y-1">
-            <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Durée (min)</label>
-            <input type="number" [(ngModel)]="newApt.duration" step="15" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+            <label for="cal-duree" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Durée (min)</label>
+            <input id="cal-duree" type="number" [(ngModel)]="newApt.duration" step="15" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
           </div>
         </div>
 
         <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Type de Consultation</label>
-          <select [(ngModel)]="newApt.type" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+          <label for="cal-type" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Type de Consultation</label>
+          <select id="cal-type" [(ngModel)]="newApt.type" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
             <option value="Consultation Générale">Consultation Générale</option>
             <option value="Suivi">Suivi</option>
             <option value="Urgence">Urgence</option>

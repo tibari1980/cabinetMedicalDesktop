@@ -76,8 +76,8 @@
       </div>
       
       <div class="space-y-4">
-        <div *ngFor="let apt of waitingList.slice(0, 3)" 
-             class="glass-panel p-6 rounded-2xl flex items-start justify-between border border-white/50 ambient-glow hover:bg-white/90 transition-all cursor-pointer group">
+        <div *ngFor="let apt of waitingList.slice(0, 3); trackBy: trackByApt" 
+             class="glass-panel p-6 rounded-2xl flex items-start justify-between border border-outline-variant/10 ambient-glow hover:bg-surface-container-highest transition-all cursor-pointer group">
           <div class="flex gap-5">
             <div class="w-14 h-14 rounded-2xl bg-surface-container-high text-primary flex items-center justify-center font-extrabold text-lg transition-colors group-hover:bg-primary group-hover:text-white">
               {{ apt.patientName[0] }}
@@ -97,7 +97,7 @@
               </div>
             </div>
           </div>
-          <button class="text-on-surface-variant/30 hover:text-primary transition-colors p-1">
+          <button aria-label="Plus d'options" class="text-on-surface-variant/30 hover:text-primary transition-colors p-1">
             <span class="material-symbols-outlined">more_vert</span>
           </button>
         </div>
@@ -112,7 +112,7 @@
       <div class="bg-surface-container-lowest p-6 rounded-3xl ambient-glow">
         <h3 class="text-lg font-bold text-on-surface mb-6">File d'Attente Active</h3>
         <div class="space-y-6">
-          <div *ngFor="let apt of waitingList.slice(0, 4)" class="flex gap-4 relative pb-6 border-l-2 border-outline-variant/10 ml-2 pl-6">
+          <div *ngFor="let apt of waitingList.slice(0, 4); trackBy: trackByApt" class="flex gap-4 relative pb-6 border-l-2 border-outline-variant/10 ml-2 pl-6">
             <div [class.bg-primary]="apt.status === 'Confirmé'" class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-4 border-white shadow-sm"></div>
             <div class="flex-1">
               <p class="text-sm font-bold text-on-surface">{{ apt.patientName }}</p>
@@ -150,7 +150,7 @@
         <h3 class="text-xl font-bold text-on-surface">Nouveau Rendez-vous</h3>
         <p class="text-xs text-on-surface-variant font-medium mt-1">Planification directe depuis le Dashboard</p>
       </div>
-      <button (click)="showModal = false" class="text-on-surface-variant/40 hover:text-error transition-colors">
+      <button (click)="showModal = false" aria-label="Fermer la modale" class="text-on-surface-variant/40 hover:text-error transition-colors focus-visible:outline-primary focus-visible:ring-2">
         <span class="material-symbols-outlined text-3xl">close</span>
       </button>
     </div>
@@ -166,37 +166,37 @@
       </div>
 
       <div class="space-y-1" *ngIf="!isNewPatient">
-        <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rechercher un Patient</label>
-        <select [(ngModel)]="newApt.patientId" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
-          <option *ngFor="let p of patients" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
+        <label for="select-patient" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rechercher un Patient</label>
+        <select id="select-patient" [(ngModel)]="newApt.patientId" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+          <option *ngFor="let p of patients; trackBy: trackByPatientId" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
         </select>
       </div>
 
       <div class="space-y-4 animate-fade-in" *ngIf="isNewPatient">
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-1">
-            <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
-            <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom">
+            <label for="input-lastname" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
+            <input id="input-lastname" [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom">
           </div>
           <div class="space-y-1">
-            <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
-            <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Prénom">
+            <label for="input-firstname" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
+            <input id="input-firstname" [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Prénom">
           </div>
         </div>
         <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Tél *</label>
-          <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 ...">
+          <label for="input-phone" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Tél *</label>
+          <input id="input-phone" [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 ...">
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-4 pt-4 border-t border-outline-variant/5">
         <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Heure</label>
-          <input type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm outline-none">
+          <label for="input-time" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Heure</label>
+          <input id="input-time" type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm outline-none">
         </div>
         <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Honoraires (DH)</label>
-          <input type="number" [(ngModel)]="newApt.fee" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm font-black text-primary focus:ring-2 focus:ring-primary/10 outline-none shadow-inner">
+          <label for="input-fee" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Honoraires (DH)</label>
+          <input id="input-fee" type="number" [(ngModel)]="newApt.fee" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm font-black text-primary focus:ring-2 focus:ring-primary/10 outline-none shadow-inner">
         </div>
       </div>
     </div>

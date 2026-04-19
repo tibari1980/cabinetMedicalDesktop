@@ -118,5 +118,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.appointmentService.addAppointment(this.newApt as Appointment);
     this.showModal = false;
   }
+
+  trackByApt(index: number, apt: Appointment): string {
+    return apt.id.toString();
+  }
+
+  trackByPatientId(index: number, patient: Patient): string {
+    return patient.id.toString();
+  }
 }
 

@@ -25,7 +25,7 @@
         <span class="material-symbols-outlined text-lg">medical_services</span>
         Nouvelle Consultation
       </button>
-      <button class="p-3 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all border border-outline-variant/20">
+      <button aria-label="Imprimer le dossier médical" class="p-3 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all border border-outline-variant/20">
         <span class="material-symbols-outlined">print</span>
       </button>
     </div>
@@ -50,11 +50,11 @@
       <div class="space-y-6">
         <!-- Subjective -->
         <div class="space-y-3">
-          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest flex items-center gap-2">
+          <label for="soap-s" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest flex items-center gap-2">
             <span class="w-6 h-6 rounded-md bg-primary text-white flex items-center justify-center">S</span>
             Subjectif (Plaintes, Histoire)
           </label>
-          <textarea [(ngModel)]="activeConsultation.subjective.chiefComplaint" 
+          <textarea id="soap-s" [(ngModel)]="activeConsultation.subjective.chiefComplaint" 
                     class="w-full bg-white border border-outline-variant/10 rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-inner" 
                     rows="3" placeholder="Pourquoi le patient consulte-t-il ?"></textarea>
         </div>
@@ -69,25 +69,25 @@
             <div class="bg-white p-3 rounded-2xl border border-outline-variant/5 shadow-inner">
               <span class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">Tension (SYS/DIA)</span>
               <div class="flex items-center gap-1">
-                <input [(ngModel)]="activeConsultation.objective.vitalSigns.bloodPressureSys" type="number" class="w-12 text-sm font-bold border-none outline-none bg-transparent" placeholder="120">
+                <input aria-label="Tension Systolique" [(ngModel)]="activeConsultation.objective.vitalSigns.bloodPressureSys" type="number" class="w-12 text-sm font-bold border-none outline-none bg-transparent" placeholder="120">
                 <span class="text-xs opacity-30">/</span>
-                <input [(ngModel)]="activeConsultation.objective.vitalSigns.bloodPressureDia" type="number" class="w-12 text-sm font-bold border-none outline-none bg-transparent" placeholder="80">
+                <input aria-label="Tension Diastolique" [(ngModel)]="activeConsultation.objective.vitalSigns.bloodPressureDia" type="number" class="w-12 text-sm font-bold border-none outline-none bg-transparent" placeholder="80">
               </div>
             </div>
             <div class="bg-white p-3 rounded-2xl border border-outline-variant/5 shadow-inner">
-              <span class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">Température (°C)</span>
-              <input [(ngModel)]="activeConsultation.objective.vitalSigns.temperature" type="number" step="0.1" class="w-full text-sm font-bold border-none outline-none bg-transparent" placeholder="37.0">
+              <label for="soap-temp" class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">Température (°C)</label>
+              <input id="soap-temp" [(ngModel)]="activeConsultation.objective.vitalSigns.temperature" type="number" step="0.1" class="w-full text-sm font-bold border-none outline-none bg-transparent" placeholder="37.0">
             </div>
             <div class="bg-white p-3 rounded-2xl border border-outline-variant/5 shadow-inner">
-              <span class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">Poids (kg)</span>
-              <input [(ngModel)]="activeConsultation.objective.vitalSigns.weight" (ngModelChange)="calculateBMI()" type="number" class="w-full text-sm font-bold border-none outline-none bg-transparent" placeholder="70">
+              <label for="soap-poids" class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">Poids (kg)</label>
+              <input id="soap-poids" [(ngModel)]="activeConsultation.objective.vitalSigns.weight" (ngModelChange)="calculateBMI()" type="number" class="w-full text-sm font-bold border-none outline-none bg-transparent" placeholder="70">
             </div>
             <div class="bg-white p-3 rounded-2xl border border-outline-variant/5 shadow-inner bg-primary/5">
               <span class="text-[9px] font-bold text-primary uppercase mb-1 block">IMC (Calculé)</span>
               <span class="text-sm font-black text-primary">{{ activeConsultation.objective.vitalSigns.bmi || '--' }}</span>
             </div>
           </div>
-          <textarea [(ngModel)]="activeConsultation.objective.physicalExam" 
+          <textarea aria-label="Examen physique" [(ngModel)]="activeConsultation.objective.physicalExam" 
                     class="w-full bg-white border border-outline-variant/10 rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-inner" 
                     rows="3" placeholder="Observations de l'examen physique..."></textarea>
         </div>
@@ -101,10 +101,10 @@
             <span class="w-6 h-6 rounded-md bg-secondary text-white flex items-center justify-center">A</span>
             Évaluation (Diagnostic)
           </label>
-          <input [(ngModel)]="activeConsultation.assessment.diagnosis" 
+          <input aria-label="Conclusion ou Diagnostic principal" [(ngModel)]="activeConsultation.assessment.diagnosis" 
                  class="w-full bg-white border border-outline-variant/10 rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-inner" 
                  placeholder="Conclusion ou Diagnostic principal">
-          <textarea [(ngModel)]="activeConsultation.assessment.notes" 
+          <textarea aria-label="Notes additionnelles" [(ngModel)]="activeConsultation.assessment.notes" 
                     class="w-full bg-white border border-outline-variant/10 rounded-2xl p-4 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-inner" 
                     rows="2" placeholder="Notes additionnelles..."></textarea>
         </div>
@@ -115,7 +115,7 @@
             <span class="w-6 h-6 rounded-md bg-error text-white flex items-center justify-center">P</span>
             Plan (Traitement, Suivi)
           </label>
-          <textarea [(ngModel)]="activeConsultation.plan.treatment" 
+          <textarea aria-label="Traitement prescrit, examens demandés" [(ngModel)]="activeConsultation.plan.treatment" 
                     class="w-full bg-white border border-outline-variant/10 rounded-2xl p-4 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-inner" 
                     rows="4" placeholder="Traitement prescrit, examens demandés..."></textarea>
         </div>
@@ -133,7 +133,7 @@
           Alertes & Allergies
         </h4>
         <div class="flex flex-wrap gap-2">
-          <span *ngFor="let allergy of record?.allergies" class="px-3 py-1 bg-error/10 text-error rounded-full text-[10px] font-bold uppercase">{{ allergy }}</span>
+          <span *ngFor="let allergy of record?.allergies; trackBy: trackByAllergy" class="px-3 py-1 bg-error/10 text-error rounded-full text-[10px] font-bold uppercase">{{ allergy }}</span>
           <span *ngIf="!record?.allergies?.length" class="text-xs text-on-surface-variant opacity-50">Aucune allergie connue</span>
         </div>
       </div>
@@ -144,7 +144,7 @@
           Pathologies Chroniques
         </h4>
         <div class="space-y-2">
-          <div *ngFor="let disease of record?.chronicDiseases" class="flex items-center gap-2 text-xs font-bold text-on-surface">
+          <div *ngFor="let disease of record?.chronicDiseases; trackBy: trackByDisease" class="flex items-center gap-2 text-xs font-bold text-on-surface">
             <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
             {{ disease }}
           </div>
@@ -157,7 +157,7 @@
     <div class="lg:col-span-2 space-y-4">
       <h3 class="text-lg font-bold text-on-surface px-4">Historique des Consultations</h3>
       
-      <div *ngFor="let consult of record?.consultations" 
+      <div *ngFor="let consult of record?.consultations; trackBy: trackByConsultation" 
            [class.border-l-4]="consult.status === 'Validé'"
            class="bg-white p-6 rounded-[2rem] shadow-sm border border-outline-variant/10 border-l-primary/40 relative group">
         <div class="flex justify-between items-start mb-4">
@@ -171,7 +171,7 @@
             </div>
             <p class="text-[10px] text-on-surface-variant font-bold mt-1 uppercase tracking-widest">DR. {{ consult.doctorName }} • {{ consult.doctorSpecialty }}</p>
           </div>
-          <button class="material-symbols-outlined text-on-surface-variant/20 group-hover:text-primary transition-colors">description</button>
+          <button aria-label="Voir la page de consultation complète" class="material-symbols-outlined text-on-surface-variant/20 group-hover:text-primary transition-colors hover:bg-surface-container-high p-2 rounded-xl">description</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">

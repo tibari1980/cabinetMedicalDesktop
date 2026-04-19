@@ -99,5 +99,17 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
   cancelConsultation() {
     this.activeConsultation = null;
   }
+
+  trackByAllergy(index: number, allergy: string): string {
+    return allergy;
+  }
+
+  trackByDisease(index: number, disease: string): string {
+    return disease;
+  }
+
+  trackByConsultation(index: number, consultation: Consultation): string {
+    return consultation.id.toString();
+  }
 }
 

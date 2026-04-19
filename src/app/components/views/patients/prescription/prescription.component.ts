@@ -92,5 +92,9 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
   goBack() {
     this.router.navigate(['/patients', this.patient.id, 'record']);
   }
+
+  trackByItem(index: number, item: PrescriptionItem): string {
+    return item.id;
+  }
 }
 

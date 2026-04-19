@@ -3,7 +3,7 @@
   <!-- UI SECTION: EDITING (Hidden when printing) -->
   <section class="no-print bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 ambient-glow flex justify-between items-center">
     <div class="flex items-center gap-4">
-      <button (click)="goBack()" class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant">
+      <button (click)="goBack()" aria-label="Retour au dossier du patient" class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant">
         <span class="material-symbols-outlined">arrow_back</span>
       </button>
       <div>
@@ -25,20 +25,20 @@
 
   <!-- FORM SECTION (Hidden when printing) -->
   <section class="no-print bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 space-y-4">
-    <div *ngFor="let item of prescription.items; let i = index" class="grid grid-cols-[1fr_2fr_1fr_40px] gap-4 items-end animate-fade-in pb-4 border-b border-outline-variant/5">
+    <div *ngFor="let item of prescription.items; let i = index; trackBy: trackByItem" class="grid grid-cols-[1fr_2fr_1fr_40px] gap-4 items-end animate-fade-in pb-4 border-b border-outline-variant/5">
       <div class="space-y-1">
-        <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Médicament</label>
-        <input [(ngModel)]="item.medicationName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom du médicament">
+        <label for="rx-name-{{i}}" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Médicament</label>
+        <input id="rx-name-{{i}}" [(ngModel)]="item.medicationName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom du médicament">
       </div>
       <div class="space-y-1">
-        <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Posologie</label>
-        <input [(ngModel)]="item.dosage" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" placeholder="Ex: 1 comp 3x/jour après les repas">
+        <label for="rx-dosage-{{i}}" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Posologie</label>
+        <input id="rx-dosage-{{i}}" [(ngModel)]="item.dosage" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" placeholder="Ex: 1 comp 3x/jour après les repas">
       </div>
       <div class="space-y-1">
-        <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Durée / Qté</label>
-        <input [(ngModel)]="item.duration" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" placeholder="7 jours / 2 boites">
+        <label for="rx-duration-{{i}}" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Durée / Qté</label>
+        <input id="rx-duration-{{i}}" [(ngModel)]="item.duration" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" placeholder="7 jours / 2 boites">
       </div>
-      <button (click)="removeItem(i)" class="text-error/30 hover:text-error transition-colors p-2">
+      <button (click)="removeItem(i)" aria-label="Supprimer ce médicament" class="text-error/30 hover:text-error transition-colors p-2">
         <span class="material-symbols-outlined">delete</span>
       </button>
     </div>

@@ -1,1 +1,55 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  /* Light Mode Colors */
+  --color-primary: #00408b;
+  --color-primary-container: #0057b8;
+  --color-on-primary: #ffffff;
+  --color-surface: #f8f9fa;
+  --color-on-surface: #191c1d;
+  --color-on-surface-variant: #424752;
+  --color-surface-container-low: #f3f4f5;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #e7e8e9;
+  --color-surface-container-highest: #e1e3e4;
+  --color-outline-variant: #c2c6d4;
+  --color-tertiary: #004e1c;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+}
+
+:root.dark {
+  /* Dark Mode Colors (Medical / Professional Dark Tone) */
+  --color-primary: #a3c9fe;
+  --color-primary-container: #00408b;
+  --color-on-primary: #002e69;
+  --color-surface: #111315;
+  --color-on-surface: #e1e2e4;
+  --color-on-surface-variant: #c2c6d4;
+  --color-surface-container-low: #191c1d;
+  --color-surface-container-lowest: #0e1011;
+  --color-surface-container-high: #272a2e;
+  --color-surface-container-highest: #32353a;
+  --color-outline-variant: #424752;
+  --color-tertiary: #88d79b;
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+}
+
+/* Base tailwind elements to switch properly */
+.dark .glass-panel {
+  background: rgba(30, 30, 30, 0.75);
+}
+.dark .ambient-glow {
+  box-shadow: 0 40px 40px -20px rgba(0, 0, 0, 0.5);
+}
+.dark input, .dark textarea, .dark select {
+  color: var(--color-on-surface);
+  background-color: var(--color-surface-container-low);
+}
+.dark input::placeholder, .dark textarea::placeholder {
+  color: var(--color-on-surface-variant);
+  opacity: 0.5;
+}
