@@ -12,12 +12,22 @@
       </div>
     </div>
     <div class="flex gap-3 items-center">
-      <div class="mr-4 flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-xl border border-outline-variant/20">
-        <span class="material-symbols-outlined text-sm text-on-surface-variant">description</span>
-        <select aria-label="Format d'impression" [(ngModel)]="paperFormat" class="bg-transparent border-none text-xs font-bold font-on-surface p-0 outline-none cursor-pointer">
-          <option value="A5">Format A5 (Petit)</option>
-          <option value="A4">Format A4 (Grand)</option>
-        </select>
+      <div class="mr-4 flex gap-3">
+        <!-- Sélecteur de médecin (bloqué si on est médecin, ouvert si on est secrétaire) -->
+        <div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-xl border border-outline-variant/20">
+          <span class="material-symbols-outlined text-sm text-tertiary">stethoscope</span>
+          <select aria-label="Médecin prescripteur" [(ngModel)]="selectedDoctorId" (change)="onDoctorChange()" [disabled]="isDoctor" class="bg-transparent border-none text-xs font-bold font-on-surface p-0 outline-none cursor-pointer disabled:opacity-50 appearance-none">
+            <option *ngFor="let doc of doctors" [value]="doc.id">Dr. {{ doc.lastName }}</option>
+          </select>
+        </div>
+        
+        <div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-xl border border-outline-variant/20">
+          <span class="material-symbols-outlined text-sm text-on-surface-variant">description</span>
+          <select aria-label="Format d'impression" [(ngModel)]="paperFormat" class="bg-transparent border-none text-xs font-bold font-on-surface p-0 outline-none cursor-pointer">
+            <option value="A5">Format A5 (Petit)</option>
+            <option value="A4">Format A4 (Grand)</option>
+          </select>
+        </div>
       </div>
       <button (click)="addItem()" class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high text-on-surface rounded-xl font-bold text-sm hover:brightness-95 transition-all">
         <span class="material-symbols-outlined text-lg">add</span>

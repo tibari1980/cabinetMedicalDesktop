@@ -14,11 +14,7 @@ export class AdminComponent {
   clinicInfo: ClinicInfo = { name: '', openingHour: 8, closingHour: 18 };
   logs$ = this.auditService.logs$;
 
-  staff: User[] = [
-    { id: '1', username: 'dr.miller', firstName: 'Sarah', lastName: 'Miller', role: UserRole.DOCTOR, email: 'dr.miller@clinique.ma', specialty: 'Cardiologue' },
-    { id: '2', username: 'amine.b', firstName: 'Amine', lastName: 'Bennani', role: UserRole.SECRETARY, email: 'amine@clinique.ma' },
-    { id: '3', username: 'admin.sophie', firstName: 'Sophie', lastName: 'Martin', role: UserRole.ADMIN, email: 'sophie@clinique.ma' }
-  ];
+  staff$ = this.authService.users$;
 
   UserRole = UserRole;
 
@@ -28,8 +24,6 @@ export class AdminComponent {
     private authService: AuthService
   ) {
     this.clinicInfo = { ...this.clinicService.getClinicValue() };
-    const savedStaff = localStorage.getItem('mc_staff');
-    if (savedStaff) this.staff = JSON.parse(savedStaff);
   }
 
   saveClinicInfo() {
@@ -42,14 +36,55 @@ export class AdminComponent {
     alert('Paramètres enregistrés localement avec succès !');
   }
 
-  saveStaff() {
-    localStorage.setItem('mc_staff', JSON.stringify(this.staff));
+  // GESTION DES PROFILS (ÉQUIPE)
+  showProfileModal = false;
+  selectedProfile: Partial<User> = {};
+  isNewProfile = false;
+
+  openProfileModal(user?: User) {
+    if (user) {
+      this.isNewProfile = false;
+      this.selectedProfile = { ...user };
+    } else {
+      this.isNewProfile = true;
+      this.selectedProfile = {
+        id: Math.random().toString(36).substr(2, 9),
+        username: '',
+        firstName: '',
+        lastName: '',
+        role: UserRole.DOCTOR,
+        email: '',
+        specialty: ''
+      };
+    }
+    this.showProfileModal = true;
+  }
+
+  saveProfile() {
+    if (!this.selectedProfile.firstName || !this.selectedProfile.username) {
+      alert("Le nom d'utilisateur et le prénom sont obligatoires.");
+      return;
+    }
+    
+    this.authService.addOrUpdateUser(this.selectedProfile as User);
     this.auditService.log(
       this.authService.currentUserValue,
       AuditAction.EDIT_SETTINGS,
-      `Mise à jour de la spécialité du personnel`
+      `Profil de ${this.selectedProfile.firstName} (Rôle: ${this.selectedProfile.role}) enregistré.`
     );
-    alert('Spécialités enregistrées !');
+    this.showProfileModal = false;
+  }
+
+  deleteProfile(user: User, event: Event) {
+    event.stopPropagation();
+    if(confirm(`Êtes-vous sûr de vouloir supprimer le profil de ${user.firstName} ?`)) {
+      this.authService.deleteUser(user.id);
+      this.auditService.log(
+        this.authService.currentUserValue,
+        AuditAction.EDIT_SETTINGS,
+        `Profil de ${user.firstName} supprimé.`
+      );
+    }
   }
 
   onLogoChange(event: any) {

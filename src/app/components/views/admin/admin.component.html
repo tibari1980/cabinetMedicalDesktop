@@ -127,27 +127,99 @@
       </div>
 
       <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] border border-outline-variant/5 shadow-sm">
-        <h3 class="text-lg font-bold text-on-surface mb-6 flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">group</span>
-          Équipe & Accès
-        </h3>
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">group</span>
+            Équipe & Accès
+          </h3>
+          <button (click)="openProfileModal()" class="text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-all">
+            + Ajouter
+          </button>
+        </div>
         <div class="space-y-4">
-          <div *ngFor="let member of staff" class="flex items-center justify-between p-4 bg-surface-container-low/50 rounded-2xl hover:bg-white transition-all cursor-pointer group">
+          <div *ngFor="let member of staff$ | async" (click)="openProfileModal(member)" class="flex items-center justify-between p-4 bg-surface-container-low/50 rounded-2xl hover:bg-white border border-transparent hover:border-primary/20 transition-all cursor-pointer group shadow-sm hover:shadow-md">
             <div class="flex items-center gap-4">
               <div class="w-10 h-10 rounded-xl bg-primary-container text-primary flex items-center justify-center font-bold">
                 {{ member.firstName[0] }}{{ member.lastName[0] }}
               </div>
               <div>
                 <p class="text-sm font-bold text-on-surface">{{ member.firstName }} {{ member.lastName }}</p>
-                <p class="text-[10px] text-on-surface-variant font-label uppercase tracking-widest">{{ member.role }}</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-[9px] text-on-surface-variant font-label uppercase tracking-widest bg-surface-container-high px-2 py-0.5 rounded-full">{{ member.role }}</span>
+                  <span class="text-[9px] text-primary font-bold italic" *ngIf="member.specialty">{{ member.specialty }}</span>
+                </div>
               </div>
             </div>
-            <button class="text-on-surface-variant/30 group-hover:text-primary transition-all">
-              <span class="material-symbols-outlined">chevron_right</span>
-            </button>
+            <div class="flex items-center gap-2">
+              <button (click)="deleteProfile(member, $event)" aria-label="Supprimer le profil" class="p-2 text-error/30 hover:text-error hover:bg-error/10 rounded-xl transition-all opacity-0 group-hover:opacity-100">
+                <span class="material-symbols-outlined text-sm">delete</span>
+              </button>
+              <button class="text-on-surface-variant/30 group-hover:text-primary transition-all">
+                <span class="material-symbols-outlined">edit</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+</div>
+
+<!-- PROFILE EDIT MODAL -->
+<div *ngIf="showProfileModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm animate-fade-in" (click)="showProfileModal = false"></div>
+  <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden">
+    <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
+      <div>
+        <h3 class="text-xl font-bold text-on-surface">{{ isNewProfile ? 'Nouveau Collaborateur' : 'Édition du Profil' }}</h3>
+        <p class="text-xs text-on-surface-variant font-medium mt-1">Gestion des accès et rôles MedConnect</p>
+      </div>
+      <button (click)="showProfileModal = false" aria-label="Fermer" class="text-on-surface-variant/40 hover:text-error transition-colors">
+        <span class="material-symbols-outlined text-3xl">close</span>
+      </button>
+    </div>
+
+    <div class="p-8 space-y-5 max-h-[60vh] overflow-y-auto">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
+          <input [(ngModel)]="selectedProfile.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Pénome">
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
+          <input [(ngModel)]="selectedProfile.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom de famille">
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Identifiant (Connexion) *</label>
+        <input [(ngModel)]="selectedProfile.username" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="dr.nom">
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rôle Système</label>
+          <select [(ngModel)]="selectedProfile.role" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none font-bold">
+            <option [value]="UserRole.DOCTOR">Médecin (DOCTOR)</option>
+            <option [value]="UserRole.SECRETARY">Secrétaire (SECRETARY)</option>
+            <option [value]="UserRole.ADMIN">Directeur (ADMIN)</option>
+          </select>
+        </div>
+        <div class="space-y-1" *ngIf="selectedProfile.role === UserRole.DOCTOR">
+          <label class="text-[10px] uppercase font-bold text-tertiary tracking-widest pl-1">Spécialité</label>
+          <input [(ngModel)]="selectedProfile.specialty" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Ex: Cardiologue">
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Email Professionnel</label>
+        <input [(ngModel)]="selectedProfile.email" type="email" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="contact@clinique.ma">
+      </div>
+    </div>
+
+    <div class="p-8 bg-surface-container-low/20 flex gap-4">
+      <button (click)="showProfileModal = false" class="flex-1 py-4 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">Annuler</button>
+      <button (click)="saveProfile()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:brightness-110 transition-all">Enregistrer le Profil</button>
+    </div>
+  </div>
 </div>

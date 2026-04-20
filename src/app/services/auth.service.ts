@@ -12,17 +12,28 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
 
-  private mockUsers: User[] = [
+  private usersSubject: BehaviorSubject<User[]>;
+  public users$: Observable<User[]>;
+
+  private defaultUsers: User[] = [
     { id: '1', username: 'superadmin', firstName: 'Jean', lastName: 'Dupont', role: UserRole.SUPER_ADMIN, email: 'admin@medconnect.pro' },
-    { id: '2', username: 'admin', firstName: 'Sophie', lastName: 'Martin', role: UserRole.ADMIN, email: 'sophie@clinique.ma' },
-    { id: '3', username: 'doctor', firstName: 'Sarah', lastName: 'Miller', role: UserRole.DOCTOR, email: 'dr.miller@clinique.ma', specialty: 'Cardiologue' },
-    { id: '4', username: 'secretary', firstName: 'Amine', lastName: 'Bennani', role: UserRole.SECRETARY, email: 'amine@clinique.ma' }
+    { id: '2', username: 'admin.sophie', firstName: 'Sophie', lastName: 'Martin', role: UserRole.ADMIN, email: 'sophie@clinique.ma' },
+    { id: '3', username: 'dr.miller', firstName: 'Sarah', lastName: 'Miller', role: UserRole.DOCTOR, email: 'dr.miller@clinique.ma', specialty: 'Cardiologue' },
+    { id: '4', username: 'amine.b', firstName: 'Amine', lastName: 'Bennani', role: UserRole.SECRETARY, email: 'amine@clinique.ma' }
   ];
 
   constructor(
     private router: Router,
     private auditService: AuditService
   ) {
+    const savedUsers = localStorage.getItem('mc_users');
+    const initialUsers = savedUsers ? JSON.parse(savedUsers) : this.defaultUsers;
+    this.usersSubject = new BehaviorSubject<User[]>(initialUsers);
+    this.users$ = this.usersSubject.asObservable();
+    if (!savedUsers) {
+      localStorage.setItem('mc_users', JSON.stringify(initialUsers));
+    }
+
     const savedUser = localStorage.getItem('mc_session');
     this.currentUserSubject = new BehaviorSubject<User | null>(savedUser ? JSON.parse(savedUser) : null);
     this.currentUser$ = this.currentUserSubject.asObservable();
@@ -32,9 +43,41 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  public get usersValue(): User[] {
+    return this.usersSubject.value;
+  }
+
+  getDoctors(): User[] {
+    return this.usersValue.filter(u => u.role === UserRole.DOCTOR);
+  }
+
+  addOrUpdateUser(updatedUser: User) {
+    const currentUsers = this.usersValue;
+    const index = currentUsers.findIndex(u => u.id === updatedUser.id);
+    if (index > -1) {
+      currentUsers[index] = updatedUser;
+    } else {
+      currentUsers.push(updatedUser);
+    }
+    localStorage.setItem('mc_users', JSON.stringify(currentUsers));
+    this.usersSubject.next([...currentUsers]);
+    
+    // Si c'est l'utilisateur courant, on update sa session
+    if (this.currentUserValue?.id === updatedUser.id) {
+      localStorage.setItem('mc_session', JSON.stringify(updatedUser));
+      this.currentUserSubject.next(updatedUser);
+    }
+  }
+
+  deleteUser(userId: string) {
+    const newUsers = this.usersValue.filter(u => u.id !== userId);
+    localStorage.setItem('mc_users', JSON.stringify(newUsers));
+    this.usersSubject.next(newUsers);
+  }
+
   login(username: string, password: string): Observable<boolean> {
     // Simple mock logic - ignore password for demo or check against a fixed one
-    const user = this.mockUsers.find(u => u.username === username.toLowerCase());
+    const user = this.usersValue.find(u => u.username === username.toLowerCase());
     
     if (user) {
       localStorage.setItem('mc_session', JSON.stringify(user));

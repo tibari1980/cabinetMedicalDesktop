@@ -7,6 +7,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { Patient } from '../../../../models/patient.model';
 import { Prescription, PrescriptionItem } from '../../../../models/prescription.model';
 import { ClinicInfo } from '../../../../models/clinic.model';
+import { User, UserRole } from '../../../../models/user.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -26,6 +27,11 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
 
   newItem: PrescriptionItem = { id: '', medicationName: '', dosage: '', duration: '' };
   paperFormat: 'A4' | 'A5' = 'A5';
+  
+  doctors: User[] = [];
+  selectedDoctorId: string = '';
+  isDoctor: boolean = false;
+  
   private subs: Subscription[] = [];
 
   constructor(
@@ -52,14 +58,36 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
     const sub2 = this.clinicService.clinic$.subscribe(c => this.clinic = c);
     this.subs.push(sub2);
     
+    // Charger la liste des docteurs
+    this.doctors = this.authService.getDoctors();
     const user = this.authService.currentUserValue;
+    
     if (user) {
-      this.prescription.doctorName = `${user.firstName} ${user.lastName}`;
-      this.prescription.doctorSpecialty = user.specialty;
+      this.isDoctor = user.role === UserRole.DOCTOR;
+      if (this.isDoctor) {
+        this.selectedDoctorId = user.id;
+        this.updateDoctorInfo(user);
+      } else if (this.doctors.length > 0) {
+        // Sélectionne le premier docteur par défaut si c'est une secrétaire
+        this.selectedDoctorId = this.doctors[0].id;
+        this.updateDoctorInfo(this.doctors[0]);
+      }
     }
 
     // Start with one empty item
     this.addItem();
+  }
+
+  onDoctorChange() {
+    const doc = this.doctors.find(d => d.id === this.selectedDoctorId);
+    if (doc) {
+      this.updateDoctorInfo(doc);
+    }
+  }
+
+  private updateDoctorInfo(doc: User) {
+    this.prescription.doctorName = `${doc.firstName} ${doc.lastName}`;
+    this.prescription.doctorSpecialty = doc.specialty || '';
   }
 
   ngOnDestroy() {
