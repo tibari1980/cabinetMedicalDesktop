@@ -1,0 +1,123 @@
+<div class="min-h-screen bg-surface p-4 md:p-8 lg:p-12 animate-fade-in-up">
+  <!-- Header -->
+  <header class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+    <div class="flex items-center gap-4">
+      <button (click)="goBack()" class="p-4 bg-white rounded-2xl shadow-sm hover:bg-slate-50 transition-all group">
+        <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform">arrow_back</span>
+      </button>
+      <div>
+        <h1 class="text-4xl font-black tracking-tighter text-on-surface">Centre d'Aide & Documentation</h1>
+        <p class="text-on-surface-variant font-medium mt-1">Guide complet pour maîtriser MedConnect Pro v1.0</p>
+      </div>
+    </div>
+    <div class="bg-primary-container/20 px-6 py-3 rounded-2xl border border-primary/10 flex items-center gap-3">
+      <span class="w-3 h-3 bg-primary rounded-full animate-pulse"></span>
+      <span class="text-xs font-black text-primary uppercase tracking-widest">Support Local Activé</span>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="max-w-6xl mx-auto flex justify-center mb-12">
+    <div class="bg-white p-2 rounded-[2rem] shadow-xl flex gap-1 border border-outline-variant/10">
+      <button (click)="setTab('doctor')" 
+              [class]="activeTab === 'doctor' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-slate-50'"
+              class="flex items-center gap-3 px-8 py-4 rounded-[1.5rem] font-bold text-sm transition-all">
+        <span class="material-symbols-outlined">medical_services</span>
+        Espace Médical
+      </button>
+      <button (click)="setTab('secretary')" 
+              [class]="activeTab === 'secretary' ? 'bg-tertiary text-white' : 'text-on-surface-variant hover:bg-slate-50'"
+              class="flex items-center gap-3 px-8 py-4 rounded-[1.5rem] font-bold text-sm transition-all">
+        <span class="material-symbols-outlined">event_note</span>
+        Secrétariat
+      </button>
+      <button (click)="setTab('admin')" 
+              [class]="activeTab === 'admin' ? 'bg-secondary text-white' : 'text-on-surface-variant hover:bg-slate-50'"
+              class="flex items-center gap-3 px-8 py-4 rounded-[1.5rem] font-bold text-sm transition-all">
+        <span class="material-symbols-outlined">admin_panel_settings</span>
+        Direction / Admin
+      </button>
+    </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto">
+    <!-- DOCTOR SECTION -->
+    <div *ngIf="activeTab === 'doctor'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-scale-up">
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 relative overflow-hidden group">
+        <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6">
+          <span class="material-symbols-outlined">edit_note</span>
+        </div>
+        <h3 class="text-xl font-bold mb-4">Note SOAP Assistée</h3>
+        <p class="text-on-surface-variant text-sm leading-relaxed mb-6">Utilisez l'<b>Assistant Gabarits</b> pour remplir vos notes en un clic. Choisissez une pathologie (Grippe, HTA...) et le logiciel s'occupe du texte médical.</p>
+        <div class="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/5 p-3 rounded-xl border border-primary/10">Astuce : Sauvegardez en brouillon pour finir plus tard !</div>
+      </div>
+
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 group">
+        <div class="w-12 h-12 bg-tertiary/10 rounded-2xl flex items-center justify-center text-tertiary mb-6">
+          <span class="material-symbols-outlined">description</span>
+        </div>
+        <h3 class="text-xl font-bold mb-4">Ordonnances Professionnelles</h3>
+        <p class="text-on-surface-variant text-sm leading-relaxed mb-6">Générez des ordonnances propres au format A4 ou A5. Le logiciel masque automatiquement vos menus pour une impression parfaite.</p>
+      </div>
+
+      <div class="bg-gradient-to-br from-primary to-primary-container p-8 rounded-[2.5rem] text-white shadow-xl">
+        <h3 class="text-xl font-bold mb-4">Le Saviez-vous ?</h3>
+        <p class="text-white/80 text-sm leading-relaxed mb-6">Toutes vos données sont stockées sur cet ordinateur. Aucun dossier médical ne quitte le cabinet par Internet.</p>
+        <span class="material-symbols-outlined text-4xl opacity-20">shield_lock</span>
+      </div>
+    </div>
+
+    <!-- SECRETARY SECTION -->
+    <div *ngIf="activeTab === 'secretary'" class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-scale-up">
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10">
+        <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+          <span class="material-symbols-outlined text-tertiary">person_add</span>
+          Gestion des Patients
+        </h3>
+        <ul class="space-y-4">
+          <li class="flex gap-4">
+            <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold shrink-0">1</span>
+            <p class="text-sm text-on-surface-variant">Cliquez sur <b>Nouveau Patient</b> dans le Dashboard ou l'onglet Patients.</p>
+          </li>
+          <li class="flex gap-4">
+            <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold shrink-0">2</span>
+            <p class="text-sm text-on-surface-variant">Renseignez au minimum le <b>Nom, Prénom et Téléphone</b>.</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10">
+        <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+          <span class="material-symbols-outlined text-tertiary">calendar_today</span>
+          Agenda & File d'attente
+        </h3>
+        <p class="text-sm text-on-surface-variant leading-relaxed">Organisez les RDV par simples clics. Les statuts <b>Confirmé / En attente / Terminé</b> permettent au médecin de voir l'avancement de sa journée en temps réel.</p>
+      </div>
+    </div>
+
+    <!-- ADMIN SECTION -->
+    <div *ngIf="activeTab === 'admin'" class="space-y-6 animate-scale-up">
+      <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline-variant/10">
+        <h3 class="text-2xl font-black mb-8 text-secondary tracking-tight">Configuration de la Clinique</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div class="space-y-4">
+            <h4 class="font-bold">Branding</h4>
+            <p class="text-xs text-on-surface-variant">Personnalisez le logo de la clinique et ses coordonnées. Ces informations apparaîtront sur tous les documents imprimés.</p>
+          </div>
+          <div class="space-y-4">
+            <h4 class="font-bold">Gestion du Staff</h4>
+            <p class="text-xs text-on-surface-variant">Créez des accès pour vos collaborateurs. En cas de mot de passe oublié, vous pouvez le réinitialiser depuis votre onglet Administration.</p>
+          </div>
+          <div class="space-y-4">
+            <h4 class="font-bold">Journal d'Audit</h4>
+            <p class="text-xs text-on-surface-variant font-medium bg-amber-50 p-3 rounded-xl border border-amber-100">Le journal de traçabilité enregistre chaque connexion et modification. C'est votre garantie de sécurité légale.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="max-w-6xl mx-auto mt-20 text-center">
+    <p class="text-[10px] font-black uppercase text-on-surface-variant/30 tracking-[0.4em]">MedConnect Pro • Edition Commerciale v1.0 • Geek Certified</p>
+  </footer>
+</div>

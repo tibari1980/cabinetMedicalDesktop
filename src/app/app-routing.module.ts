@@ -11,9 +11,11 @@ import { UserRole } from './models/user.model';
 import { CalendarComponent } from './components/views/calendar/calendar.component';
 import { MedicalRecordDetailComponent } from './components/views/patients/medical-record-detail/medical-record-detail.component';
 import { PrescriptionComponent } from './components/views/patients/prescription/prescription.component';
+import { HelpComponent } from './components/views/help/help.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'help', component: HelpComponent },
   {
     path: '',
     component: AppLayoutComponent,

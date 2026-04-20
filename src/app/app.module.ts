@@ -19,6 +19,7 @@ import { AdminComponent } from './components/views/admin/admin.component';
 import { CalendarComponent } from './components/views/calendar/calendar.component';
 import { MedicalRecordDetailComponent } from './components/views/patients/medical-record-detail/medical-record-detail.component';
 import { PrescriptionComponent } from './components/views/patients/prescription/prescription.component';
+import { HelpComponent } from './components/views/help/help.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { PrescriptionComponent } from './components/views/patients/prescription/
     AdminComponent,
     CalendarComponent,
     MedicalRecordDetailComponent,
-    PrescriptionComponent
+    PrescriptionComponent,
+    HelpComponent
   ],
   imports: [
     BrowserModule,

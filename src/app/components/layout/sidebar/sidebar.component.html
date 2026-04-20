@@ -70,6 +70,11 @@
       </div>
     </div>
     
+    <a routerLink="/help" class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-highest transition-all cursor-pointer group">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110">help_center</span>
+      <span class="text-sm font-semibold">Documentation</span>
+    </a>
+    
     <a (click)="authService.logout()" class="text-error flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-error-container/20 transition-all cursor-pointer group">
       <span class="material-symbols-outlined transition-transform group-hover:scale-110">logout</span>
       <span class="text-sm font-semibold">Déconnexion</span>
