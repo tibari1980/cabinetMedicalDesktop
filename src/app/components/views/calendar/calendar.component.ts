@@ -138,6 +138,13 @@ export class CalendarComponent implements OnInit, OnDestroy {
     window.print();
   }
 
+  updateAptStatus(apt: Appointment, status: string, event: Event) {
+    event.stopPropagation(); // Avoid triggering openNewAptModal or whatever
+    apt.status = status as AppointmentStatus;
+    this.appointmentService.updateAppointment(apt);
+    this.showModal = false; // Close just in case
+  }
+
   trackBySlot(index: number, slot: string): string {
     return slot;
   }

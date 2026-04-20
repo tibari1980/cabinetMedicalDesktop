@@ -119,6 +119,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.showModal = false;
   }
 
+  updateAptStatus(apt: Appointment, status: string) {
+    apt.status = status as AppointmentStatus;
+    this.appointmentService.updateAppointment(apt);
+  }
+
   trackByApt(index: number, apt: Appointment): string {
     return apt.id.toString();
   }

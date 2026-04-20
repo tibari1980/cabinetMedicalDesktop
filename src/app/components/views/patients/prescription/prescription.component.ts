@@ -25,6 +25,7 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
   };
 
   newItem: PrescriptionItem = { id: '', medicationName: '', dosage: '', duration: '' };
+  paperFormat: 'A4' | 'A5' = 'A5';
   private subs: Subscription[] = [];
 
   constructor(

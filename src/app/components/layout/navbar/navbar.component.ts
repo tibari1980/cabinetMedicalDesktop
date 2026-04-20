@@ -13,5 +13,9 @@ export class NavbarComponent {
     public authService: AuthService,
     public themeService: ThemeService
   ) {}
+
+  showNotifications() {
+    alert("Aucune nouvelle notification pour le moment.");
+  }
 }
 

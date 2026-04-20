@@ -38,6 +38,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
     const term = this.searchTerm.toLowerCase().trim();
     if (!term) {
       this.filteredPatients = this.patients;
+      this.currentPage = 1;
       return;
     }
     this.filteredPatients = this.patients.filter(p =>
@@ -45,6 +46,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
       p.phone.includes(term) ||
       p.email?.toLowerCase().includes(term)
     );
+    this.currentPage = 1;
   }
 
   openNewPatientModal() {
@@ -75,6 +77,50 @@ export class PatientsComponent implements OnInit, OnDestroy {
     this.medicalRecordService.initializeRecord(patientId.toString());
     this.showModal = false;
     this.newPatient = { gender: 'Masculin' };
+  }
+
+  // Pagination logic
+  currentPage = 1;
+  itemsPerPage = 10;
+
+  get paginatedPatients() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredPatients.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredPatients.length / this.itemsPerPage) || 1;
+  }
+
+  changePage(delta: number) {
+    const newPage = this.currentPage + delta;
+    if (newPage >= 1 && newPage <= this.totalPages) {
+      this.currentPage = newPage;
+    }
+  }
+
+  exportPatientsCSV() {
+    const headers = ['ID', 'Nom', 'Prenom', 'Telephone', 'Email', 'Genre', 'Date_Naissance', 'Derniere_Visite'];
+    const rows = this.patients.map(p => [
+      p.id, 
+      `"${p.lastName}"`, 
+      `"${p.firstName}"`, 
+      `"${p.phone}"`, 
+      `"${p.email || ''}"`, 
+      `"${p.gender}"`, 
+      `"${p.birthDate}"`, 
+      `"${p.lastVisit}"`
+    ]);
+    
+    const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `patients_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   trackByPatient(index: number, patient: Patient): string {

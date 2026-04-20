@@ -11,14 +11,21 @@
         <p class="text-xs text-on-surface-variant uppercase tracking-widest font-bold">Patient: {{ patient.firstName }} {{ patient.lastName }}</p>
       </div>
     </div>
-    <div class="flex gap-3">
+    <div class="flex gap-3 items-center">
+      <div class="mr-4 flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-xl border border-outline-variant/20">
+        <span class="material-symbols-outlined text-sm text-on-surface-variant">description</span>
+        <select aria-label="Format d'impression" [(ngModel)]="paperFormat" class="bg-transparent border-none text-xs font-bold font-on-surface p-0 outline-none cursor-pointer">
+          <option value="A5">Format A5 (Petit)</option>
+          <option value="A4">Format A4 (Grand)</option>
+        </select>
+      </div>
       <button (click)="addItem()" class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high text-on-surface rounded-xl font-bold text-sm hover:brightness-95 transition-all">
         <span class="material-symbols-outlined text-lg">add</span>
         Ajouter une ligne
       </button>
       <button (click)="saveAndPrint()" class="flex items-center gap-2 px-8 py-2.5 bg-primary text-white rounded-xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
         <span class="material-symbols-outlined text-lg">print</span>
-        Imprimer l'Ordonnance
+        Imprimer
       </button>
     </div>
   </section>
@@ -45,7 +52,8 @@
   </section>
 
   <!-- PRINT SECTION: THE ACTUAL DOCUMENT (Visible only when printing) -->
-  <div class="print-only prescription-paper bg-white mx-auto p-4 md:p-10 font-serif text-slate-900 border border-slate-100 shadow-2xl rounded-sm">
+  <div class="print-only prescription-paper bg-white mx-auto p-4 md:p-10 font-serif text-slate-900 border border-slate-100 shadow-2xl rounded-sm"
+       [class.format-a4]="paperFormat === 'A4'" [class.format-a5]="paperFormat === 'A5'">
     <!-- Header -->
     <header *ngIf="clinic" class="flex justify-between items-start border-b-2 border-primary pb-8 mb-10">
       <div class="space-y-1">
@@ -121,12 +129,20 @@
     }
 
     .prescription-paper {
-      width: 148mm; /* A5 Width */
-      min-height: 210mm; /* A5 Height */
       box-shadow: none !important;
       border: none !important;
       padding: 10mm !important;
       margin: 0 auto;
+    }
+
+    .format-a5 {
+      width: 148mm;
+      min-height: 210mm;
+    }
+
+    .format-a4 {
+      width: 210mm;
+      min-height: 297mm;
     }
 
     header { border-bottom: 2px solid #0D9488 !important; } /* Use Teal color code */

@@ -88,7 +88,14 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
       if (validate) {
         this.activeConsultation.status = ConsultationStatus.VALIDATED;
       }
-      this.recordService.addConsultation(this.patient.id.toString(), this.activeConsultation);
+      
+      const isExisting = this.record.consultations.some(c => c.id === this.activeConsultation!.id);
+      if (isExisting) {
+        this.recordService.updateConsultation(this.patient.id.toString(), this.activeConsultation);
+      } else {
+        this.recordService.addConsultation(this.patient.id.toString(), this.activeConsultation);
+      }
+      
       if (validate) {
         this.activeConsultation = null;
       }
@@ -98,6 +105,16 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
 
   cancelConsultation() {
     this.activeConsultation = null;
+  }
+
+  viewConsultation(consult: Consultation) {
+    // Clone pour éviter les modifications en vue directe sans sauvegarder
+    this.activeConsultation = JSON.parse(JSON.stringify(consult));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  printRecord() {
+    window.print();
   }
 
   trackByAllergy(index: number, allergy: string): string {

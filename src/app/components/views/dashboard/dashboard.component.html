@@ -97,9 +97,14 @@
               </div>
             </div>
           </div>
-          <button aria-label="Plus d'options" class="text-on-surface-variant/30 hover:text-primary transition-colors p-1">
-            <span class="material-symbols-outlined">more_vert</span>
-          </button>
+          <div class="flex flex-col gap-1 items-end">
+            <button (click)="updateAptStatus(apt, 'Terminé')" aria-label="Marquer comme terminé" class="text-xs font-bold text-success bg-success/10 hover:bg-success/20 transition-colors px-3 py-1.5 rounded-lg no-print">
+              Terminer
+            </button>
+            <button (click)="updateAptStatus(apt, 'Annulé')" aria-label="Annuler le rendez-vous" class="text-xs font-bold text-error bg-error/10 hover:bg-error/20 transition-colors px-3 py-1.5 rounded-lg no-print mt-1">
+              Annuler
+            </button>
+          </div>
         </div>
 
         <div *ngIf="waitingList.length === 0" class="py-12 bg-surface-container-low/20 rounded-2xl border border-dashed border-outline-variant/30 text-center">
