@@ -16,10 +16,10 @@ export class AuthService {
   public users$: Observable<User[]>;
 
   private defaultUsers: User[] = [
-    { id: '1', username: 'superadmin', firstName: 'Jean', lastName: 'Dupont', role: UserRole.SUPER_ADMIN, email: 'admin@medconnect.pro' },
-    { id: '2', username: 'admin.sophie', firstName: 'Sophie', lastName: 'Martin', role: UserRole.ADMIN, email: 'sophie@clinique.ma' },
-    { id: '3', username: 'dr.miller', firstName: 'Sarah', lastName: 'Miller', role: UserRole.DOCTOR, email: 'dr.miller@clinique.ma', specialty: 'Cardiologue' },
-    { id: '4', username: 'amine.b', firstName: 'Amine', lastName: 'Bennani', role: UserRole.SECRETARY, email: 'amine@clinique.ma' }
+    { id: '1', username: 'superadmin', password: 'demo123', firstName: 'Jean', lastName: 'Dupont', role: UserRole.SUPER_ADMIN, email: 'admin@medconnect.pro' },
+    { id: '2', username: 'admin.sophie', password: 'demo123', firstName: 'Sophie', lastName: 'Martin', role: UserRole.ADMIN, email: 'sophie@clinique.ma' },
+    { id: '3', username: 'dr.miller', password: 'demo123', firstName: 'Sarah', lastName: 'Miller', role: UserRole.DOCTOR, email: 'dr.miller@clinique.ma', specialty: 'Cardiologue' },
+    { id: '4', username: 'amine.b', password: 'demo123', firstName: 'Amine', lastName: 'Bennani', role: UserRole.SECRETARY, email: 'amine@clinique.ma' }
   ];
 
   constructor(
@@ -76,8 +76,8 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<boolean> {
-    // Simple mock logic - ignore password for demo or check against a fixed one
-    const user = this.usersValue.find(u => u.username === username.toLowerCase());
+    // Vérification du nom d'utilisateur ET du mot de passe
+    const user = this.usersValue.find(u => u.username === username.toLowerCase() && u.password === password);
     
     if (user) {
       localStorage.setItem('mc_session', JSON.stringify(user));
@@ -86,6 +86,25 @@ export class AuthService {
       return of(true);
     }
     return of(false);
+  }
+
+  changePassword(userId: string, newPassword: string) {
+    const currentUsers = this.usersValue;
+    const index = currentUsers.findIndex(u => u.id === userId);
+    if (index > -1) {
+      currentUsers[index].password = newPassword;
+      localStorage.setItem('mc_users', JSON.stringify(currentUsers));
+      this.usersSubject.next([...currentUsers]);
+      
+      // Update session if it's the current user
+      if (this.currentUserValue?.id === userId) {
+        const updatedUser = { ...this.currentUserValue, password: newPassword };
+        localStorage.setItem('mc_session', JSON.stringify(updatedUser));
+        this.currentUserSubject.next(updatedUser);
+      }
+      return true;
+    }
+    return false;
   }
 
   logout() {

@@ -15,4 +15,5 @@ export interface User {
   clinicId?: string;
   email?: string;
   avatar?: string;
+  password?: string;
 }

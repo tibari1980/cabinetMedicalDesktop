@@ -7,8 +7,9 @@ import { ThemeService } from '../../../services/theme.service';
   templateUrl: './navbar.component.html'
 })
 export class NavbarComponent {
-  today = new Date();
-  
+  showChangePasswordModal = false;
+  newPasswordValue = '';
+
   constructor(
     public authService: AuthService,
     public themeService: ThemeService
@@ -16,6 +17,24 @@ export class NavbarComponent {
 
   showNotifications() {
     alert("Aucune nouvelle notification pour le moment.");
+  }
+
+  openChangePassword() {
+    this.newPasswordValue = '';
+    this.showChangePasswordModal = true;
+  }
+
+  saveNewPassword() {
+    if (!this.newPasswordValue || this.newPasswordValue.length < 4) {
+      alert("Le mot de passe doit contenir au moins 4 caractères.");
+      return;
+    }
+    const user = this.authService.currentUserValue;
+    if (user) {
+      this.authService.changePassword(user.id, this.newPasswordValue);
+      alert("Mot de passe mis à jour avec succès !");
+      this.showChangePasswordModal = false;
+    }
   }
 }
 

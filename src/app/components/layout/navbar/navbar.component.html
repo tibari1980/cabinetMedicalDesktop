@@ -20,14 +20,55 @@
       <span class="material-symbols-outlined">settings</span>
     </button>
     <div class="h-8 w-[1px] bg-outline-variant/20 mx-2"></div>
-    <div class="flex items-center gap-3 px-2">
+    <div class="flex items-center gap-3 px-2 group cursor-pointer relative" (click)="openChangePassword()">
       <div class="text-right hidden md:block">
-        <p class="text-sm font-bold text-on-surface">{{ authService.currentUserValue?.firstName }} {{ authService.currentUserValue?.lastName }}</p>
-        <p class="text-[10px] text-on-surface-variant font-label tracking-widest uppercase">{{ authService.currentUserValue?.role }}</p>
+        <p class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">{{ authService.currentUserValue?.firstName }} {{ authService.currentUserValue?.lastName }}</p>
+        <p class="text-[10px] text-on-surface-variant font-label tracking-widest uppercase flex items-center justify-end gap-1">
+          {{ authService.currentUserValue?.role }}
+          <span class="material-symbols-outlined text-[12px]">lock_reset</span>
+        </p>
       </div>
-      <div class="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden bg-primary-container text-primary flex items-center justify-center font-bold">
+      <div class="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden bg-primary-container text-primary flex items-center justify-center font-bold group-hover:scale-105 transition-transform">
         {{ authService.currentUserValue?.firstName?.[0] }}{{ authService.currentUserValue?.lastName?.[0] }}
+      </div>
+      <!-- Tooltip simple -->
+      <div class="absolute top-full right-0 mt-2 bg-on-surface text-surface text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+        Changer mon mot de passe
       </div>
     </div>
   </div>
 </header>
+
+<!-- MODALE CHANGEMENT MOT DE PASSE PERSO -->
+<div *ngIf="showChangePasswordModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm animate-fade-in" (click)="showChangePasswordModal = false"></div>
+  <div class="bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden">
+    <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
+      <div>
+        <h3 class="text-xl font-bold text-on-surface">Sécurité du Compte</h3>
+        <p class="text-xs text-on-surface-variant font-medium mt-1">Changer votre clé d'accès personnelle</p>
+      </div>
+      <button (click)="showChangePasswordModal = false" class="text-on-surface-variant/40 hover:text-error transition-colors">
+        <span class="material-symbols-outlined text-2xl">close</span>
+      </button>
+    </div>
+
+    <div class="p-8 space-y-4">
+      <div class="space-y-1">
+        <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nouveau mot de passe</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-sm">lock</span>
+          <input [(ngModel)]="newPasswordValue" type="password" 
+                 class="w-full bg-surface-container-low border-none rounded-xl py-3 pl-10 pr-4 text-sm outline-none shadow-inner" 
+                 placeholder="Au moins 4 caractères">
+        </div>
+      </div>
+      <p class="text-[9px] text-on-surface-variant italic">Note: Votre accès est personnel. Ne partagez jamais votre mot de passe avec d'autres collaborateurs du cabinet.</p>
+    </div>
+
+    <div class="p-6 bg-surface-container-low/20 flex gap-3">
+      <button (click)="showChangePasswordModal = false" class="flex-1 py-3 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all">Annuler</button>
+      <button (click)="saveNewPassword()" class="flex-1 py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:brightness-110 transition-all">Confirmer</button>
+    </div>
+  </div>
+</div>

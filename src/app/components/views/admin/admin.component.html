@@ -191,9 +191,15 @@
         </div>
       </div>
 
-      <div class="space-y-1">
-        <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Identifiant (Connexion) *</label>
-        <input [(ngModel)]="selectedProfile.username" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="dr.nom">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Identifiant (Connexion) *</label>
+          <input [(ngModel)]="selectedProfile.username" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="dr.nom">
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-error tracking-widest pl-1">Mot de Passe *</label>
+          <input [(ngModel)]="selectedProfile.password" type="text" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner font-mono" placeholder="demo123">
+        </div>
       </div>
 
       <div class="grid grid-cols-2 gap-4">
