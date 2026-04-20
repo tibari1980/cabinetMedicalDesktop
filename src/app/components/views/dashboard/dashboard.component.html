@@ -175,11 +175,24 @@
                 class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">Nouveau Patient</button>
       </div>
 
-      <div class="space-y-1" *ngIf="!isNewPatient">
-        <label for="select-patient" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rechercher un Patient</label>
-        <select id="select-patient" [(ngModel)]="newApt.patientId" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
-          <option *ngFor="let p of patients; trackBy: trackByPatientId" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
-        </select>
+      <div class="space-y-4" *ngIf="!isNewPatient">
+        <div class="space-y-1">
+          <label for="search-patient" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rechercher un Patient</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-sm">search</span>
+            <input id="search-patient" [(ngModel)]="patientSearchTerm" 
+                   class="w-full bg-surface-container-low border-none rounded-xl py-3 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-primary/10 transition-all" 
+                   placeholder="Tapez le nom ou téléphone...">
+          </div>
+        </div>
+        
+        <div class="space-y-1">
+          <label for="select-patient" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Sélectionner dans la liste ({{ filteredPatients.length }})</label>
+          <select id="select-patient" [(ngModel)]="newApt.patientId" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+            <option value="" disabled selected>Choisir un patient...</option>
+            <option *ngFor="let p of filteredPatients; trackBy: trackByPatientId" [value]="p.id">{{ p.firstName }} {{ p.lastName }} ({{ p.phone }})</option>
+          </select>
+        </div>
       </div>
 
       <div class="space-y-4 animate-fade-in" *ngIf="isNewPatient">
@@ -199,15 +212,42 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-4 pt-4 border-t border-outline-variant/5">
+      <div class="space-y-4 pt-4 border-t border-outline-variant/5">
         <div class="space-y-1">
-          <label for="input-time" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Heure</label>
-          <input id="input-time" type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm outline-none">
+          <label for="input-type" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Type d'Acte</label>
+          <select id="input-type" [(ngModel)]="newApt.type" (change)="onTypeChange()" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm outline-none focus:ring-2 focus:ring-primary/10">
+            <option value="Consultation Générale">Consultation Générale</option>
+            <option value="Suivi / Contrôle">Suivi / Contrôle</option>
+            <option value="Urgence">Urgence</option>
+            <option value="Spécialité">Spécialité</option>
+          </select>
         </div>
-        <div class="space-y-1">
-          <label for="input-fee" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Honoraires (DH)</label>
-          <input id="input-fee" type="number" [(ngModel)]="newApt.fee" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm font-black text-primary focus:ring-2 focus:ring-primary/10 outline-none shadow-inner">
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label for="input-time" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Heure</label>
+            <input id="input-time" type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm outline-none shadow-inner">
+          </div>
+          <div class="space-y-1">
+            <label for="input-fee" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Honoraires (DH)</label>
+            <input id="input-fee" type="number" [(ngModel)]="newApt.fee" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm font-black text-primary focus:ring-2 focus:ring-primary/10 outline-none shadow-inner">
+          </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Feedback Overlay -->
+    <div *ngIf="bookingStatus !== 'idle'" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/90 backdrop-blur-md animate-fade-in">
+      <div *ngIf="bookingStatus === 'saving'" class="space-y-4 text-center">
+        <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p class="text-xs font-bold text-primary uppercase tracking-widest animate-pulse">Enregistrement...</p>
+      </div>
+      <div *ngIf="bookingStatus === 'success'" class="space-y-4 text-center animate-scale-up">
+        <div class="w-20 h-20 bg-success/10 text-success rounded-full flex items-center justify-center mx-auto mb-2">
+          <span class="material-symbols-outlined text-5xl">check_circle</span>
+        </div>
+        <h4 class="text-xl font-black text-on-surface">Rendez-vous Confirmé !</h4>
+        <p class="text-on-surface-variant text-sm">Le patient a été ajouté à la file d'attente</p>
       </div>
     </div>
 

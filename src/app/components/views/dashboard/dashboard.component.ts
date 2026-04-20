@@ -30,6 +30,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // Booking Modal
   showModal = false;
   isNewPatient = false;
+  bookingStatus: 'idle' | 'saving' | 'success' = 'idle';
+  patientSearchTerm = '';
   newApt: Partial<Appointment> = {};
   newPatient: Partial<Patient> = { gender: 'Masculin' };
 
@@ -41,6 +43,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private statsService: StatisticsService,
     public authService: AuthService
   ) {}
+
+  get filteredPatients(): Patient[] {
+    if (!this.patientSearchTerm) return this.patients;
+    const term = this.patientSearchTerm.toLowerCase();
+    return this.patients.filter(p => 
+      p.firstName.toLowerCase().includes(term) || 
+      p.lastName.toLowerCase().includes(term) ||
+      p.phone.includes(term)
+    );
+  }
 
   ngOnInit() {
     const todayStr = this.today.toISOString().split('T')[0];
@@ -92,6 +104,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.isNewPatient = false;
     this.newPatient = { gender: 'Masculin' };
     this.showModal = true;
+    this.bookingStatus = 'idle';
+    this.patientSearchTerm = '';
+  }
+
+  onTypeChange() {
+    // Expert Logic: Propose default fees based on type
+    if (this.newApt.type === AppointmentType.EMERGENCY) this.newApt.fee = 500;
+    else if (this.newApt.type === AppointmentType.CONTROL) this.newApt.fee = 150;
+    else this.newApt.fee = 300;
   }
 
   submitAppointment() {
@@ -126,8 +147,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.newApt.patientName = patient ? `${patient.firstName} ${patient.lastName}` : 'Patient Inconnu';
     }
 
-    this.appointmentService.addAppointment(this.newApt as Appointment);
-    this.showModal = false;
+    this.bookingStatus = 'saving';
+
+    // Simulate small delay for "Wooow" effect and robustness
+    setTimeout(() => {
+      this.appointmentService.addAppointment(this.newApt as Appointment);
+      this.bookingStatus = 'success';
+      
+      // Close after success animation
+      setTimeout(() => {
+        this.showModal = false;
+        this.bookingStatus = 'idle';
+      }, 1500);
+    }, 600);
   }
 
   updateAptStatus(apt: Appointment, status: string) {
