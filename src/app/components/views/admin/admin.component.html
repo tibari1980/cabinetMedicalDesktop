@@ -217,9 +217,15 @@
         </div>
       </div>
 
-      <div class="space-y-1">
-        <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Email Professionnel</label>
-        <input [(ngModel)]="selectedProfile.email" type="email" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="contact@clinique.ma">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Email Professionnel</label>
+          <input [(ngModel)]="selectedProfile.email" type="email" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="contact@clinique.ma">
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Téléphone Direct</label>
+          <input [(ngModel)]="selectedProfile.phone" type="tel" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 6XX XX XX XX">
+        </div>
       </div>
     </div>
 
