@@ -2,9 +2,15 @@
   <!-- Header -->
   <header class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
     <div class="flex items-center gap-4">
-      <button (click)="goBack()" class="p-4 bg-white rounded-2xl shadow-sm hover:bg-slate-50 transition-all group">
-        <span class="material-symbols-outlined text-primary group-hover:-translate-x-1 transition-transform">arrow_back</span>
-      </button>
+      <div class="flex gap-2">
+        <button (click)="goBack()" class="p-4 bg-white rounded-2xl shadow-sm hover:bg-slate-50 transition-all group" title="Retour">
+          <span class="material-symbols-outlined text-on-surface-variant group-hover:-translate-x-1 transition-transform">arrow_back</span>
+        </button>
+        <button routerLink="/dashboard" class="p-4 bg-white rounded-2xl shadow-sm hover:bg-slate-50 transition-all group text-primary font-bold flex items-center gap-2" title="Dashboard">
+          <span class="material-symbols-outlined">dashboard</span>
+          <span class="hidden md:inline text-xs uppercase tracking-widest">Dashboard</span>
+        </button>
+      </div>
       <div>
         <h1 class="text-4xl font-black tracking-tighter text-on-surface">Centre d'Aide & Documentation</h1>
         <p class="text-on-surface-variant font-medium mt-1">Guide complet pour maîtriser MedConnect Pro v1.0</p>
