@@ -39,36 +39,97 @@
   </div>
 </header>
 
-<!-- MODALE CHANGEMENT MOT DE PASSE PERSO -->
+<!-- MODALE MON PROFIL & SÉCURITÉ -->
 <div *ngIf="showChangePasswordModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
   <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm animate-fade-in" (click)="showChangePasswordModal = false"></div>
-  <div class="bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden">
+  <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden">
+    <!-- Header -->
     <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
-      <div>
-        <h3 class="text-xl font-bold text-on-surface">Sécurité du Compte</h3>
-        <p class="text-xs text-on-surface-variant font-medium mt-1">Changer votre clé d'accès personnelle</p>
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl shadow-inner">
+          {{ editUser.firstName?.[0] }}{{ editUser.lastName?.[0] }}
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-on-surface">Mon Profil Pro</h3>
+          <p class="text-xs text-on-surface-variant font-medium mt-0.5">Identifiant : {{ editUser.username }}</p>
+        </div>
       </div>
-      <button (click)="showChangePasswordModal = false" class="text-on-surface-variant/40 hover:text-error transition-colors">
+      <button (click)="showChangePasswordModal = false" class="text-on-surface-variant/40 hover:text-error transition-colors p-2">
         <span class="material-symbols-outlined text-2xl">close</span>
       </button>
     </div>
 
-    <div class="p-8 space-y-4">
-      <div class="space-y-1">
-        <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nouveau mot de passe</label>
-        <div class="relative">
-          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-sm">lock</span>
-          <input [(ngModel)]="newPasswordValue" type="password" 
-                 class="w-full bg-surface-container-low border-none rounded-xl py-3 pl-10 pr-4 text-sm outline-none shadow-inner" 
-                 placeholder="Au moins 4 caractères">
+    <!-- Scrollable Content -->
+    <div class="p-8 space-y-6 max-h-[65vh] overflow-y-auto">
+      
+      <!-- IDENTITÉ SECTION -->
+      <div class="space-y-4">
+        <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/50 flex items-center gap-2">
+          <span class="h-[1px] flex-1 bg-primary/10"></span>
+          Identité & Rôle
+          <span class="h-[1px] flex-1 bg-primary/10"></span>
+        </h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Prénom</label>
+            <input [(ngModel)]="editUser.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner focus:ring-2 focus:ring-primary/10 transition-all">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Nom</label>
+            <input [(ngModel)]="editUser.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner focus:ring-2 focus:ring-primary/10 transition-all">
+          </div>
+        </div>
+        
+        <!-- Spécialité (si Docteur) -->
+        <div class="space-y-1" *ngIf="editUser.role === UserRole.DOCTOR">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Spécialité Médicale</label>
+          <input [(ngModel)]="editUser.specialty" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Ex: Cardiologue">
         </div>
       </div>
-      <p class="text-[9px] text-on-surface-variant italic">Note: Votre accès est personnel. Ne partagez jamais votre mot de passe avec d'autres collaborateurs du cabinet.</p>
+
+      <!-- COORDONNÉES SECTION -->
+      <div class="space-y-4">
+        <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/50 flex items-center gap-2">
+          <span class="h-[1px] flex-1 bg-primary/10"></span>
+          Coordonnées Pro
+          <span class="h-[1px] flex-1 bg-primary/10"></span>
+        </h4>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Email Professionnel</label>
+          <input [(ngModel)]="editUser.email" type="email" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner focus:ring-2 focus:ring-primary/10 transition-all" placeholder="contact@clinique.ma">
+        </div>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Téléphone Direct</label>
+          <input [(ngModel)]="editUser.phone" type="tel" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner focus:ring-2 focus:ring-primary/10 transition-all" placeholder="+212 6XX XX XX XX">
+        </div>
+      </div>
+
+      <!-- SÉCURITÉ SECTION -->
+      <div class="space-y-4 pt-2">
+        <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-error/50 flex items-center gap-2">
+          <span class="h-[1px] flex-1 bg-error/10"></span>
+          Sécurité & Accès
+          <span class="h-[1px] flex-1 bg-error/10"></span>
+        </h4>
+        <div class="space-y-1">
+          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Modifier le mot de passe</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-sm">lock</span>
+            <input [(ngModel)]="editUser.password" type="password" 
+                   class="w-full bg-surface-container-low border-none rounded-xl py-3 pl-10 pr-4 text-sm outline-none shadow-inner focus:ring-2 focus:ring-error/10 transition-all" 
+                   placeholder="Laissez vide pour ne pas changer">
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="p-6 bg-surface-container-low/20 flex gap-3">
-      <button (click)="showChangePasswordModal = false" class="flex-1 py-3 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all">Annuler</button>
-      <button (click)="saveNewPassword()" class="flex-1 py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-lg shadow-primary/20 hover:brightness-110 transition-all">Confirmer</button>
+    <!-- Footer Actions -->
+    <div class="p-8 bg-surface-container-low/20 flex gap-4">
+      <button (click)="showChangePasswordModal = false" class="flex-1 py-4 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">Annuler</button>
+      <button (click)="saveProfile()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:brightness-110 transition-all flex items-center justify-center gap-2">
+        Mettre à jour mon profil
+        <span class="material-symbols-outlined text-lg">check_circle</span>
+      </button>
     </div>
   </div>
 </div>
