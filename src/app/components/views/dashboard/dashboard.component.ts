@@ -20,6 +20,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // Stats
   totalPatients = 0;
   revenueToday = 0;
+  revenueWeek = 0;
+  patientGrowth = 0;
   pendingCount = 0;
   occupationRate = 0;
   waitingList: Appointment[] = [];
@@ -47,10 +49,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     const sub2 = this.appointmentService.appointments$.subscribe(allApts => {
+      const todayStr = this.today.toISOString().split('T')[0];
       const apts = allApts.filter(a => a.date === todayStr);
+      
       this.pendingCount = apts.filter(a => a.status === AppointmentStatus.CONFIRMED || a.status === AppointmentStatus.WAITING).length;
       this.waitingList = apts.filter(a => a.status !== AppointmentStatus.CANCELLED && a.status !== AppointmentStatus.DONE);
       this.revenueToday = apts.reduce((sum, a) => sum + (a.fee || 0), 0);
+      
+      // Calculate 7-day revenue
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+      
+      this.revenueWeek = allApts
+        .filter(a => a.date >= sevenDaysAgoStr && a.date <= todayStr && a.status !== AppointmentStatus.CANCELLED)
+        .reduce((sum, a) => sum + (a.fee || 0), 0);
+
       this.calculateOccupation(apts);
     });
 

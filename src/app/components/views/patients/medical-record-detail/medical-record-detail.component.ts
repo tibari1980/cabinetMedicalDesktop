@@ -16,6 +16,40 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
   record!: MedicalRecord;
   activeConsultation: Consultation | null = null;
   private sub!: Subscription;
+
+  // Gabarits de consultation (Killer Feature: SOAP Assists)
+  templates = [
+    { 
+      id: 'grippe', 
+      label: 'Grippe / Syndrome Grippal', 
+      data: {
+        subjective: { chiefComplaint: 'Fièvre, courbatures, fatigue intense depuis 48h.', history: 'Début brutal. Pas de signes de gravité respiratoires.' },
+        objective: { physicalExam: 'Auscultation pulmonaire libre. Gorge inflammatoire. Pas de ganglions.' },
+        assessment: { diagnosis: 'Syndrome Grippal saisonnier', notes: 'Surveillance de la température.' },
+        plan: { treatment: 'Paracétamol 1g (1x3/j) / Repos / Hydratation.' }
+      }
+    },
+    { 
+      id: 'hta', 
+      label: 'Suivi Hypertension (HTA)', 
+      data: {
+        subjective: { chiefComplaint: 'Consultation de suivi systématique.', history: 'Patient connu hypertendu sous traitement régulier.' },
+        objective: { physicalExam: 'Examen cardio-vasculaire normal. Pas d\'oedème des membres inférieurs.' },
+        assessment: { diagnosis: 'Hypertension Artérielle contrôlée', notes: 'Bonne tolérance du traitement.' },
+        plan: { treatment: 'Continuer le traitement actuel. Prochain contrôle dans 3 mois.' }
+      }
+    },
+    { 
+      id: 'routine', 
+      label: 'Examen de Routine / Check-up', 
+      data: {
+        subjective: { chiefComplaint: 'Bilan de santé annuel.', history: 'Pas de plaintes particulières.' },
+        objective: { physicalExam: 'Examen complet normal. Constantes stables.' },
+        assessment: { diagnosis: 'Patient en bonne santé apparente', notes: 'Bilan préventif.' },
+        plan: { treatment: 'Encourager l\'activité physique régulière. Alimentation équilibrée.' }
+      }
+    }
+  ];
   
   constructor(
     private route: ActivatedRoute,
@@ -71,6 +105,18 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
       plan: { treatment: '', followUp: '' },
       status: ConsultationStatus.DRAFT
     };
+  }
+
+  applyTemplate(templateId: string) {
+    const template = this.templates.find(t => t.id === templateId);
+    if (template && this.activeConsultation) {
+      this.activeConsultation.subjective.chiefComplaint = template.data.subjective.chiefComplaint;
+      this.activeConsultation.subjective.history = template.data.subjective.history;
+      this.activeConsultation.objective.physicalExam = template.data.objective.physicalExam;
+      this.activeConsultation.assessment.diagnosis = template.data.assessment.diagnosis;
+      this.activeConsultation.assessment.notes = template.data.assessment.notes;
+      this.activeConsultation.plan.treatment = template.data.plan.treatment;
+    }
   }
 
   calculateBMI() {

@@ -12,50 +12,55 @@
 
   <!-- Bento Grid Stats -->
   <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    <div class="bg-surface-container-lowest p-6 rounded-2xl ambient-glow relative overflow-hidden group">
+    <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
       <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
       <div class="relative">
-        <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">Total Patients</p>
+        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">Revenu 7 Jours</p>
         <div class="flex items-end gap-2">
-          <span class="text-4xl font-extrabold text-on-surface">{{ totalPatients }}</span>
-          <span class="text-tertiary font-bold text-xs mb-1 flex items-center" *ngIf="totalPatients > 0">
-            <span class="material-symbols-outlined text-sm">trending_up</span>
-            Actif
-          </span>
+          <span class="text-4xl font-black text-primary">{{ revenueWeek | number:'1.0-0' }}</span>
+          <span class="text-primary/60 font-bold text-xs mb-1">DH</span>
         </div>
-        <p class="text-[10px] text-on-surface-variant mt-2 font-semibold">Flux quotidien actif</p>
+        <div class="flex items-center gap-1.5 mt-4">
+          <div class="flex-1 bg-surface-container-high h-1 rounded-full overflow-hidden">
+            <div class="bg-primary h-full rounded-full" style="width: 75%"></div>
+          </div>
+          <span class="text-[9px] font-black text-primary uppercase">+12%</span>
+        </div>
       </div>
     </div>
 
-    <div class="bg-surface-container-lowest p-6 rounded-2xl ambient-glow relative overflow-hidden group">
+    <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
       <div class="absolute top-0 right-0 w-32 h-32 bg-tertiary/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
       <div class="relative">
-        <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">Revenu du Jour</p>
+        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">Revenu du Jour</p>
         <div class="flex items-end gap-2">
-          <span class="text-4xl font-extrabold text-on-surface">{{ revenueToday | number:'1.0-0' }}</span>
-          <span class="text-on-surface-variant font-semibold text-xs mb-1">DH</span>
+          <span class="text-4xl font-black text-on-surface">{{ revenueToday | number:'1.0-0' }}</span>
+          <span class="text-on-surface-variant/60 font-bold text-xs mb-1">DH</span>
         </div>
-        <p class="text-[10px] text-on-surface-variant mt-2 font-semibold">Réel (basé sur honoraires)</p>
+        <p class="text-[9px] text-tertiary mt-4 font-bold flex items-center gap-1">
+          <span class="material-symbols-outlined text-[12px]">check_circle</span>
+          {{ waitingList.length }} consultations à venir
+        </p>
       </div>
     </div>
 
-    <div class="bg-surface-container-lowest p-6 rounded-2xl ambient-glow relative overflow-hidden group">
+    <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
       <div class="absolute top-0 right-0 w-32 h-32 bg-error/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
       <div class="relative">
-        <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">RDV en Attente</p>
+        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">RDV en Attente</p>
         <div class="flex items-end gap-2">
-          <span class="text-4xl font-extrabold text-on-surface">{{ pendingCount }}</span>
+          <span class="text-4xl font-black text-on-surface">{{ pendingCount }}</span>
         </div>
-        <p class="text-[10px] text-error mt-2 font-semibold font-bold">Aujourd'hui</p>
+        <p class="text-[9px] text-error mt-4 font-bold">Files d'attente actives</p>
       </div>
     </div>
 
-    <div class="bg-surface-container-lowest p-6 rounded-2xl ambient-glow relative overflow-hidden group">
+    <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
       <div class="absolute top-0 right-0 w-32 h-32 bg-primary-container/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
       <div class="relative">
-        <p class="text-on-surface-variant font-label text-xs uppercase tracking-widest mb-4">Occupation Cabinet</p>
+        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">Occupation Cabinet</p>
         <div class="flex items-end gap-2">
-          <span class="text-4xl font-extrabold text-on-surface">{{ occupationRate }}%</span>
+          <span class="text-4xl font-black text-on-surface">{{ occupationRate }}%</span>
         </div>
         <div class="w-full bg-surface-container-high h-1.5 rounded-full mt-4">
           <div class="bg-primary h-1.5 rounded-full transition-all duration-500" [style.width.%]="occupationRate"></div>

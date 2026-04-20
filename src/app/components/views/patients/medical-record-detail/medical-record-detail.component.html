@@ -34,10 +34,22 @@
   <!-- Active Consultation (SOAP FORM) -->
   <section *ngIf="activeConsultation" class="bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-xl border-2 border-primary/20 animate-scale-up space-y-8">
     <div class="flex justify-between items-center border-b border-outline-variant/10 pb-6">
-      <h3 class="text-xl font-bold text-primary flex items-center gap-2">
-        <span class="material-symbols-outlined">edit_note</span>
-        Consultation en cours - Note SOAP
-      </h3>
+      <div class="flex flex-col">
+        <h3 class="text-xl font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined">edit_note</span>
+          Consultation en cours - Note SOAP
+        </h3>
+        <!-- TEMPLATE ASSISTANT (Expert Feature) -->
+        <div class="flex items-center gap-2 mt-3">
+          <span class="text-[9px] font-black uppercase text-on-surface-variant/40 tracking-widest bg-slate-100 px-2 py-0.5 rounded">Assistant Gabarits :</span>
+          <div class="flex gap-2">
+            <button *ngFor="let t of templates" (click)="applyTemplate(t.id)" 
+                    class="text-[10px] font-bold px-3 py-1.5 border border-primary/20 text-primary rounded-xl hover:bg-primary/5 transition-all">
+              {{ t.label }}
+            </button>
+          </div>
+        </div>
+      </div>
       <div class="flex gap-2">
         <button (click)="cancelConsultation()" class="px-6 py-2 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all">Annuler</button>
         <button (click)="saveConsultation(false)" class="px-6 py-2 text-xs font-bold text-primary bg-primary/5 hover:bg-primary/10 rounded-xl transition-all">Sauvegarder Brouillon</button>
