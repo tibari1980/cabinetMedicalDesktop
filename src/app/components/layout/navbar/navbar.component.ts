@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { ThemeService } from '../../../services/theme.service';
+import { User, UserRole } from '../../../models/user.model';
 
 @Component({
   selector: 'app-navbar',
