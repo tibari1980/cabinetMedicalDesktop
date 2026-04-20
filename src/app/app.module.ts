@@ -20,6 +20,7 @@ import { CalendarComponent } from './components/views/calendar/calendar.componen
 import { MedicalRecordDetailComponent } from './components/views/patients/medical-record-detail/medical-record-detail.component';
 import { PrescriptionComponent } from './components/views/patients/prescription/prescription.component';
 import { HelpComponent } from './components/views/help/help.component';
+import { PerformanceComponent } from './components/views/performance/performance.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { HelpComponent } from './components/views/help/help.component';
     CalendarComponent,
     MedicalRecordDetailComponent,
     PrescriptionComponent,
-    HelpComponent
+    HelpComponent,
+    PerformanceComponent
   ],
   imports: [
     BrowserModule,

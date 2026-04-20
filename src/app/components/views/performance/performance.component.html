@@ -1,0 +1,124 @@
+<div class="space-y-8 animate-fade-in-up pb-20">
+  <!-- Header -->
+  <header class="flex justify-between items-end">
+    <div>
+      <h2 class="text-3xl font-black text-on-surface tracking-tight">Focus Performance</h2>
+      <p class="text-on-surface-variant mt-1">Analyse prédictive et rentabilité (Mode Hors-ligne)</p>
+    </div>
+    <div class="bg-white px-4 py-2 rounded-xl shadow-sm border border-outline-variant/10 text-[10px] font-bold uppercase tracking-widest text-primary flex items-center gap-2">
+      <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+      Données Temps Réel
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" *ngIf="stats">
+    <!-- Main Charts Column -->
+    <div class="lg:col-span-2 space-y-8">
+      <!-- Revenue Trend Line Chart (SVG) -->
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 relative overflow-hidden group">
+        <h3 class="text-lg font-bold mb-8 flex justify-between items-center">
+          Intelligence de Revenus (30j)
+          <span class="text-xs font-bold text-success bg-success/10 px-3 py-1 rounded-lg">+18% vs mois précédent</span>
+        </h3>
+        
+        <div class="h-64 w-full relative">
+          <!-- The SVG Line Chart -->
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="w-full h-full">
+            <!-- Gradient Definition -->
+            <defs>
+              <linearGradient id="lineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--color-primary);stop-opacity:0.2" />
+                <stop offset="100%" style="stop-color:var(--color-primary);stop-opacity:0" />
+              </linearGradient>
+            </defs>
+            <!-- Area under path -->
+            <path [attr.d]="'M0,100 L' + getLinePoints() + ' L100,100 Z'" fill="url(#lineGrad)" />
+            <!-- Main Path -->
+            <polyline fill="none" stroke="var(--color-primary)" stroke-width="2" vector-effect="non-scaling-stroke"
+                      [attr.points]="getLinePoints()" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          
+          <!-- Tooltip Helper lines -->
+          <div class="absolute inset-0 flex justify-between opacity-5">
+            <div *ngFor="let i of [1,2,3,4,5,6]" class="w-px h-full bg-on-surface"></div>
+          </div>
+        </div>
+        
+        <div class="flex justify-between mt-6 text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest">
+            <span>Il y a 30 jours</span>
+            <span>Aujourd'hui</span>
+        </div>
+      </div>
+
+      <!-- Bento Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/5 shadow-sm">
+          <p class="text-[10px] uppercase font-black text-on-surface-variant/40 tracking-widest mb-2">Valeur Moyenne par Acte (Panier Moyen)</p>
+          <div class="flex items-baseline gap-2">
+            <span class="text-4xl font-black text-on-surface">{{ stats.averageFee | number:'1.0-0' }}</span>
+            <span class="text-sm font-bold text-on-surface-variant">DH</span>
+          </div>
+        </div>
+        <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/5 shadow-sm">
+          <p class="text-[10px] uppercase font-black text-on-surface-variant/40 tracking-widest mb-2">Chiffre d'Affaires de la Période</p>
+           <div class="flex items-baseline gap-2">
+            <span class="text-4xl font-black text-primary">{{ stats.totalRevenue | number:'1.0-0' }}</span>
+            <span class="text-sm font-bold text-primary/60">DH</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Column -->
+    <aside class="space-y-8">
+      <!-- Consultation Distribution -->
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10">
+        <h3 class="text-lg font-bold mb-6">Mix des Actes</h3>
+        <div class="space-y-6">
+          <div class="space-y-2">
+            <div class="flex justify-between text-xs font-bold">
+              <span>Consultations</span>
+              <span class="text-primary">{{ stats.appointmentTypes.consultation }}</span>
+            </div>
+            <div class="w-full bg-slate-50 h-2 rounded-full overflow-hidden">
+               <div class="bg-primary h-full rounded-full" [style.width.%]="(stats.appointmentTypes.consultation / (stats.appointmentTypes.consultation + stats.appointmentTypes.control + stats.appointmentTypes.emergency)) * 100"></div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex justify-between text-xs font-bold">
+              <span>Contrôles</span>
+              <span class="text-tertiary">{{ stats.appointmentTypes.control }}</span>
+            </div>
+            <div class="w-full bg-slate-50 h-2 rounded-full overflow-hidden">
+               <div class="bg-tertiary h-full rounded-full" [style.width.%]="(stats.appointmentTypes.control / (stats.appointmentTypes.consultation + stats.appointmentTypes.control + stats.appointmentTypes.emergency)) * 100"></div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex justify-between text-xs font-bold">
+              <span>Urgences</span>
+              <span class="text-error">{{ stats.appointmentTypes.emergency }}</span>
+            </div>
+            <div class="w-full bg-slate-50 h-2 rounded-full overflow-hidden">
+               <div class="bg-error h-full rounded-full" [style.width.%]="(stats.appointmentTypes.emergency / (stats.appointmentTypes.consultation + stats.appointmentTypes.control + stats.appointmentTypes.emergency)) * 100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expert Recommendation Card -->
+      <div class="bg-gradient-to-br from-on-surface to-surface-container-highest p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
+        <span class="material-symbols-outlined text-4xl mb-6 text-primary">psychology</span>
+        <h4 class="text-xl font-bold leading-tight mb-4">Conseil Expert IA</h4>
+        <p class="text-white/70 text-sm leading-relaxed">
+          Sur la base de vos données du mois, il est recommandé d'optimiser les créneaux de <b>Contrôle</b> car ils représentent 40% de votre flux mais seulement 15% de votre revenu. 
+        </p>
+        <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div *ngIf="!stats" class="p-20 text-center space-y-4">
+    <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+    <p class="text-on-surface-variant animate-pulse font-medium">Calcul des algorithmes de performance...</p>
+  </div>
+</div>

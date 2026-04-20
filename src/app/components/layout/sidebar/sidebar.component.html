@@ -50,6 +50,15 @@
             [style.font-variation-settings]="getIconSettings(rlaAdmin.isActive)">settings_account_box</span>
       <span class="text-sm">Gestion Staff</span>
     </a>
+
+    <!-- Performance: Super Admin & Admin -->
+    <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])"
+       routerLink="/performance" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaPerf="routerLinkActive"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+            [style.font-variation-settings]="getIconSettings(rlaPerf.isActive)">insights</span>
+      <span class="text-sm">Performances</span>
+    </a>
   </nav>
   
   <div class="pt-4 border-t border-outline-variant/10 space-y-1">
