@@ -9,6 +9,7 @@ import { AuthService } from '../../../services/auth.service';
 export class LoginComponent implements OnInit {
   username = '';
   password = '';
+  hidePassword = true;
   error = '';
   returnUrl = '/';
 

@@ -4,6 +4,7 @@ import { Patient } from '../../../models/patient.model';
 import { AuthService } from '../../../services/auth.service';
 import { AppointmentService } from '../../../services/appointment.service';
 import { ClinicService } from '../../../services/clinic.service';
+import { StatisticsService } from '../../../services/statistics.service';
 import { Appointment, AppointmentType, AppointmentStatus } from '../../../models/appointment.model';
 import { MedicalRecordService } from '../../../services/medical-record.service';
 import { Subscription } from 'rxjs';
@@ -37,6 +38,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private appointmentService: AppointmentService,
     private medicalRecordService: MedicalRecordService,
     private clinicService: ClinicService,
+    private statsService: StatisticsService,
     public authService: AuthService
   ) {}
 
@@ -56,19 +58,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.waitingList = apts.filter(a => a.status !== AppointmentStatus.CANCELLED && a.status !== AppointmentStatus.DONE);
       this.revenueToday = apts.reduce((sum, a) => sum + (a.fee || 0), 0);
       
-      // Calculate 7-day revenue
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-      const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
-      
-      this.revenueWeek = allApts
-        .filter(a => a.date >= sevenDaysAgoStr && a.date <= todayStr && a.status !== AppointmentStatus.CANCELLED)
-        .reduce((sum, a) => sum + (a.fee || 0), 0);
-
       this.calculateOccupation(apts);
     });
 
-    this.subs.push(sub1, sub2);
+    const sub3 = this.statsService.getPerformanceStats().subscribe(stats => {
+      this.revenueWeek = stats.totalRevenue; // Synchronized from StatisticsService
+    });
+
+    this.subs.push(sub1, sub2, sub3);
   }
 
   ngOnDestroy() {

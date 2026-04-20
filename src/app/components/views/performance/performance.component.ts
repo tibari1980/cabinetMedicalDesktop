@@ -33,7 +33,7 @@ export class PerformanceComponent implements OnInit, OnDestroy {
     const max = this.getMaxRevenue();
     const count = this.stats.revenueByDay.length;
     return this.stats.revenueByDay.map((d: any, i: number) => {
-      const x = (i / (count - 1)) * 100;
+      const x = count > 1 ? (i / (count - 1)) * 100 : 50;
       const y = 100 - (d.amount / max) * 100;
       return `${x},${y}`;
     }).join(' ');

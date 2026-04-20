@@ -27,12 +27,21 @@ export class AuthService {
     private auditService: AuditService
   ) {
     const savedUsers = localStorage.getItem('mc_users');
-    const initialUsers = savedUsers ? JSON.parse(savedUsers) : this.defaultUsers;
+    let initialUsers = savedUsers ? JSON.parse(savedUsers) : this.defaultUsers;
+    
+    // Expert Fix: Force sync default passwords for demo accounts to ensure demo123 always works
+    this.defaultUsers.forEach(def => {
+      const existing = initialUsers.find((u: User) => u.username === def.username);
+      if (existing) {
+        existing.password = def.password; // Force to 'demo123'
+      } else {
+        initialUsers.push(def);
+      }
+    });
+
     this.usersSubject = new BehaviorSubject<User[]>(initialUsers);
     this.users$ = this.usersSubject.asObservable();
-    if (!savedUsers) {
-      localStorage.setItem('mc_users', JSON.stringify(initialUsers));
-    }
+    localStorage.setItem('mc_users', JSON.stringify(initialUsers));
 
     const savedUser = localStorage.getItem('mc_session');
     this.currentUserSubject = new BehaviorSubject<User | null>(savedUser ? JSON.parse(savedUser) : null);
