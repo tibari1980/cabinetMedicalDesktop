@@ -1,18 +1,19 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { PatientService } from '../../../services/patient.service';
 import { MedicalRecordService } from '../../../services/medical-record.service';
 import { Patient } from '../../../models/patient.model';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-patients',
-  templateUrl: './patients.component.html'
+  templateUrl: './patients.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PatientsComponent implements OnInit, OnDestroy {
   patients: Patient[] = [];
   filteredPatients: Patient[] = [];
   searchTerm = '';
-  private sub!: Subscription;
+  private destroy$ = new Subject<void>();
 
   // Modal state
   showModal = false;
@@ -20,18 +21,23 @@ export class PatientsComponent implements OnInit, OnDestroy {
 
   constructor(
     private patientService: PatientService,
-    private medicalRecordService: MedicalRecordService
+    private medicalRecordService: MedicalRecordService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.sub = this.patientService.getPatients().subscribe(data => {
-      this.patients = data;
-      this.applyFilter();
-    });
+    this.patientService.getPatients()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        this.patients = data;
+        this.applyFilter();
+        this.cdr.markForCheck();
+      });
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   applyFilter() {
@@ -40,6 +46,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
       this.filteredPatients = this.patients;
       this.currentPage = 1;
       this.recomputePagination();
+      this.cdr.markForCheck();
       return;
     }
     this.filteredPatients = this.patients.filter(p =>
@@ -49,11 +56,13 @@ export class PatientsComponent implements OnInit, OnDestroy {
     );
     this.currentPage = 1;
     this.recomputePagination();
+    this.cdr.markForCheck();
   }
 
   openNewPatientModal() {
     this.newPatient = { gender: 'Masculin' };
     this.showModal = true;
+    this.cdr.markForCheck();
   }
 
   submitNewPatient() {
@@ -79,6 +88,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
     this.medicalRecordService.initializeRecord(patientId.toString());
     this.showModal = false;
     this.newPatient = { gender: 'Masculin' };
+    this.cdr.markForCheck();
   }
 
   // Pagination logic
@@ -101,6 +111,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
     if (newPage >= 1 && newPage <= this.computedTotalPages) {
       this.currentPage = newPage;
       this.recomputePagination();
+      this.cdr.markForCheck();
     }
   }
 

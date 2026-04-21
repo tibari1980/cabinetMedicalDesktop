@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { PatientService } from '../../../services/patient.service';
 import { Patient } from '../../../models/patient.model';
 import { AuthService } from '../../../services/auth.service';
@@ -10,12 +10,13 @@ import { UserRole } from '../../../models/user.model';
 import { MedicalRecordService } from '../../../services/medical-record.service';
 import { BillingService } from '../../../services/billing.service';
 import { AuditService } from '../../../services/audit.service';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html'
+  templateUrl: './dashboard.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   patients: Patient[] = [];
@@ -24,7 +25,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   minTime: string = '08:00';
   maxTime: string = '18:00';
   today = new Date();
-  private subs: Subscription[] = [];
+  private destroy$ = new Subject<void>();
 
   // Stats
   totalPatients = 0;
@@ -46,7 +47,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private billingService: BillingService,
     private auditService: AuditService,
     private router: Router,
-    public authService: AuthService
+    public authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   onPatientSearchTermChange(term: string) {
@@ -64,46 +66,57 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const todayStr = this.today.toISOString().split('T')[0];
-
-    const sub0 = this.clinicService.clinic$.subscribe(c => {
-      this.clinic = c;
-      const open = c.openingHour;
-      const close = c.closingHour;
-      this.minTime = (open < 10 ? '0' + open : open) + ':00';
-      this.maxTime = (close < 10 ? '0' + close : close) + ':00';
-    });
-
-    const sub1 = this.patientService.getPatients().subscribe(data => {
-      this.patients = data;
-      this.totalPatients = data.length;
-      this.onPatientSearchTermChange(this.patientSearchTerm);
-    });
-
-    const sub2 = this.appointmentService.appointments$.subscribe(allApts => {
-      const todayStr = this.today.toISOString().split('T')[0];
-      const apts = allApts.filter(a => {
-        if (a.date !== todayStr || !a.time) return false;
-        const hour = parseInt(a.time.split(':')[0], 10);
-        return hour >= this.clinic.openingHour && hour < this.clinic.closingHour;
+    this.clinicService.clinic$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(c => {
+        this.clinic = c;
+        const open = c.openingHour;
+        const close = c.closingHour;
+        this.minTime = (open < 10 ? '0' + open : open) + ':00';
+        this.maxTime = (close < 10 ? '0' + close : close) + ':00';
+        this.cdr.markForCheck();
       });
-      
-      this.pendingCount = apts.filter(a => a.status === AppointmentStatus.CONFIRMED || a.status === AppointmentStatus.WAITING).length;
-      this.waitingList = apts.filter(a => a.status !== AppointmentStatus.CANCELLED && a.status !== AppointmentStatus.DONE);
-      this.revenueToday = apts.reduce((sum, a) => sum + (a.fee || 0), 0);
-      
-      this.calculateOccupation(apts);
-    });
 
-    const sub3 = this.statsService.getPerformanceStats().subscribe(stats => {
-      this.revenueWeek = stats.totalRevenue; // Synchronized from StatisticsService
-    });
+    this.patientService.getPatients()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        this.patients = data;
+        this.totalPatients = data.length;
+        this.onPatientSearchTermChange(this.patientSearchTerm);
+        this.cdr.markForCheck();
+      });
 
-    const sub4 = this.auditService.logs$.subscribe(logs => {
-      this.recentLogs = logs.slice(0, 5);
-    });
+    this.appointmentService.appointments$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(allApts => {
+        const todayStr = this.today.toISOString().split('T')[0];
+        const apts = allApts.filter(a => {
+          if (a.date !== todayStr || !a.time) return false;
+          const hour = parseInt(a.time.split(':')[0], 10);
+          return hour >= (this.clinic?.openingHour || 8) && hour < (this.clinic?.closingHour || 18);
+        });
+        
+        this.pendingCount = apts.filter(a => a.status === AppointmentStatus.CONFIRMED || a.status === AppointmentStatus.WAITING).length;
+        this.waitingList = apts.filter(a => a.status !== AppointmentStatus.CANCELLED && a.status !== AppointmentStatus.DONE);
+        this.revenueToday = apts.reduce((sum, a) => sum + (a.fee || 0), 0);
+        
+        this.calculateOccupation(apts);
+        this.cdr.markForCheck();
+      });
 
-    this.subs.push(sub0, sub1, sub2, sub3, sub4);
+    this.statsService.getPerformanceStats()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(stats => {
+        this.revenueWeek = stats.totalRevenue;
+        this.cdr.markForCheck();
+      });
+
+    this.auditService.logs$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(logs => {
+        this.recentLogs = logs.slice(0, 5);
+        this.cdr.markForCheck();
+      });
   }
 
   // Restore variables potentially cleared by previous edit
@@ -117,7 +130,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   appointmentTypes = Object.values(AppointmentType);
 
   ngOnDestroy() {
-    this.subs.forEach(s => s.unsubscribe());
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private calculateOccupation(todayApts: Appointment[]) {

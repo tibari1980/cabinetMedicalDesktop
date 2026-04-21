@@ -18,8 +18,14 @@ export class LanguageService {
     this.translate.use(lang);
     localStorage.setItem('app_lang', lang);
     this.currentLangSubject.next(lang);
-    // Force document lang update for SEO and A11y
+    
+    // Update document attributes for SEO, A11y and Layout
     document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  }
+
+  isRTL(): boolean {
+    return this.currentLangSubject.value === 'ar';
   }
 
   getCurrentLang(): string {

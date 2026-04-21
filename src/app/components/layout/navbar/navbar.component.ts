@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
@@ -9,7 +9,8 @@ import { User, UserRole } from '../../../models/user.model';
 
 @Component({
   selector: 'app-navbar',
-  templateUrl: './navbar.component.html'
+  templateUrl: './navbar.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent {
   showChangePasswordModal = false; 
@@ -21,24 +22,37 @@ export class NavbarComponent {
   showSearchResults: boolean = false;
   results$: Observable<SearchResult[]>;
 
+  languages = [
+    { code: 'fr', label: 'Français', flag: 'FR' },
+    { code: 'en', label: 'English', flag: 'EN' },
+    { code: 'ar', label: 'العربية', flag: 'AR' },
+    { code: 'es', label: 'Español', flag: 'ES' },
+    { code: 'it', label: 'Italiano', flag: 'IT' },
+    { code: 'pt', label: 'Português', flag: 'PT' }
+  ];
+  showLangMenu = false;
+
   constructor(
     public authService: AuthService,
     public themeService: ThemeService,
     public languageService: LanguageService,
     private searchService: SearchService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.results$ = new BehaviorSubject<SearchResult[]>([]).asObservable();
   }
 
-  toggleLanguage() {
-    const nextLang = this.languageService.getCurrentLang() === 'fr' ? 'en' : 'fr';
-    this.languageService.setLanguage(nextLang);
+  switchLanguage(lang: string) {
+    this.languageService.setLanguage(lang);
+    this.showLangMenu = false;
+    this.cdr.markForCheck();
   }
 
   onSearchChange() {
     this.results$ = this.searchService.search(this.searchTerm);
     this.showSearchResults = this.searchTerm.trim().length >= 2;
+    this.cdr.markForCheck();
   }
 
   selectResult(result: SearchResult) {
@@ -49,6 +63,7 @@ export class NavbarComponent {
   closeSearch() {
     this.searchTerm = '';
     this.showSearchResults = false;
+    this.cdr.markForCheck();
   }
 
   showNotifications() {

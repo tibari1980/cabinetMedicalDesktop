@@ -55,67 +55,96 @@ export class DatabaseService {
     });
   }
 
-  async getAll<T>(storeName: string): Promise<T[]> {
-    await this.init();
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(storeName, 'readonly');
-      const store = transaction.objectStore(storeName);
-      const request = store.getAll();
+  /**
+   * Generates a cryptographically secure UUID
+   */
+  generateSecureId(): string {
+    return crypto.randomUUID();
+  }
 
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
+  async getAll<T>(storeName: string): Promise<T[]> {
+    try {
+      await this.init();
+      return new Promise((resolve, reject) => {
+        const transaction = this.db!.transaction(storeName, 'readonly');
+        const store = transaction.objectStore(storeName);
+        const request = store.getAll();
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    } catch (error) {
+      console.error(`Error getting all from ${storeName}:`, error);
+      return [];
+    }
   }
 
   async put<T>(storeName: string, item: T): Promise<void> {
-    await this.init();
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(storeName, 'readwrite');
-      const store = transaction.objectStore(storeName);
-      const request = store.put(item);
+    try {
+      await this.init();
+      return new Promise((resolve, reject) => {
+        const transaction = this.db!.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        const request = store.put(item);
 
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
-    });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    } catch (error) {
+      console.error(`Error putting into ${storeName}:`, error);
+      throw error;
+    }
   }
 
   async clear(storeName: string): Promise<void> {
-    await this.init();
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(storeName, 'readwrite');
-      const store = transaction.objectStore(storeName);
-      const request = store.clear();
+    try {
+      await this.init();
+      return new Promise((resolve, reject) => {
+        const transaction = this.db!.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        const request = store.clear();
 
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
-    });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    } catch (error) {
+      console.error(`Error clearing ${storeName}:`, error);
+    }
   }
 
   async delete(storeName: string, key: any): Promise<void> {
-    await this.init();
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(storeName, 'readwrite');
-      const store = transaction.objectStore(storeName);
-      const request = store.delete(key);
+    try {
+      await this.init();
+      return new Promise((resolve, reject) => {
+        const transaction = this.db!.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        const request = store.delete(key);
 
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
-    });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+      });
+    } catch (error) {
+      console.error(`Error deleting from ${storeName}:`, error);
+    }
   }
   
   /**
    * Bulk add/update items
    */
   async putAll<T>(storeName: string, items: T[]): Promise<void> {
-    await this.init();
-    return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction(storeName, 'readwrite');
-      const store = transaction.objectStore(storeName);
-      
-      items.forEach(item => store.put(item));
-      
-      transaction.oncomplete = () => resolve();
-      transaction.onerror = () => reject(transaction.error);
-    });
+    try {
+      await this.init();
+      return new Promise((resolve, reject) => {
+        const transaction = this.db!.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        
+        items.forEach(item => store.put(item));
+        
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error);
+      });
+    } catch (error) {
+      console.error(`Error bulk putting into ${storeName}:`, error);
+    }
   }
 }

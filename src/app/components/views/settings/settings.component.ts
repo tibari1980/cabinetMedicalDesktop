@@ -14,12 +14,12 @@ export class SettingsComponent {
   
   countries = [
     { code: 'FR', name: 'France', currency: '€', languages: ['Français'] },
-    { code: 'MA', name: 'Maroc', currency: 'DH', languages: ['Français', 'Arabe'] },
-    { code: 'ES', name: 'Espagne', currency: '€', languages: ['Espagnol'] },
-    { code: 'PT', name: 'Portugal', currency: '€', languages: ['Portugais'] },
-    { code: 'IT', name: 'Italie', currency: '€', languages: ['Italien'] },
-    { code: 'US', name: 'États-Unis', currency: '$', languages: ['Anglais'] },
-    { code: 'GB', name: 'Royaume-Uni', currency: '£', languages: ['Anglais'] }
+    { code: 'MA', name: 'Maroc', currency: 'DH', languages: ['العربية', 'Français'] },
+    { code: 'ES', name: 'Espagne', currency: '€', languages: ['Español'] },
+    { code: 'PT', name: 'Portugal', currency: '€', languages: ['Português'] },
+    { code: 'IT', name: 'Italie', currency: '€', languages: ['Italiano'] },
+    { code: 'US', name: 'États-Unis', currency: '$', languages: ['English'] },
+    { code: 'GB', name: 'Royaume-Uni', currency: '£', languages: ['English'] }
   ];
 
   storageUsageMB: number = 0;

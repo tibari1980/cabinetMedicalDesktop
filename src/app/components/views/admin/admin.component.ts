@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuditService } from '../../../services/audit.service';
+import { SeedService } from '../../../services/seed.service';
 import { AuditAction } from '../../../models/audit.model';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole, User } from '../../../models/user.model';
@@ -19,7 +20,8 @@ export class AdminComponent {
 
   constructor(
     private auditService: AuditService,
-    public authService: AuthService
+    public authService: AuthService,
+    private seedService: SeedService
   ) {
     this.authService.users$.subscribe(users => {
       this.staff = users;
@@ -117,6 +119,16 @@ export class AdminComponent {
         AuditAction.EDIT_SETTINGS,
         `Profil de ${user.firstName} supprimé.`
       );
+    }
+  }
+
+  isSeeding = false;
+  async runStressTest() {
+    if (confirm("Générer 1000 patients de test ? Cela peut prendre quelques secondes.")) {
+      this.isSeeding = true;
+      await this.seedService.seedPatients(1000);
+      this.isSeeding = false;
+      alert("1000 patients générés avec succès !");
     }
   }
 }

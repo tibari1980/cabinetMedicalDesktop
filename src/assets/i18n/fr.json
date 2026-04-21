@@ -199,7 +199,6 @@
     "HOUR_FORMAT": "Format 24h (HH)",
     "TAX_NOTE_TITLE": "Note sur la fiscalité",
     "TAX_NOTE_BODY": "Les taxes (TVA/IS) sont calculées dynamiquement selon le pays sélectionné. Assurez-vous que la devise est conforme à votre région.",
-    "SAVE_SETTINGS": "Sauvegarder les Paramètres",
     "COUNTRIES": {
       "FR": "France",
       "MA": "Maroc",
@@ -208,7 +207,8 @@
       "IT": "Italie",
       "US": "États-Unis",
       "GB": "Royaume-Uni"
-    }
+    },
+    "SAVE_SETTINGS": "Sauvegarder les Paramètres"
   },
   "AUTH": {
     "SUBTITLE": "Gestion Immédiate du Cabinet",
@@ -293,7 +293,11 @@
   },
   "LANGUAGE": {
     "SWITCH_TO_EN": "English",
-    "SWITCH_TO_FR": "Français"
+    "SWITCH_TO_FR": "Français",
+    "SWITCH_TO_AR": "العربية",
+    "SWITCH_TO_ES": "Español",
+    "SWITCH_TO_IT": "Italiano",
+    "SWITCH_TO_PT": "Português"
   },
   "DASHBOARD": {
     "TITLE": "Tableau de Bord",

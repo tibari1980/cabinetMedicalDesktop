@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { AuditAction } from '../models/audit.model';
 
 import { DatabaseService } from './database.service';
+import { EncryptionService } from './encryption.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,24 +18,36 @@ export class MedicalRecordService {
   constructor(
     private auditService: AuditService,
     private authService: AuthService,
-    private dbService: DatabaseService
+    private dbService: DatabaseService,
+    private encryptionService: EncryptionService
   ) {
     this.loadRecords();
   }
 
   private async loadRecords() {
-    const saved = localStorage.getItem('mc_medical_records');
-    let records: MedicalRecord[] = [];
-    
-    if (saved) {
-      records = JSON.parse(saved);
-      await this.dbService.putAll('medical_records', records);
-      localStorage.removeItem('mc_medical_records');
-    } else {
-      records = await this.dbService.getAll<MedicalRecord>('medical_records');
+    try {
+      const rawRecords = await this.dbService.getAll<any>('medical_records');
+      let records: MedicalRecord[] = [];
+
+      for (const item of rawRecords) {
+        if (item.encryptedData) {
+          const decrypted = await this.encryptionService.decrypt<MedicalRecord>(item.encryptedData);
+          if (decrypted) records.push(decrypted);
+        } else {
+          // Backward compatibility
+          records.push(item);
+          this.dbService.put('medical_records', { 
+            patientId: item.patientId, 
+            encryptedData: await this.encryptionService.encrypt(item) 
+          });
+        }
+      }
+      
+      this.recordsSubject.next(records);
+    } catch (error) {
+      console.error('Error loading medical records:', error);
+      this.recordsSubject.next([]);
     }
-    
-    this.recordsSubject.next(records);
   }
 
   getRecordByPatientId(patientId: string): MedicalRecord | undefined {
@@ -52,7 +65,8 @@ export class MedicalRecordService {
         lastUpdate: new Date().toISOString()
       };
       
-      await this.dbService.put('medical_records', newRecord);
+      const encryptedData = await this.encryptionService.encrypt(newRecord);
+      await this.dbService.put('medical_records', { patientId, encryptedData });
       this.recordsSubject.next([...records, newRecord]);
     }
   }
@@ -65,9 +79,10 @@ export class MedicalRecordService {
       records[recordIndex].consultations.unshift(consultation); 
       records[recordIndex].lastUpdate = new Date().toISOString();
       
-      await this.dbService.put('medical_records', records[recordIndex]);
+      const encryptedData = await this.encryptionService.encrypt(records[recordIndex]);
+      await this.dbService.put('medical_records', { patientId, encryptedData });
       this.recordsSubject.next([...records]);
-
+// ... (audit part remains)
       this.auditService.log(
         this.authService.currentUserValue,
         AuditAction.CREATE_CONSULTATION,
@@ -87,7 +102,8 @@ export class MedicalRecordService {
         consultations[cIndex] = consultation;
         records[recordIndex].lastUpdate = new Date().toISOString();
         
-        await this.dbService.put('medical_records', records[recordIndex]);
+        const encryptedData = await this.encryptionService.encrypt(records[recordIndex]);
+        await this.dbService.put('medical_records', { patientId, encryptedData });
         this.recordsSubject.next([...records]);
       }
     }

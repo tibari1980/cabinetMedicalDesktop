@@ -293,7 +293,11 @@
   },
   "LANGUAGE": {
     "SWITCH_TO_EN": "English",
-    "SWITCH_TO_FR": "French"
+    "SWITCH_TO_FR": "French",
+    "SWITCH_TO_AR": "العربية",
+    "SWITCH_TO_ES": "Spanish",
+    "SWITCH_TO_IT": "Italiano",
+    "SWITCH_TO_PT": "Portuguese"
   },
   "DASHBOARD": {
     "TITLE": "Dashboard",

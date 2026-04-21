@@ -60,13 +60,34 @@
   </div>
   
   <div class="flex items-center gap-3">
-    <button (click)="toggleLanguage()" aria-label="Changer la langue" class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all group overflow-hidden relative">
-      <div class="flex flex-col items-center transition-transform duration-500 group-active:scale-95" [style.transform]="languageService.getCurrentLang() === 'fr' ? 'translateY(0)' : 'translateY(-20px)'">
-        <span class="text-[10px] font-black uppercase tracking-tighter h-5 flex items-center">FR</span>
-        <span class="text-[10px] font-black uppercase tracking-tighter h-5 flex items-center">EN</span>
+    <!-- Language Selector Dropdown -->
+    <div class="relative">
+      <button (click)="showLangMenu = !showLangMenu" aria-label="Changer la langue" class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all group overflow-hidden relative">
+        <span class="text-[10px] font-black uppercase tracking-tighter">{{ languageService.getCurrentLang() }}</span>
+        <span class="material-symbols-outlined text-[14px] opacity-40">language</span>
+      </button>
+
+      <!-- Transparent Overlay to Close Menu -->
+      <div *ngIf="showLangMenu" class="fixed inset-0 z-10 cursor-default" (click)="showLangMenu = false"></div>
+
+      <!-- Premium Language Menu -->
+      <div *ngIf="showLangMenu" class="absolute top-full right-0 mt-3 bg-surface-container-lowest/90 backdrop-blur-3xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden z-[100] animate-scale-up origin-top min-w-[170px]">
+        <div class="p-2 space-y-1">
+          <button *ngFor="let lang of languages" 
+                  (click)="switchLanguage(lang.code)"
+                  [ngClass]="{'bg-primary/5': languageService.getCurrentLang() === lang.code}"
+                  class="w-full flex items-center gap-3 p-3 hover:bg-primary/10 rounded-2xl transition-all group/item text-left">
+            <div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-[10px] font-black group-hover/item:scale-110 transition-transform">
+              {{ lang.flag }}
+            </div>
+            <span class="text-xs font-bold text-on-surface flex-1" [class.text-primary]="languageService.getCurrentLang() === lang.code">{{ lang.label }}</span>
+            <span class="material-symbols-outlined text-primary text-sm transition-all" 
+                  [class.opacity-100]="languageService.getCurrentLang() === lang.code"
+                  [class.opacity-0]="languageService.getCurrentLang() !== lang.code">check_circle</span>
+          </button>
+        </div>
       </div>
-      <span class="material-symbols-outlined text-[14px] opacity-40">language</span>
-    </button>
+    </div>
     <button (click)="themeService.toggleDarkMode()" aria-label="Basculer le mode sombre" class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">
       <span class="material-symbols-outlined text-xl" *ngIf="!(themeService.isDarkMode$ | async)">dark_mode</span>
       <span class="material-symbols-outlined text-xl" *ngIf="themeService.isDarkMode$ | async">light_mode</span>
