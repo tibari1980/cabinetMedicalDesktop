@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
+import { LanguageService } from '../../../services/language.service';
 import { ThemeService } from '../../../services/theme.service';
-import { User, UserRole } from '../../../models/user.model';
 import { SearchService, SearchResult } from '../../../services/search.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { User, UserRole } from '../../../models/user.model';
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html'
@@ -22,10 +24,16 @@ export class NavbarComponent {
   constructor(
     public authService: AuthService,
     public themeService: ThemeService,
+    public languageService: LanguageService,
     private searchService: SearchService,
     private router: Router
   ) {
     this.results$ = new BehaviorSubject<SearchResult[]>([]).asObservable();
+  }
+
+  toggleLanguage() {
+    const nextLang = this.languageService.getCurrentLang() === 'fr' ? 'en' : 'fr';
+    this.languageService.setLanguage(nextLang);
   }
 
   onSearchChange() {

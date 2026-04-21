@@ -8,7 +8,7 @@
       <div>
         <h2 class="text-3xl font-extrabold text-on-surface">{{ patient.firstName }} {{ patient.lastName }}</h2>
         <div class="flex items-center gap-3 mt-1">
-          <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{{ patient.gender }} • {{ patient.birthDate | date:'dd MMM yyyy' }}</span>
+          <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">{{ 'COMMON.GENDER_' + (patient.gender === 'Masculin' ? 'M' : 'F') | translate }} • {{ patient.birthDate | date:'dd MMM yyyy' }}</span>
           <span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
           <span class="text-sm font-semibold text-primary">ID: #{{ patient.id }}</span>
         </div>
@@ -18,12 +18,12 @@
       <button [routerLink]="['/patients', patient.id, 'prescription']"
               class="flex items-center gap-2 px-6 py-3 bg-tertiary text-white rounded-2xl font-bold text-sm hover:brightness-110 shadow-lg shadow-tertiary/20 transition-all">
         <span class="material-symbols-outlined text-lg">description</span>
-        Générer Ordonnance
+        {{ 'RECORDS.GENERATE_PRESCRIPTION' | translate }}
       </button>
       <button (click)="startNewConsultation()" *ngIf="!activeConsultation"
               class="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-2xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
         <span class="material-symbols-outlined text-lg">medical_services</span>
-        Nouvelle Consultation
+        {{ 'RECORDS.NEW_CONSULTATION' | translate }}
       </button>
       <button (click)="printRecord()" aria-label="Imprimer le dossier médical" class="p-3 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all border border-outline-variant/20">
         <span class="material-symbols-outlined">print</span>
@@ -37,11 +37,11 @@
       <div class="flex flex-col">
         <h3 class="text-xl font-bold text-primary flex items-center gap-2">
           <span class="material-symbols-outlined">edit_note</span>
-          Consultation en cours - Note SOAP
+          {{ 'RECORDS.ACTIVE_CONSULTATION' | translate }}
         </h3>
         <!-- TEMPLATE ASSISTANT (Expert Feature) -->
         <div class="flex items-center gap-2 mt-3">
-          <span class="text-[9px] font-black uppercase text-on-surface-variant/40 tracking-widest bg-slate-100 px-2 py-0.5 rounded">Assistant Gabarits :</span>
+          <span class="text-[9px] font-black uppercase text-on-surface-variant/40 tracking-widest bg-slate-100 px-2 py-0.5 rounded">{{ 'RECORDS.TEMPLATE_ASSISTANT' | translate }} :</span>
           <div class="flex gap-2">
             <button *ngFor="let t of templates" (click)="applyTemplate(t.id)" 
                     class="text-[10px] font-bold px-3 py-1.5 border border-primary/20 text-primary rounded-xl hover:bg-primary/5 transition-all">
@@ -51,9 +51,9 @@
         </div>
       </div>
       <div class="flex gap-2">
-        <button (click)="cancelConsultation()" class="px-6 py-2 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all">Annuler</button>
-        <button (click)="saveConsultation(false)" class="px-6 py-2 text-xs font-bold text-primary bg-primary/5 hover:bg-primary/10 rounded-xl transition-all">Sauvegarder Brouillon</button>
-        <button (click)="saveConsultation(true)" class="px-8 py-2 text-xs font-bold bg-primary text-white rounded-xl hover:brightness-110 transition-all shadow-md">Valider & Verrouiller</button>
+        <button (click)="cancelConsultation()" class="px-6 py-2 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button (click)="saveConsultation(false)" class="px-6 py-2 text-xs font-bold text-primary bg-primary/5 hover:bg-primary/10 rounded-xl transition-all">{{ 'RECORDS.SAVE_DRAFT' | translate }}</button>
+        <button (click)="saveConsultation(true)" class="px-8 py-2 text-xs font-bold bg-primary text-white rounded-xl hover:brightness-110 transition-all shadow-md">{{ 'RECORDS.VALIDATE_LOCK' | translate }}</button>
       </div>
     </div>
 
@@ -64,22 +64,22 @@
         <div class="space-y-3">
           <label for="soap-s" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest flex items-center gap-2">
             <span class="w-6 h-6 rounded-md bg-primary text-white flex items-center justify-center">S</span>
-            Subjectif (Plaintes, Histoire)
+            {{ 'RECORDS.SOAP_S_LABEL' | translate }}
           </label>
           <textarea id="soap-s" [(ngModel)]="activeConsultation.subjective.chiefComplaint" 
                     class="w-full bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-inner" 
-                    rows="3" placeholder="Pourquoi le patient consulte-t-il ?"></textarea>
+                    rows="3" [placeholder]="'RECORDS.SOAP_S_PLACEHOLDER' | translate"></textarea>
         </div>
 
         <!-- Objective - Vital Signs -->
         <div class="space-y-4">
           <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest flex items-center gap-2">
             <span class="w-6 h-6 rounded-md bg-tertiary text-white flex items-center justify-center">O</span>
-            Objectif (Examen, Vitaux)
+            {{ 'RECORDS.SOAP_O_LABEL' | translate }}
           </label>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/5 shadow-inner">
-              <span class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">Tension (SYS/DIA)</span>
+              <span class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">{{ 'RECORDS.SOAP_O_BP' | translate }}</span>
               <div class="flex items-center gap-1">
                 <input aria-label="Tension Systolique" [(ngModel)]="activeConsultation.objective.vitalSigns.bloodPressureSys" type="number" class="w-12 text-sm font-bold border-none outline-none bg-transparent" placeholder="120">
                 <span class="text-xs opacity-30">/</span>
@@ -87,21 +87,21 @@
               </div>
             </div>
             <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/5 shadow-inner">
-              <label for="soap-temp" class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">Température (°C)</label>
+              <label for="soap-temp" class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">{{ 'RECORDS.SOAP_O_TEMP' | translate }}</label>
               <input id="soap-temp" [(ngModel)]="activeConsultation.objective.vitalSigns.temperature" type="number" step="0.1" class="w-full text-sm font-bold border-none outline-none bg-transparent" placeholder="37.0">
             </div>
             <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/5 shadow-inner">
-              <label for="soap-poids" class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">Poids (kg)</label>
+              <label for="soap-poids" class="text-[9px] font-bold text-on-surface-variant uppercase mb-1 block">{{ 'RECORDS.SOAP_O_WEIGHT' | translate }}</label>
               <input id="soap-poids" [(ngModel)]="activeConsultation.objective.vitalSigns.weight" (ngModelChange)="calculateBMI()" type="number" class="w-full text-sm font-bold border-none outline-none bg-transparent" placeholder="70">
             </div>
             <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/5 shadow-inner bg-primary/5">
-              <span class="text-[9px] font-bold text-primary uppercase mb-1 block">IMC (Calculé)</span>
+              <span class="text-[9px] font-bold text-primary uppercase mb-1 block">{{ 'RECORDS.SOAP_O_BMI' | translate }}</span>
               <span class="text-sm font-black text-primary">{{ activeConsultation.objective.vitalSigns.bmi || '--' }}</span>
             </div>
           </div>
           <textarea aria-label="Examen physique" [(ngModel)]="activeConsultation.objective.physicalExam" 
                     class="w-full bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-4 text-sm outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-inner" 
-                    rows="3" placeholder="Observations de l'examen physique..."></textarea>
+                    rows="3" [placeholder]="'RECORDS.SOAP_O_PLACEHOLDER' | translate"></textarea>
         </div>
       </div>
 
@@ -111,25 +111,25 @@
         <div class="space-y-3">
           <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest flex items-center gap-2">
             <span class="w-6 h-6 rounded-md bg-secondary text-white flex items-center justify-center">A</span>
-            Évaluation (Diagnostic)
+            {{ 'RECORDS.SOAP_A_LABEL' | translate }}
           </label>
           <input aria-label="Conclusion ou Diagnostic principal" [(ngModel)]="activeConsultation.assessment.diagnosis" 
                  class="w-full bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-inner" 
-                 placeholder="Conclusion ou Diagnostic principal">
+                 [placeholder]="'RECORDS.SOAP_A_PLACEHOLDER' | translate">
           <textarea aria-label="Notes additionnelles" [(ngModel)]="activeConsultation.assessment.notes" 
                     class="w-full bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-4 text-xs outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-inner" 
-                    rows="2" placeholder="Notes additionnelles..."></textarea>
+                    rows="2" [placeholder]="'RECORDS.SOAP_A_NOTES' | translate"></textarea>
         </div>
 
         <!-- Plan -->
         <div class="space-y-3">
           <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest flex items-center gap-2">
             <span class="w-6 h-6 rounded-md bg-error text-white flex items-center justify-center">P</span>
-            Plan (Traitement, Suivi)
+            {{ 'RECORDS.SOAP_P_LABEL' | translate }}
           </label>
           <textarea aria-label="Traitement prescrit, examens demandés" [(ngModel)]="activeConsultation.plan.treatment" 
                     class="w-full bg-surface-container-lowest border border-outline-variant/10 rounded-2xl p-4 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all shadow-inner" 
-                    rows="4" placeholder="Traitement prescrit, examens demandés..."></textarea>
+                    rows="4" [placeholder]="'RECORDS.SOAP_P_PLACEHOLDER' | translate"></textarea>
         </div>
       </div>
     </div>
@@ -142,18 +142,18 @@
       <div class="bg-surface-container-lowest p-6 rounded-[2rem] shadow-sm border border-outline-variant/10">
         <h4 class="text-sm font-extrabold uppercase tracking-widest mb-4 flex items-center gap-2">
           <span class="material-symbols-outlined text-error">warning</span>
-          Alertes & Allergies
+          {{ 'RECORDS.ALERTS_ALLERGIES' | translate }}
         </h4>
         <div class="flex flex-wrap gap-2">
           <span *ngFor="let allergy of record?.allergies; trackBy: trackByAllergy" class="px-3 py-1 bg-error/10 text-error rounded-full text-[10px] font-bold uppercase">{{ allergy }}</span>
-          <span *ngIf="!record?.allergies?.length" class="text-xs text-on-surface-variant opacity-50">Aucune allergie connue</span>
+          <span *ngIf="!record?.allergies?.length" class="text-xs text-on-surface-variant opacity-50">{{ 'RECORDS.NO_ALLERGIES' | translate }}</span>
         </div>
       </div>
       
       <div class="bg-surface-container-lowest p-6 rounded-[2rem] shadow-sm border border-outline-variant/10">
         <h4 class="text-sm font-extrabold uppercase tracking-widest mb-4 flex items-center gap-2">
           <span class="material-symbols-outlined text-primary">history</span>
-          Pathologies Chroniques
+          {{ 'RECORDS.CHRONIC_DISEASES' | translate }}
         </h4>
         <div class="space-y-2">
           <div *ngFor="let disease of record?.chronicDiseases; trackBy: trackByDisease" class="flex items-center gap-2 text-xs font-bold text-on-surface">
@@ -167,7 +167,7 @@
 
     <!-- Right Column: Consultation Timeline -->
     <div class="lg:col-span-2 space-y-4">
-      <h3 class="text-lg font-bold text-on-surface px-4">Historique des Consultations</h3>
+      <h3 class="text-lg font-bold text-on-surface px-4">{{ 'RECORDS.CONSULTATION_HISTORY' | translate }}</h3>
       
       <div *ngFor="let consult of record?.consultations; trackBy: trackByConsultation" 
            [class.border-l-4]="consult.status === 'Validé'"
@@ -188,25 +188,25 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
           <div class="space-y-1">
-            <p class="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-widest">Diagnostic</p>
+            <p class="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-widest">{{ 'RECORDS.DIAGNOSTIC' | translate }}</p>
             <p class="text-sm font-extrabold text-on-surface">{{ consult.assessment.diagnosis }}</p>
           </div>
           <div class="space-y-1">
-            <p class="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-widest">Traitement / Plan</p>
+            <p class="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-widest">{{ 'RECORDS.TREATMENT_PLAN' | translate }}</p>
             <p class="text-xs text-on-surface-variant leading-relaxed">{{ consult.plan.treatment }}</p>
           </div>
         </div>
 
         <div class="mt-4 pt-4 border-t border-outline-variant/5 flex gap-4 text-[10px] font-bold text-on-surface-variant/60">
           <span *ngIf="consult.objective.vitalSigns.bloodPressureSys">BP: {{ consult.objective.vitalSigns.bloodPressureSys }}/{{ consult.objective.vitalSigns.bloodPressureDia }}</span>
-          <span *ngIf="consult.objective.vitalSigns.weight">Poids: {{ consult.objective.vitalSigns.weight }}kg</span>
-          <span *ngIf="consult.objective.vitalSigns.temperature">Temp: {{ consult.objective.vitalSigns.temperature }}°C</span>
+          <span *ngIf="consult.objective.vitalSigns.weight">{{ 'RECORDS.SOAP_O_WEIGHT' | translate }}: {{ consult.objective.vitalSigns.weight }}kg</span>
+          <span *ngIf="consult.objective.vitalSigns.temperature">{{ 'RECORDS.SOAP_O_TEMP' | translate }}: {{ consult.objective.vitalSigns.temperature }}°C</span>
         </div>
       </div>
 
       <div *ngIf="!record?.consultations?.length" class="text-center py-12 bg-surface-container-lowest rounded-[2rem] border border-dashed border-outline-variant/30">
         <span class="material-symbols-outlined text-4xl text-on-surface-variant/20 mb-2 block">folder_open</span>
-        <p class="text-sm text-on-surface-variant opacity-50">Aucun historique de consultation pour ce patient.</p>
+        <p class="text-sm text-on-surface-variant opacity-50">{{ 'RECORDS.NO_HISTORY' | translate }}</p>
       </div>
     </div>
   </div>

@@ -15,18 +15,18 @@
         </button>
       </div>
       <button (click)="resetToToday()" class="text-xs font-bold text-primary px-4 py-2 bg-primary/5 rounded-full hover:bg-primary/10 transition-all">
-        Aujourd'hui
+        {{ 'CALENDAR.TODAY' | translate }}
       </button>
     </div>
 
     <div class="flex items-center gap-3">
       <button (click)="printAgenda()" class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high text-on-surface-variant rounded-xl font-bold text-sm hover:brightness-95 transition-all">
         <span class="material-symbols-outlined text-lg">print</span>
-        Imprimer
+        {{ 'COMMON.PRINT' | translate }}
       </button>
       <button (click)="openNewAptModal()" class="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
-        <span class="material-symbols-outlined text-lg">add</span>
-        Nouveau RDV
+        <span class="material-symbols-outlined">add</span>
+        {{ 'CALENDAR.NEW_APPOINTMENT' | translate }}
       </button>
     </div>
   </section>
@@ -61,13 +61,13 @@
               <div>
                 <p class="text-sm font-extrabold leading-tight">{{ apt.patientName }}</p>
                 <div class="flex items-center gap-2 mt-1">
-                  <span class="text-[9px] font-black uppercase tracking-widest bg-white/20 px-2 py-0.5 rounded-md">{{ apt.type }}</span>
+                  <span class="text-[9px] font-black uppercase tracking-widest bg-white/20 px-2 py-0.5 rounded-md">{{ 'CALENDAR.TYPE_' + (apt.type === 'Consultation Générale' ? 'CONSULTATION' : (apt.type === 'Suivi' ? 'FOLLOWUP' : (apt.type === 'Urgence' ? 'URGENCY' : 'EXAM'))) | translate }}</span>
                   <span class="text-[9px] font-bold opacity-80">• {{ apt.duration }} min</span>
                 </div>
               </div>
             </div>
             <div class="text-right flex items-center gap-2">
-              <span class="text-[9px] font-extrabold bg-tertiary-container text-tertiary px-3 py-1 rounded-full uppercase">{{ apt.status }}</span>
+              <span class="text-[9px] font-extrabold bg-tertiary-container text-tertiary px-3 py-1 rounded-full uppercase">{{ 'CALENDAR.STATUS_' + (apt.status === 'Confirmé' ? 'CONFIRMED' : (apt.status === 'Terminé' ? 'DONE' : 'CANCELLED')) | translate }}</span>
               <div class="flex opacity-0 group-hover/card:opacity-100 transition-opacity bg-surface-container-lowest/50 backdrop-blur-md rounded-xl p-1 gap-1">
                 <button (click)="updateAptStatus(apt, 'Terminé', $event)" aria-label="Marquer comme terminé" class="material-symbols-outlined text-sm p-1.5 hover:bg-success/20 text-success rounded-lg transition-colors">check_circle</button>
                 <button (click)="updateAptStatus(apt, 'Annulé', $event)" aria-label="Annuler ce rendez-vous" class="material-symbols-outlined text-sm p-1.5 hover:bg-error/20 text-error rounded-lg transition-colors">cancel</button>
@@ -95,15 +95,15 @@
       <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center relative z-10">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-            <span class="material-symbols-outlined text-2xl" translate="no">event_available</span>
+            <span class="material-symbols-outlined text-3xl">calendar_month</span>
           </div>
           <div>
-            <h3 class="text-2xl font-black text-on-surface tracking-tight">Prendre un Rendez-vous</h3>
-            <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">Planification Agenda</p>
+            <h3 class="text-2xl font-black text-on-surface tracking-tight">{{ 'CALENDAR.MODAL_TITLE' | translate }}</h3>
+            <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">{{ 'CALENDAR.MODAL_SUBTITLE' | translate }}</p>
           </div>
         </div>
         <button (click)="showModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
-          <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform" translate="no">close</span>
+          <span class="material-symbols-outlined group-hover:rotate-90 transition-transform">close</span>
         </button>
       </div>
 
@@ -112,23 +112,23 @@
         <div class="flex items-center justify-between p-1.5 bg-surface-container-low rounded-[1.25rem] mb-4">
           <button (click)="isNewPatient = false" 
                   [class]="!isNewPatient ? 'bg-surface-container-lowest shadow-md text-primary font-bold' : 'text-on-surface-variant font-medium opacity-60'"
-                  class="flex-1 py-3 text-xs rounded-[0.875rem] transition-all transform active:scale-95">Patient Existant</button>
+                  class="flex-1 py-3 text-xs rounded-[0.875rem] transition-all transform active:scale-95">{{ 'CALENDAR.EXISTING_PATIENT' | translate }}</button>
           <button (click)="isNewPatient = true" 
                   [class]="isNewPatient ? 'bg-surface-container-lowest shadow-md text-primary font-bold' : 'text-on-surface-variant font-medium opacity-60'"
-                  class="flex-1 py-3 text-xs rounded-[0.875rem] transition-all transform active:scale-95">Nouveau Patient</button>
+                  class="flex-1 py-3 text-xs rounded-[0.875rem] transition-all transform active:scale-95">{{ 'CALENDAR.NEW_PATIENT' | translate }}</button>
         </div>
 
         <!-- Existing Patient Selection -->
         <div class="space-y-4 animate-fade-in" *ngIf="!isNewPatient">
           <div class="space-y-2">
-            <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Sélectionner un Patient</label>
+            <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'CALENDAR.SELECT_PATIENT' | translate }}</label>
             <div class="relative">
               <select id="cal-sel-pat" [(ngModel)]="newApt.patientId" 
                       class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 focus:bg-surface-container-lowest appearance-none transition-all">
-                <option value="" disabled selected>Choisir dans la liste...</option>
+                <option value="" disabled selected>{{ 'PATIENTS.MODAL_CHOOSE_LIST' | translate }}</option>
                 <option *ngFor="let p of patients; trackBy: trackByPatient" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
               </select>
-              <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">expand_more</span>
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary transition-colors">search</span>
             </div>
           </div>
         </div>
@@ -137,27 +137,27 @@
         <div class="space-y-5 animate-fade-in" *ngIf="isNewPatient">
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Nom *</label>
-              <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="Nom">
+              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.LAST_NAME' | translate }} *</label>
+              <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" [placeholder]="'COMMON.LAST_NAME' | translate">
             </div>
             <div class="space-y-2">
-              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Prénom *</label>
-              <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="Prénom">
+              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.FIRST_NAME' | translate }} *</label>
+              <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" [placeholder]="'COMMON.FIRST_NAME' | translate">
             </div>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Téléphone *</label>
+              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.PHONE' | translate }} *</label>
               <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="+212 ...">
             </div>
             <div class="space-y-2">
-              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Date Naissance *</label>
+              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.BIRTH_DATE' | translate }} *</label>
               <input type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all">
             </div>
           </div>
           <div class="space-y-2">
-            <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Adresse Complète</label>
-            <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" placeholder="Adresse du patient..."></textarea>
+            <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.ADDRESS' | translate }}</label>
+            <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" [placeholder]="'PATIENTS.MODAL_ADDRESS_PLACEHOLDER' | translate"></textarea>
           </div>
         </div>
 
@@ -165,11 +165,11 @@
         <div class="space-y-5 pt-8 border-t border-outline-variant/10">
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
-              <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Heure du RDV</label>
+              <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'CALENDAR.APT_TIME' | translate }}</label>
               <input type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm">
             </div>
             <div class="space-y-2">
-              <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Durée (Min)</label>
+              <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'CALENDAR.APT_DURATION' | translate }}</label>
               <div class="relative">
                 <input type="number" [(ngModel)]="newApt.duration" step="15" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm">
                 <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-primary opacity-40">MIN</span>
@@ -178,12 +178,12 @@
           </div>
 
           <div class="space-y-2">
-            <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Type d'Acte</label>
+            <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'CALENDAR.APT_TYPE' | translate }}</label>
             <select id="cal-type" [(ngModel)]="newApt.type" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
-              <option value="Consultation Générale">Consultation Générale</option>
-              <option value="Suivi">Suivi</option>
-              <option value="Urgence">Urgence</option>
-              <option value="Examen / Analyse">Examen / Analyse</option>
+              <option value="Consultation Générale">{{ 'CALENDAR.TYPE_CONSULTATION' | translate }}</option>
+              <option value="Suivi">{{ 'CALENDAR.TYPE_FOLLOWUP' | translate }}</option>
+              <option value="Urgence">{{ 'CALENDAR.TYPE_URGENCY' | translate }}</option>
+              <option value="Examen / Analyse">{{ 'CALENDAR.TYPE_EXAM' | translate }}</option>
             </select>
           </div>
         </div>
@@ -191,8 +191,8 @@
 
       <!-- Final Actions -->
       <div class="p-8 bg-surface-container-low/40 backdrop-blur-xl flex gap-4 relative z-10 border-t border-outline-variant/10">
-        <button (click)="showModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">Annuler</button>
-        <button (click)="submitAppointment()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">Valider le Rendez-vous</button>
+        <button (click)="showModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button (click)="submitAppointment()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">{{ 'CALENDAR.MODAL_SUBMIT' | translate }}</button>
       </div>
     </div>
   </div>

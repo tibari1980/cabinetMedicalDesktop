@@ -1,22 +1,22 @@
 <div class="space-y-6">
   <section class="flex justify-between items-end">
     <div>
-      <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Base Patients</h2>
-      <p class="text-on-surface-variant mt-1">Gestion et historique des fiches patients</p>
+      <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">{{ 'PATIENTS.TITLE' | translate }}</h2>
+      <p class="text-on-surface-variant mt-1">{{ 'PATIENTS.SUBTITLE' | translate }}</p>
     </div>
     <button (click)="openNewPatientModal()" class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-transform hover:brightness-110">
       <span class="material-symbols-outlined text-lg">person_add</span>
-      Nouveau Patient
+      {{ 'PATIENTS.ADD_NEW' | translate }}
     </button>
   </section>
 
   <div class="bg-surface-container-lowest/50 backdrop-blur-xl rounded-[2rem] shadow-sm border border-outline-variant/10 overflow-hidden">
     <div class="p-6 border-b border-outline-variant/5 flex items-center justify-between bg-surface-container-low/20">
       <div class="relative w-full max-w-sm group">
-        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg transition-colors group-focus-within:text-primary" translate="no">search</span>
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg transition-colors group-focus-within:text-primary">search</span>
         <input [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()"
                class="w-full bg-surface-container-lowest/80 border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/10 transition-all outline-none shadow-inner-sm" 
-               placeholder="Rechercher par nom, téléphone, email..." type="text"/>
+               [placeholder]="'PATIENTS.SEARCH_PLACEHOLDER' | translate" type="text"/>
       </div>
       <div class="flex gap-3">
         <button aria-label="Filtrer la liste" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-outline-variant/10 hover:border-primary/20 hover:text-primary">
@@ -32,11 +32,11 @@
       <table class="w-full text-left">
         <thead class="bg-surface-container-low/50 text-on-surface-variant text-[10px] font-bold uppercase tracking-widest">
           <tr>
-            <th class="px-8 py-5">Identité du Patient</th>
-            <th class="px-8 py-5">Contact & Canal</th>
-            <th class="px-8 py-5">Dernière Consultation</th>
-            <th class="px-8 py-5">Statut</th>
-            <th class="px-8 py-5 text-right">Action</th>
+            <th class="px-8 py-5">{{ 'PATIENTS.TABLE_IDENTITY' | translate }}</th>
+            <th class="px-8 py-5">{{ 'PATIENTS.TABLE_CONTACT' | translate }}</th>
+            <th class="px-8 py-5">{{ 'PATIENTS.TABLE_LAST_VISIT' | translate }}</th>
+            <th class="px-8 py-5">{{ 'PATIENTS.TABLE_STATUS' | translate }}</th>
+            <th class="px-8 py-5 text-right">{{ 'PATIENTS.TABLE_ACTION' | translate }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-outline-variant/5">
@@ -48,7 +48,7 @@
                 </div>
                 <div>
                   <p class="font-bold text-on-surface group-hover:text-primary transition-colors text-base leading-tight">{{ patient.firstName }} {{ patient.lastName }}</p>
-                  <p class="text-[11px] text-on-surface-variant mt-0.5">{{ patient.gender }} • {{ patient.birthDate | date:'dd MMM yyyy' }}</p>
+                  <p class="text-[11px] text-on-surface-variant mt-0.5">{{ 'COMMON.GENDER_' + (patient.gender === 'Masculin' ? 'M' : 'F') | translate }} • {{ patient.birthDate | date:'dd MMM yyyy' }}</p>
                 </div>
               </div>
             </td>
@@ -60,7 +60,7 @@
               <span class="text-sm text-on-surface-variant font-medium">{{ patient.lastVisit | date:'fullDate' }}</span>
             </td>
             <td class="px-8 py-6">
-              <span class="px-3 py-1 text-[9px] font-extrabold uppercase tracking-widest bg-tertiary/10 text-tertiary rounded-full">Actif</span>
+              <span class="px-3 py-1 text-[9px] font-extrabold uppercase tracking-widest bg-tertiary/10 text-tertiary rounded-full">{{ 'PATIENTS.STATUS_ACTIVE' | translate }}</span>
             </td>
             <td class="px-8 py-6 text-right">
               <button [routerLink]="['/patients', patient.id, 'record']" aria-label="Voir le dossier médical"
@@ -74,7 +74,9 @@
     </div>
     
     <div class="p-6 bg-surface-container-low/20 border-t border-outline-variant/10 flex items-center justify-between">
-      <p class="text-[11px] text-on-surface-variant font-medium">Affichage de {{ computedPaginatedPatients.length }} patients (Page {{ currentPage }} sur {{ computedTotalPages }}) • Total: {{ filteredPatients.length }}</p>
+      <p class="text-[11px] text-on-surface-variant font-medium">
+        {{ 'PATIENTS.PAGINATION_INFO' | translate:{ count: computedPaginatedPatients.length, page: currentPage, totalPages: computedTotalPages, total: filteredPatients.length } }}
+      </p>
       <nav class="flex gap-2">
         <button (click)="changePage(-1)" [disabled]="currentPage === 1" [class.opacity-50]="currentPage === 1"
                 aria-label="Page précédente" class="p-2 border border-outline-variant/20 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high transition-all max-disabled:pointer-events-none">
@@ -105,49 +107,49 @@
     <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center relative z-10">
       <div class="flex items-center gap-4">
         <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-          <span class="material-symbols-outlined text-2xl" translate="no">person_add</span>
+          <span class="material-symbols-outlined text-2xl">person_add</span>
         </div>
         <div>
-          <h3 class="text-2xl font-black text-on-surface tracking-tight">Nouveau Patient</h3>
-          <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">Création de Dossier</p>
+          <h3 class="text-2xl font-black text-on-surface tracking-tight">{{ 'PATIENTS.MODAL_TITLE' | translate }}</h3>
+          <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">{{ 'PATIENTS.MODAL_SUBTITLE' | translate }}</p>
         </div>
       </div>
       <button (click)="showModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
-        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform" translate="no">close</span>
+        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">close</span>
       </button>
     </div>
 
     <div class="p-8 space-y-6 max-h-[65vh] overflow-y-auto relative z-10 custom-scrollbar">
       <div class="grid grid-cols-2 gap-5">
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Nom de famille *</label>
-          <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Nom">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_LAST_NAME' | translate }} *</label>
+          <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" [placeholder]="'PATIENTS.MODAL_LAST_NAME' | translate">
         </div>
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Prénom *</label>
-          <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Prénom">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_FIRST_NAME' | translate }} *</label>
+          <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" [placeholder]="'PATIENTS.MODAL_FIRST_NAME' | translate">
         </div>
       </div>
 
-      <div class="space-y-2">
-        <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Numéro de Téléphone *</label>
-        <div class="relative">
-          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40" translate="no">phone</span>
-          <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="+212 ...">
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_PHONE' | translate }} *</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40">phone</span>
+            <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="+212 ...">
+          </div>
         </div>
-      </div>
 
       <div class="grid grid-cols-2 gap-5">
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Date de Naissance *</label>
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_BIRTH_DATE' | translate }} *</label>
           <input type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all text-on-surface">
         </div>
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Genre</label>
+          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_GENDER' | translate }}</label>
           <div class="relative">
             <select [(ngModel)]="newPatient.gender" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
-              <option value="Masculin">Masculin</option>
-              <option value="Féminin">Féminin</option>
+              <option value="Masculin">{{ 'COMMON.GENDER_M' | translate }}</option>
+              <option value="Féminin">{{ 'COMMON.GENDER_F' | translate }}</option>
             </select>
             <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">wc</span>
           </div>
@@ -155,23 +157,23 @@
       </div>
 
       <div class="space-y-2">
-        <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Adresse Postale *</label>
-        <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" placeholder="Résidence, Rue, Ville..."></textarea>
+        <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_ADDRESS' | translate }} *</label>
+        <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" [placeholder]="'PATIENTS.MODAL_ADDRESS_PLACEHOLDER' | translate"></textarea>
       </div>
 
       <div class="space-y-2">
-        <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Email (optionnel)</label>
+        <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_EMAIL' | translate }}</label>
         <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
-          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30" translate="no">mail</span>
-          <input [(ngModel)]="newPatient.email" type="email" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:font-normal" placeholder="email@exemple.com">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30">mail</span>
+          <input [(ngModel)]="newPatient.email" type="email" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:font-normal" [placeholder]="'PATIENTS.MODAL_EMAIL_PLACEHOLDER' | translate">
         </div>
       </div>
     </div>
 
     <!-- Final Actions -->
     <div class="p-8 bg-surface-container-low/40 backdrop-blur-xl flex gap-4 relative z-10 border-t border-outline-variant/10">
-      <button (click)="showModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">Annuler</button>
-      <button (click)="submitNewPatient()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">Enregistrer le Dossier</button>
+      <button (click)="showModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">{{ 'COMMON.CANCEL' | translate }}</button>
+      <button (click)="submitNewPatient()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">{{ 'PATIENTS.MODAL_SUBMIT' | translate }}</button>
     </div>
   </div>
 </div>

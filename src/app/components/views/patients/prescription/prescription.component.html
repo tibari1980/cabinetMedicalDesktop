@@ -7,8 +7,8 @@
         <span class="material-symbols-outlined">arrow_back</span>
       </button>
       <div>
-        <h2 class="text-xl font-bold text-on-surface">Édition d'Ordonnance</h2>
-        <p class="text-xs text-on-surface-variant uppercase tracking-widest font-bold">Patient: {{ patient.firstName }} {{ patient.lastName }}</p>
+        <h2 class="text-xl font-bold text-on-surface">{{ 'PRESCRIPTION.EDIT_TITLE' | translate }}</h2>
+        <p class="text-xs text-on-surface-variant uppercase tracking-widest font-bold">{{ 'PRESCRIPTION.PATIENT_LABEL' | translate }}: {{ patient.firstName }} {{ patient.lastName }}</p>
       </div>
     </div>
     <div class="flex gap-3 items-center">
@@ -24,18 +24,18 @@
         <div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-xl border border-outline-variant/20">
           <span class="material-symbols-outlined text-sm text-on-surface-variant">description</span>
           <select aria-label="Format d'impression" [(ngModel)]="paperFormat" class="bg-transparent border-none text-xs font-bold font-on-surface p-0 outline-none cursor-pointer">
-            <option value="A5">Format A5 (Petit)</option>
-            <option value="A4">Format A4 (Grand)</option>
+            <option value="A5">{{ 'PRESCRIPTION.FORMAT_A5' | translate }}</option>
+            <option value="A4">{{ 'PRESCRIPTION.FORMAT_A4' | translate }}</option>
           </select>
         </div>
       </div>
       <button (click)="addItem()" class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high text-on-surface rounded-xl font-bold text-sm hover:brightness-95 transition-all">
         <span class="material-symbols-outlined text-lg">add</span>
-        Ajouter une ligne
+        {{ 'PRESCRIPTION.ADD_LINE' | translate }}
       </button>
       <button (click)="saveAndPrint()" class="flex items-center gap-2 px-8 py-2.5 bg-primary text-white rounded-xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
         <span class="material-symbols-outlined text-lg">print</span>
-        Imprimer
+        {{ 'PRESCRIPTION.PRINT' | translate }}
       </button>
     </div>
   </section>
@@ -44,16 +44,16 @@
   <section class="no-print bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 space-y-4">
     <div *ngFor="let item of prescription.items; let i = index; trackBy: trackByItem" class="grid grid-cols-[1fr_2fr_1fr_40px] gap-4 items-end animate-fade-in pb-4 border-b border-outline-variant/5">
       <div class="space-y-1">
-        <label for="rx-name-{{i}}" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Médicament</label>
-        <input id="rx-name-{{i}}" [(ngModel)]="item.medicationName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom du médicament">
+        <label for="rx-name-{{i}}" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">{{ 'PRESCRIPTION.MEDICATION' | translate }}</label>
+        <input id="rx-name-{{i}}" [(ngModel)]="item.medicationName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" [placeholder]="'PRESCRIPTION.MED_PLACEHOLDER' | translate">
       </div>
       <div class="space-y-1">
-        <label for="rx-dosage-{{i}}" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Posologie</label>
-        <input id="rx-dosage-{{i}}" [(ngModel)]="item.dosage" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" placeholder="Ex: 1 comp 3x/jour après les repas">
+        <label for="rx-dosage-{{i}}" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">{{ 'PRESCRIPTION.DOSAGE' | translate }}</label>
+        <input id="rx-dosage-{{i}}" [(ngModel)]="item.dosage" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" [placeholder]="'PRESCRIPTION.DOSAGE_PLACEHOLDER' | translate">
       </div>
       <div class="space-y-1">
-        <label for="rx-duration-{{i}}" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Durée / Qté</label>
-        <input id="rx-duration-{{i}}" [(ngModel)]="item.duration" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" placeholder="7 jours / 2 boites">
+        <label for="rx-duration-{{i}}" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">{{ 'PRESCRIPTION.DURATION' | translate }}</label>
+        <input id="rx-duration-{{i}}" [(ngModel)]="item.duration" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" [placeholder]="'PRESCRIPTION.DURATION_PLACEHOLDER' | translate">
       </div>
       <button (click)="removeItem(i)" aria-label="Supprimer ce médicament" class="text-error/30 hover:text-error transition-colors p-2">
         <span class="material-symbols-outlined">delete</span>
@@ -79,11 +79,11 @@
         </div>
       </div>
       <div class="text-right space-y-1">
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Le {{ prescription.date | date:'dd / MM / yyyy' }}</p>
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ 'PRESCRIPTION.DATE_LABEL' | translate }} {{ prescription.date | date:'dd / MM / yyyy' }}</p>
         <div class="mt-8">
           <p class="text-xs font-bold text-slate-400">Patient:</p>
           <p class="text-lg font-black text-slate-800">{{ patient.lastName | uppercase }} {{ patient.firstName }}</p>
-          <p class="text-[10px] text-slate-500 italic">{{ patient.birthDate | date:'dd/MM/yyyy' }} ({{ patient.gender }})</p>
+          <p class="text-[10px] text-slate-500 italic">{{ patient.birthDate | date:'dd/MM/yyyy' }} ({{ 'COMMON.GENDER_' + (patient.gender === 'Masculin' ? 'M' : 'F') | translate }})</p>
         </div>
       </div>
     </header>
@@ -91,7 +91,7 @@
     <!-- Body -->
     <main class="min-h-[400px]">
       <div class="mb-8 text-center">
-        <h2 class="text-2xl font-serif italic border-b border-primary/20 inline-block px-8 pb-1 mb-4">Ordonnance Médicale</h2>
+        <h2 class="text-2xl font-serif italic border-b border-primary/20 inline-block px-8 pb-1 mb-4">{{ 'PRESCRIPTION.DOC_TITLE' | translate }}</h2>
       </div>
 
       <div class="space-y-8 pl-4">
@@ -111,10 +111,10 @@
     <!-- Footer -->
     <footer class="mt-12 flex justify-between items-end">
       <div class="text-[9px] text-slate-300 italic max-w-[200px]">
-        Le pharmacien est autorisé à délivrer des équivalents génériques conformément à la législation en vigueur.
+        {{ 'PRESCRIPTION.PHARMACY_NOTE' | translate }}
       </div>
       <div class="text-center w-48 border-t border-slate-100 pt-4">
-        <p class="text-[9px] uppercase font-bold text-slate-400 mb-8 tracking-tighter">Signature et Cachet</p>
+        <p class="text-[9px] uppercase font-bold text-slate-400 mb-8 tracking-tighter">{{ 'PRESCRIPTION.SIGNATURE_STAMP' | translate }}</p>
         <!-- Emplacement pour signature manuelle -->
         <div class="h-20"></div>
         <p class="text-xs font-bold text-slate-700">DR. {{ prescription.doctorName }}</p>

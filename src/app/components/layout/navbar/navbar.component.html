@@ -1,7 +1,7 @@
 <header class="sticky top-0 w-full z-40 glass-panel flex items-center justify-between px-8 py-3 border-b border-outline-variant/10 ambient-glow h-20">
   <div class="flex items-center gap-6 flex-1">
     <button routerLink="/dashboard" class="p-2.5 text-primary hover:bg-primary/5 rounded-2xl transition-all group flex items-center justify-center shrink-0" title="Retour au Dashboard">
-      <span class="material-symbols-outlined group-hover:scale-110 transition-transform text-2xl" translate="no">home</span>
+      <span class="material-symbols-outlined group-hover:scale-110 transition-transform text-2xl">home</span>
     </button>
     
     <!-- Transparent Click-Outside Overlay -->
@@ -9,10 +9,10 @@
 
     <!-- Search Input Container -->
     <div class="relative group w-full max-w-xl z-20">
-      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" translate="no">search</span>
+      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary transition-colors">search</span>
       <input [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
              class="w-full bg-surface-container-low border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/10 transition-all outline-none" 
-             placeholder="Recherche globale (Patient, RDV, Facture, Staff)..." type="text"/>
+             [placeholder]="'NAVBAR.SEARCH_PLACEHOLDER' | translate" type="text"/>
       
       <!-- Premium Search Results Dropdown -->
       <div *ngIf="showSearchResults" class="absolute top-full left-0 right-0 mt-3 bg-surface-container-lowest/90 backdrop-blur-3xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden z-[100] animate-scale-up origin-top">
@@ -21,7 +21,7 @@
                (click)="selectResult(result)"
                class="flex items-center gap-4 p-4 hover:bg-primary/10 rounded-2xl transition-all cursor-pointer group/item">
             <div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary group-hover/item:scale-110 transition-transform">
-              <span class="material-symbols-outlined" translate="no">{{ result.icon }}</span>
+              <span class="material-symbols-outlined">{{ result.icon }}</span>
             </div>
             <div class="flex-1">
               <p class="text-sm font-bold text-on-surface leading-tight">{{ result.title }}</p>
@@ -36,7 +36,7 @@
           <!-- No results state -->
           <div *ngIf="(results$ | async)?.length === 0" class="p-12 text-center">
             <div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mx-auto mb-4 text-on-surface-variant/20">
-              <span class="material-symbols-outlined text-4xl" translate="no">find_in_page</span>
+              <span class="material-symbols-outlined text-4xl">find_in_page</span>
             </div>
             <p class="text-sm font-bold text-on-surface opacity-80">Aucun résultat pour "{{ searchTerm }}"</p>
             <p class="text-xs text-on-surface-variant opacity-50 mt-1">Vérifiez l'orthographe ou essayez un autre terme.</p>
@@ -47,12 +47,12 @@
           <div class="flex items-center gap-1.5 opacity-40">
             <span class="px-1.5 py-0.5 bg-on-surface/5 rounded text-[8px] font-bold">Shift</span>
             <span class="px-1.5 py-0.5 bg-on-surface/5 rounded text-[8px] font-bold">F</span>
-            <span class="text-[9px] font-bold uppercase tracking-widest">Recherche Rapide</span>
+            <span class="text-[9px] font-bold uppercase tracking-widest">{{ 'NAVBAR.SEARCH_RAPIDE' | translate }}</span>
           </div>
           <div class="w-[1px] h-3 bg-on-surface/10"></div>
           <div class="flex items-center gap-1.5 opacity-40">
             <span class="px-1.5 py-0.5 bg-on-surface/5 rounded text-[8px] font-bold">Esc</span>
-            <span class="text-[9px] font-bold uppercase tracking-widest">Fermer</span>
+            <span class="text-[9px] font-bold uppercase tracking-widest">{{ 'NAVBAR.FERMER' | translate }}</span>
           </div>
         </div>
       </div>
@@ -60,12 +60,19 @@
   </div>
   
   <div class="flex items-center gap-3">
+    <button (click)="toggleLanguage()" aria-label="Changer la langue" class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all group overflow-hidden relative">
+      <div class="flex flex-col items-center transition-transform duration-500 group-active:scale-95" [style.transform]="languageService.getCurrentLang() === 'fr' ? 'translateY(0)' : 'translateY(-20px)'">
+        <span class="text-[10px] font-black uppercase tracking-tighter h-5 flex items-center">FR</span>
+        <span class="text-[10px] font-black uppercase tracking-tighter h-5 flex items-center">EN</span>
+      </div>
+      <span class="material-symbols-outlined text-[14px] opacity-40">language</span>
+    </button>
     <button (click)="themeService.toggleDarkMode()" aria-label="Basculer le mode sombre" class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">
-      <span class="material-symbols-outlined text-xl" *ngIf="!(themeService.isDarkMode$ | async)" translate="no">dark_mode</span>
-      <span class="material-symbols-outlined text-xl" *ngIf="themeService.isDarkMode$ | async" translate="no">light_mode</span>
+      <span class="material-symbols-outlined text-xl" *ngIf="!(themeService.isDarkMode$ | async)">dark_mode</span>
+      <span class="material-symbols-outlined text-xl" *ngIf="themeService.isDarkMode$ | async">light_mode</span>
     </button>
     <button (click)="showNotifications()" aria-label="Voir les notifications" class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all relative">
-      <span class="material-symbols-outlined text-xl" translate="no">notifications</span>
+      <span class="material-symbols-outlined text-xl">notifications</span>
       <span class="absolute top-3 right-3 w-2 h-2 bg-error rounded-full border-2 border-surface shadow-sm"></span>
     </button>
     <button *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])" routerLink="/admin" aria-label="Ouvrir les paramètres" class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">
@@ -107,7 +114,7 @@
         </div>
       </div>
       <button (click)="showChangePasswordModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
-        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform" translate="no">close</span>
+        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">close</span>
       </button>
     </div>
 

@@ -7,8 +7,8 @@
           <span class="material-symbols-outlined text-3xl" translate="no">manage_accounts</span>
         </div>
         <div>
-          <h2 class="text-3xl font-black text-on-surface tracking-tight">Gestion du Personnel</h2>
-          <p class="text-sm text-on-surface-variant font-medium opacity-70">Administration des comptes, rôles et accès sécurisés</p>
+          <h2 class="text-3xl font-black text-on-surface tracking-tight">{{ 'ADMIN.TITLE' | translate }}</h2>
+          <p class="text-sm text-on-surface-variant font-medium opacity-70">{{ 'ADMIN.SUBTITLE' | translate }}</p>
         </div>
       </div>
     </div>
@@ -27,8 +27,8 @@
               <span class="material-symbols-outlined text-2xl">groups</span>
             </div>
             <div>
-              <h3 class="text-xl font-black text-on-surface tracking-tight">Gestion de l'Équipe</h3>
-              <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest opacity-60">Administration des accès et rôles</p>
+              <h3 class="text-xl font-black text-on-surface tracking-tight">{{ 'ADMIN.TEAM_MGMT' | translate }}</h3>
+              <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest opacity-60">{{ 'ADMIN.TEAM_SUBTITLE' | translate }}</p>
             </div>
           </div>
           <div class="flex flex-1 max-w-md items-center gap-3">
@@ -36,7 +36,7 @@
               <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg transition-colors group-focus-within:text-primary" translate="no">search</span>
               <input [(ngModel)]="staffSearchTerm" (ngModelChange)="applyStaffFilter()"
                      class="w-full bg-surface-container-low border-none rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold focus:ring-2 focus:ring-primary/10 transition-all outline-none shadow-inner-sm" 
-                     placeholder="Filtrer par nom, rôle..." type="text"/>
+                     [placeholder]="'ADMIN.SEARCH_PLACEHOLDER' | translate" type="text"/>
             </div>
             <button (click)="openProfileModal()" class="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">
               <span class="material-symbols-outlined text-2xl">person_add</span>
@@ -73,7 +73,7 @@
           </div>
           
           <div *ngIf="filteredStaff.length === 0" class="col-span-full p-20 text-center">
-            <p class="text-on-surface-variant font-bold italic opacity-40">Aucun collaborateur trouvé.</p>
+            <p class="text-on-surface-variant font-bold italic opacity-40">{{ 'ADMIN.NO_STAFF' | translate }}</p>
           </div>
         </div>
       </div>
@@ -84,11 +84,11 @@
           <div>
             <h3 class="text-base font-bold text-on-surface flex items-center gap-2">
               <span class="material-symbols-outlined text-sm">history_edu</span>
-              Dernières Activités Système
+              {{ 'ADMIN.RECENT_ACTIVITY' | translate }}
             </h3>
           </div>
           <button routerLink="/traceability" class="text-[10px] font-black text-primary uppercase tracking-widest hover:underline">
-            Voir tout le journal
+            {{ 'ADMIN.VIEW_ALL_LOGS' | translate }}
           </button>
         </div>
 
@@ -129,8 +129,8 @@
           <span class="material-symbols-outlined text-2xl" translate="no">manage_accounts</span>
         </div>
         <div>
-          <h3 class="text-2xl font-black text-on-surface tracking-tight">{{ isNewProfile ? 'Nouveau Collaborateur' : 'Édition du Profil' }}</h3>
-          <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">Gestion Médicale</p>
+          <h3 class="text-2xl font-black text-on-surface tracking-tight">{{ (isNewProfile ? 'ADMIN.MODAL_TITLE_NEW' : 'ADMIN.MODAL_TITLE_EDIT') | translate }}</h3>
+          <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">{{ 'ADMIN.MODAL_SUBTITLE' | translate }}</p>
         </div>
       </div>
       <button (click)="showProfileModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
@@ -141,25 +141,25 @@
     <div class="p-8 space-y-6 max-h-[65vh] overflow-y-auto relative z-10 custom-scrollbar">
       <div class="grid grid-cols-2 gap-5">
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Prénom *</label>
-          <input [(ngModel)]="selectedProfile.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Prénom">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.FIRST_NAME' | translate }} *</label>
+          <input [(ngModel)]="selectedProfile.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" [placeholder]="'COMMON.FIRST_NAME' | translate">
         </div>
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Nom *</label>
-          <input [(ngModel)]="selectedProfile.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Nom">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.LAST_NAME' | translate }} *</label>
+          <input [(ngModel)]="selectedProfile.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" [placeholder]="'COMMON.LAST_NAME' | translate">
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-5">
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Identifiant *</label>
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.USERNAME' | translate }} *</label>
           <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 text-sm" translate="no">alternate_email</span>
             <input [(ngModel)]="selectedProfile.username" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all" placeholder="username">
           </div>
         </div>
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-error tracking-[0.2em] pl-1 opacity-70">Mot de Passe *</label>
+          <label class="text-[10px] uppercase font-black text-error tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.PASSWORD' | translate }} *</label>
           <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-error/30 text-sm" translate="no">key</span>
             <input [(ngModel)]="selectedProfile.password" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-mono font-semibold outline-none focus:ring-2 focus:ring-error/10 transition-all" placeholder="••••••••">
@@ -169,29 +169,29 @@
 
       <div class="grid grid-cols-2 gap-5 pt-4 border-t border-outline-variant/10">
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Rôle Système</label>
+          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.SYSTEM_ROLE' | translate }}</label>
           <div class="relative">
             <select [(ngModel)]="selectedProfile.role" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
-              <option [value]="UserRole.DOCTOR">Médecin (DOCTOR)</option>
-              <option [value]="UserRole.SECRETARY">Secrétaire (SECRETARY)</option>
-              <option [value]="UserRole.ADMIN">Administrateur (ADMIN)</option>
+              <option [value]="UserRole.DOCTOR">{{ 'ADMIN.ROLE_DOCTOR' | translate }}</option>
+              <option [value]="UserRole.SECRETARY">{{ 'ADMIN.ROLE_SECRETARY' | translate }}</option>
+              <option [value]="UserRole.ADMIN">{{ 'ADMIN.ROLE_ADMIN' | translate }}</option>
             </select>
             <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">badge</span>
           </div>
         </div>
         <div class="space-y-2" *ngIf="selectedProfile.role === UserRole.DOCTOR">
-          <label class="text-[10px] uppercase font-black text-tertiary tracking-[0.2em] pl-1 opacity-70">Spécialité Médicale</label>
-          <input [(ngModel)]="selectedProfile.specialty" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="Ex: Cardiologue">
+          <label class="text-[10px] uppercase font-black text-tertiary tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.MEDICAL_SPECIALTY' | translate }}</label>
+          <input [(ngModel)]="selectedProfile.specialty" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" [placeholder]="'ADMIN.SPECIALTY_PLACEHOLDER' | translate">
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-5">
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Email Pro</label>
+          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.PRO_EMAIL' | translate }}</label>
           <input [(ngModel)]="selectedProfile.email" type="email" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="contact@clinique.ma">
         </div>
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Tél Direct</label>
+          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.DIRECT_PHONE' | translate }}</label>
           <input [(ngModel)]="selectedProfile.phone" type="tel" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="+212 ...">
         </div>
       </div>
@@ -199,8 +199,8 @@
 
     <!-- Final Actions -->
     <div class="p-8 bg-surface-container-low/40 backdrop-blur-xl flex gap-4 relative z-10 border-t border-outline-variant/10">
-      <button (click)="showProfileModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">Annuler</button>
-      <button (click)="saveProfile()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">Enregistrer le Profil</button>
+      <button (click)="showProfileModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">{{ 'COMMON.CANCEL' | translate }}</button>
+      <button (click)="saveProfile()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">{{ 'ADMIN.SAVE_PROFILE' | translate }}</button>
     </div>
   </div>
 </div>

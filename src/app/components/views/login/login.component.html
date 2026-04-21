@@ -8,26 +8,26 @@
         <span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">medical_services</span>
       </div>
       <h1 class="text-4xl font-extrabold text-on-surface tracking-tight">MedConnect</h1>
-      <p class="text-on-surface-variant font-medium mt-2">Gestion Immédiate du Cabinet</p>
+      <p class="text-on-surface-variant font-medium mt-2">{{ 'AUTH.SUBTITLE' | translate }}</p>
     </div>
 
     <!-- Login Card -->
     <div class="glass-panel p-10 rounded-[2.5rem] shadow-2xl border border-white/50 bg-surface-container-lowest/70 backdrop-blur-xl">
-      <h2 class="text-2xl font-bold text-on-surface mb-8 text-center">Connexion</h2>
+      <h2 class="text-2xl font-bold text-on-surface mb-8 text-center">{{ 'AUTH.LOGIN_TITLE' | translate }}</h2>
       
       <form (submit)="onSubmit()" class="space-y-6">
         <div class="space-y-2">
-          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">Identifiant</label>
+          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">{{ 'AUTH.USERNAME_LABEL' | translate }}</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50">person</span>
             <input [(ngModel)]="username" name="username" type="text" required
                    class="w-full bg-surface-container-lowest/50 border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-4 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30"
-                   placeholder="Entrez votre nom d'utilisateur">
+                   [placeholder]="'AUTH.USERNAME_PLACEHOLDER' | translate">
           </div>
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">Mot de Passe</label>
+          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">{{ 'AUTH.PASSWORD_LABEL' | translate }}</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50">lock</span>
             <input [(ngModel)]="password" name="password" [type]="hidePassword ? 'password' : 'text'" required
@@ -47,26 +47,26 @@
 
         <button type="submit" 
                 class="w-full bg-primary text-white py-4 rounded-2xl font-bold hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
-          Se Connecter
+          {{ 'AUTH.LOGIN_BUTTON' | translate }}
           <span class="material-symbols-outlined text-sm">arrow_forward</span>
         </button>
       </form>
 
       <!-- Quick Session Selector for Demo -->
       <div class="mt-8 pt-6 border-t border-outline-variant/10">
-        <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest text-center mb-4 text-primary">Mode Démonstration : Choisir un Profil</p>
+        <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest text-center mb-4 text-primary">{{ 'AUTH.DEMO_MODE' | translate }}</p>
         <div class="grid grid-cols-2 gap-3">
           <button (click)="selectDemoUser('dr.miller')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
-            👨‍⚕️ Docteur (dr.miller)
+            👨‍⚕️ {{ 'AUTH.DEMO_DOCTOR' | translate }}
           </button>
           <button (click)="selectDemoUser('amine.b')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
-            👩‍💼 Secrétaire (amine.b)
+            👩‍💼 {{ 'AUTH.DEMO_SECRETARY' | translate }}
           </button>
           <button (click)="selectDemoUser('admin.sophie')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
-            🔐 Admin Cabinet
+            🔐 {{ 'AUTH.DEMO_ADMIN' | translate }}
           </button>
           <button (click)="selectDemoUser('superadmin')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
-            🌐 Super Admin
+            🌐 {{ 'AUTH.DEMO_SUPERADMIN' | translate }}
           </button>
         </div>
       </div>
@@ -75,12 +75,12 @@
     <div class="flex justify-center mt-6">
       <button routerLink="/help" class="flex items-center gap-2 text-[10px] font-black uppercase text-primary tracking-[0.2em] bg-surface-container-lowest/50 px-4 py-2 rounded-full hover:bg-surface-container-lowest transition-all shadow-sm">
         <span class="material-symbols-outlined text-[14px]">help_center</span>
-        Guide d'Utilisation
+        {{ 'AUTH.USER_GUIDE' | translate }}
       </button>
     </div>
 
     <p class="text-center mt-8 text-on-surface-variant/60 text-[11px] font-medium">
-      Projet MedConnect v1.0 • Solution Locale Sécurisée
+      {{ 'AUTH.FOOTER' | translate }}
     </p>
   </div>
 </div>

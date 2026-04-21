@@ -2,12 +2,12 @@
   <!-- Header -->
   <header class="flex justify-between items-end">
     <div>
-      <h2 class="text-3xl font-black text-on-surface tracking-tight">Focus Performance</h2>
-      <p class="text-on-surface-variant mt-1">Analyse prédictive et rentabilité (Mode Hors-ligne)</p>
+      <h2 class="text-3xl font-black text-on-surface tracking-tight">{{ 'PERF.TITLE' | translate }}</h2>
+      <p class="text-on-surface-variant mt-1">{{ 'PERF.SUBTITLE' | translate }}</p>
     </div>
     <div class="bg-surface-container-lowest px-4 py-2 rounded-xl shadow-sm border border-outline-variant/10 text-[10px] font-bold uppercase tracking-widest text-primary flex items-center gap-2">
       <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-      Données Temps Réel
+      {{ 'PERF.REALTIME_DATA' | translate }}
     </div>
   </header>
 
@@ -17,8 +17,8 @@
       <!-- Revenue Trend Line Chart (SVG) -->
       <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 relative overflow-hidden group">
         <h3 class="text-lg font-bold mb-8 flex justify-between items-center">
-          Intelligence de Revenus (30j)
-          <span class="text-xs font-bold text-success bg-success/10 px-3 py-1 rounded-lg">+18% vs mois précédent</span>
+          {{ 'PERF.REVENUE_INTEL' | translate }}
+          <span class="text-xs font-bold text-success bg-success/10 px-3 py-1 rounded-lg">+18% {{ 'PERF.VS_PREVIOUS_MONTH' | translate }}</span>
         </h3>
         
         <div class="h-64 w-full relative">
@@ -45,22 +45,22 @@
         </div>
         
         <div class="flex justify-between mt-6 text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest">
-            <span>Il y a 30 jours</span>
-            <span>Aujourd'hui</span>
+            <span>{{ 'PERF.DAYS_AGO_30' | translate }}</span>
+            <span>{{ 'PERF.TODAY' | translate }}</span>
         </div>
       </div>
 
       <!-- Bento Stats -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/5 shadow-sm">
-          <p class="text-[10px] uppercase font-black text-on-surface-variant/40 tracking-widest mb-2">Valeur Moyenne par Acte (Panier Moyen)</p>
+          <p class="text-[10px] uppercase font-black text-on-surface-variant/40 tracking-widest mb-2">{{ 'PERF.AVG_FEE_LABEL' | translate }}</p>
           <div class="flex items-baseline gap-2">
             <span class="text-4xl font-black text-on-surface">{{ stats.averageFee | number:'1.0-0' }}</span>
             <span class="text-sm font-bold text-on-surface-variant">{{ clinic.currency || 'DH' }}</span>
           </div>
         </div>
         <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/5 shadow-sm">
-          <p class="text-[10px] uppercase font-black text-on-surface-variant/40 tracking-widest mb-2">Chiffre d'Affaires de la Période</p>
+          <p class="text-[10px] uppercase font-black text-on-surface-variant/40 tracking-widest mb-2">{{ 'PERF.TOTAL_REVENUE_LABEL' | translate }}</p>
            <div class="flex items-baseline gap-2">
             <span class="text-4xl font-black text-primary">{{ stats.totalRevenue | number:'1.0-0' }}</span>
             <span class="text-sm font-bold text-primary/60">{{ clinic.currency || 'DH' }}</span>
@@ -73,11 +73,11 @@
     <aside class="space-y-8">
       <!-- Consultation Distribution -->
       <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10">
-        <h3 class="text-lg font-bold mb-6">Mix des Actes</h3>
+        <h3 class="text-lg font-bold mb-6">{{ 'PERF.SERVICES_MIX' | translate }}</h3>
         <div class="space-y-6">
           <div class="space-y-2">
             <div class="flex justify-between text-xs font-bold">
-              <span>Consultations</span>
+              <span>{{ 'CALENDAR.ACT_TYPE_CONSULT' | translate }}</span>
               <span class="text-primary">{{ stats.appointmentTypes.consultation }}</span>
             </div>
             <div class="w-full bg-slate-50 h-2 rounded-full overflow-hidden">
@@ -86,7 +86,7 @@
           </div>
           <div class="space-y-2">
             <div class="flex justify-between text-xs font-bold">
-              <span>Contrôles</span>
+              <span>{{ 'CALENDAR.ACT_TYPE_CONTROL' | translate }}</span>
               <span class="text-tertiary">{{ stats.appointmentTypes.control }}</span>
             </div>
             <div class="w-full bg-slate-50 h-2 rounded-full overflow-hidden">
@@ -95,7 +95,7 @@
           </div>
           <div class="space-y-2">
             <div class="flex justify-between text-xs font-bold">
-              <span>Urgences</span>
+              <span>{{ 'CALENDAR.ACT_TYPE_EMERGENCY' | translate }}</span>
               <span class="text-error">{{ stats.appointmentTypes.emergency }}</span>
             </div>
             <div class="w-full bg-slate-50 h-2 rounded-full overflow-hidden">
@@ -108,9 +108,9 @@
       <!-- Expert Recommendation Card -->
       <div class="bg-gradient-to-br from-on-surface to-surface-container-highest p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
         <span class="material-symbols-outlined text-4xl mb-6 text-primary">psychology</span>
-        <h4 class="text-xl font-bold leading-tight mb-4">Conseil Expert IA</h4>
+        <h4 class="text-xl font-bold leading-tight mb-4">{{ 'PERF.AI_ADVICE_TITLE' | translate }}</h4>
         <p class="text-white/70 text-sm leading-relaxed">
-          Sur la base de vos données du mois, il est recommandé d'optimiser les créneaux de <b>Contrôle</b> car ils représentent 40% de votre flux mais seulement 15% de votre revenu. 
+          {{ 'PERF.AI_ADVICE_BODY' | translate }}
         </p>
         <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-surface-container-lowest/5 rounded-full blur-xl"></div>
       </div>
@@ -119,6 +119,6 @@
 
   <div *ngIf="!stats" class="p-20 text-center space-y-4">
     <div class="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
-    <p class="text-on-surface-variant animate-pulse font-medium">Calcul des algorithmes de performance...</p>
+    <p class="text-on-surface-variant animate-pulse font-medium">{{ 'PERF.LOADING' | translate }}</p>
   </div>
 </div>

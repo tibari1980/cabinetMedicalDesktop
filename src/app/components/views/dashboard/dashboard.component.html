@@ -1,12 +1,12 @@
 <div class="space-y-8">
   <section class="flex justify-between items-end">
     <div>
-      <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Tableau de Bord</h2>
-      <p class="text-on-surface-variant mt-1 italic">Résumé de l'activité pour le {{ today | date:'dd MMM yyyy' }}</p>
+      <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">{{ 'DASHBOARD.TITLE' | translate }}</h2>
+      <p class="text-on-surface-variant mt-1 italic">{{ 'DASHBOARD.SUMMARY_FOR' | translate }} {{ today | date:'dd MMM yyyy' }}</p>
     </div>
     <button (click)="openBookingModal()" class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 shadow-lg shadow-primary/20 active:scale-95 transition-transform hover:brightness-110">
-      <span class="material-symbols-outlined text-lg" translate="no">add</span>
-      Nouveau Rendez-vous
+      <span class="material-symbols-outlined text-lg">add</span>
+      {{ 'DASHBOARD.NEW_APPOINTMENT' | translate }}
     </button>
   </section>
 
@@ -15,7 +15,7 @@
     <div *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])" class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
       <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
       <div class="relative">
-        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">Revenu 7 Jours</p>
+        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">{{ 'DASHBOARD.STATS_REVENUE_7D' | translate }}</p>
         <div class="flex items-end gap-2">
           <span class="text-4xl font-black text-primary">{{ revenueWeek | number:'1.0-0' }}</span>
           <span class="text-primary/60 font-bold text-xs mb-1">{{ clinic?.currency || 'DH' }}</span>
@@ -32,7 +32,7 @@
     <div *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])" class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
       <div class="absolute top-0 right-0 w-32 h-32 bg-tertiary/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
       <div class="relative">
-        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">Revenu du Jour</p>
+        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">{{ 'DASHBOARD.STATS_REVENUE_TODAY' | translate }}</p>
         <div class="flex items-end gap-2">
           <span class="text-4xl font-black text-on-surface">{{ revenueToday | number:'1.0-0' }}</span>
           <span class="text-on-surface-variant/60 font-bold text-xs mb-1">{{ clinic?.currency || 'DH' }}</span>
@@ -47,7 +47,7 @@
     <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
       <div class="absolute top-0 right-0 w-32 h-32 bg-error/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
       <div class="relative">
-        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">RDV en Attente</p>
+        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">{{ 'DASHBOARD.STATS_PENDING' | translate }}</p>
         <div class="flex items-end gap-2">
           <span class="text-4xl font-black text-on-surface">{{ pendingCount }}</span>
         </div>
@@ -58,7 +58,7 @@
     <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
       <div class="absolute top-0 right-0 w-32 h-32 bg-primary-container/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
       <div class="relative">
-        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">Occupation Cabinet</p>
+        <p class="text-on-surface-variant font-label text-[10px] uppercase font-bold tracking-[0.2em] mb-4">{{ 'DASHBOARD.STATS_OCCUPATION' | translate }}</p>
         <div class="flex items-end gap-2">
           <span class="text-4xl font-black text-on-surface">{{ occupationRate }}%</span>
         </div>
@@ -75,9 +75,9 @@
       <div class="flex items-center justify-between">
         <h3 class="text-xl font-bold text-on-surface flex items-center gap-2">
           <span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">priority_high</span>
-          Consultations Urgentes
+          {{ 'DASHBOARD.URGENT_CONSULTATIONS' | translate }}
         </h3>
-        <a class="text-xs font-bold text-primary hover:underline cursor-pointer" routerLink="/calendar">Voir l'agenda complet</a>
+        <a class="text-xs font-bold text-primary hover:underline cursor-pointer" routerLink="/calendar">{{ 'DASHBOARD.VIEW_CALENDAR' | translate }}</a>
       </div>
       
       <div class="space-y-4">
@@ -123,7 +123,7 @@
 
     <aside class="space-y-8">
       <div class="bg-surface-container-lowest p-6 rounded-3xl ambient-glow">
-        <h3 class="text-lg font-bold text-on-surface mb-6">File d'Attente Active</h3>
+        <h3 class="text-lg font-bold text-on-surface mb-6">{{ 'DASHBOARD.ACTIVE_QUEUE' | translate }}</h3>
         <div class="space-y-6">
           <div *ngFor="let apt of waitingList.slice(0, 4); trackBy: trackByApt" class="flex gap-4 relative pb-6 border-l-2 border-outline-variant/10 ml-2 pl-6">
             <div [class.bg-primary]="apt.status === 'Confirmé'" class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-4 border-white shadow-sm"></div>
@@ -134,25 +134,25 @@
             </div>
           </div>
           <div *ngIf="waitingList.length === 0" class="text-center py-4">
-             <p class="text-xs text-on-surface-variant/40 italic">File vide</p>
+             <p class="text-xs text-on-surface-variant/40 italic">{{ 'DASHBOARD.EMPTY_QUEUE' | translate }}</p>
           </div>
         </div>
         <button routerLink="/calendar" class="w-full mt-6 py-3 bg-surface-container-high text-on-surface-variant font-bold text-xs rounded-xl hover:bg-surface-container-highest transition-colors uppercase tracking-widest">
-          Gérer la file d'attente
+          {{ 'DASHBOARD.MANAGE_QUEUE' | translate }}
         </button>
       </div>
 
       <!-- Live Activity Feed (Traceability integration) -->
       <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 shadow-sm relative overflow-hidden group">
         <div class="flex items-center justify-between mb-6">
-          <h3 class="text-sm font-black uppercase tracking-widest text-on-surface">Activité Récente</h3>
+          <h3 class="text-sm font-black uppercase tracking-widest text-on-surface">{{ 'DASHBOARD.RECENT_ACTIVITY' | translate }}</h3>
           <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
         </div>
         
         <div class="space-y-5">
           <div *ngFor="let log of recentLogs" class="flex gap-3 items-start animate-fade-in-up">
             <div class="w-8 h-8 rounded-xl bg-primary/5 flex items-center justify-center text-primary shrink-0">
-              <span class="material-symbols-outlined text-sm" translate="no" style="font-size: 16px;">
+              <span class="material-symbols-outlined text-sm" style="font-size: 16px;">
                 {{ log.category === 'MEDICAL' ? 'medical_services' : (log.severity === 'CRITICAL' ? 'report' : 'sync') }}
               </span>
             </div>
@@ -171,13 +171,13 @@
         </div>
 
         <button routerLink="/traceability" class="w-full mt-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:bg-primary/5 rounded-xl transition-all border border-primary/10">
-          Journal complet
+          {{ 'DASHBOARD.FULL_LOG' | translate }}
         </button>
       </div>
 
       <div class="bg-gradient-to-br from-secondary to-secondary-container p-6 rounded-3xl relative overflow-hidden text-white shadow-xl shadow-secondary/20 group">
         <div class="relative z-10">
-          <span class="material-symbols-outlined text-white text-3xl mb-4" translate="no">database</span>
+          <span class="material-symbols-outlined text-white text-3xl mb-4">database</span>
           <h4 class="text-lg font-bold leading-tight">Scalabilité Cloud-Native</h4>
           <p class="text-white/80 text-xs mt-3 leading-relaxed">Votre base de données est désormais indexée localement (IndexedDB) pour supporter des milliers de patients sans ralentissement.</p>
         </div>
@@ -204,7 +204,7 @@
     <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center relative z-10">
       <div class="flex items-center gap-4">
         <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-          <span class="material-symbols-outlined text-2xl" translate="no">event_note</span>
+          <span class="material-symbols-outlined text-2xl">event_note</span>
         </div>
         <div>
           <h3 class="text-2xl font-black text-on-surface tracking-tight">Nouveau Rendez-vous</h3>
@@ -212,7 +212,7 @@
         </div>
       </div>
       <button (click)="showModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
-        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform" translate="no">close</span>
+        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">close</span>
       </button>
     </div>
 
@@ -232,7 +232,7 @@
         <div class="space-y-2">
           <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Recherche Rapide</label>
           <div class="relative group">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" translate="no">person_search</span>
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary transition-colors">person_search</span>
             <input id="search-patient" [ngModel]="patientSearchTerm" 
                    (ngModelChange)="onPatientSearchTermChange($event)"
                    class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 pl-12 pr-4 text-sm font-medium outline-none focus:border-primary/20 focus:bg-surface-container-lowest transition-all" 
@@ -268,7 +268,7 @@
         <div class="space-y-2">
           <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Numéro de Téléphone *</label>
           <div class="relative">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40" translate="no">phone</span>
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40">phone</span>
             <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="+212 ...">
           </div>
         </div>
