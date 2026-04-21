@@ -6,7 +6,7 @@ import { LanguageService } from './services/language.service';
   templateUrl: './app.component.html'
 })
 export class AppComponent {
-  title = 'MedConnect';
+  title = 'MediFlow';
 
   constructor(private languageService: LanguageService) {}
 }

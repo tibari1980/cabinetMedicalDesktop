@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class EncryptionService {
   // In a real commercial SaaS, this key would be derived from a user password.
   // For this local-first expert implementation, we use a robust internal key mechanism.
-  private readonly MASTER_KEY_PART = 'MedConnect_Secure_v1_';
+  private readonly MASTER_KEY_PART = 'MediFlow_Secure_v2_';
   private key: CryptoKey | null = null;
 
   constructor() {

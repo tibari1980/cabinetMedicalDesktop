@@ -187,7 +187,7 @@
     "LOGO_SPEC": "Logo 400x400",
     "VISUAL_IDENTITY": "Identità Visiva",
     "STRUCTURE_NAME": "Nome della Struttura",
-    "STRUCTURE_PLACEHOLDER": "Es: MedConnect Clinic",
+    "STRUCTURE_PLACEHOLDER": "Es: MediFlow Clinic",
     "ADDRESS_LABEL": "Indirizzo Sede",
     "ADDRESS_PLACEHOLDER": "Indirizzo completo...",
     "LOCALIZATION_MONEY": "Localizzazione e Pagamenti",
@@ -221,7 +221,7 @@
     "DEMO_ADMIN": "Admin Clinica",
     "DEMO_SUPERADMIN": "Super Admin",
     "USER_GUIDE": "Guida all'Uso",
-    "FOOTER": "Progetto MedConnect v1.0 • Soluzione Locale Sicura"
+    "FOOTER": "Progetto MediFlow v2.0 • Soluzione Locale Sicura"
   },
   "TRACE": {
     "TITLE": "Tracciabilità Operativa",
@@ -243,12 +243,12 @@
     "DETAILS": "Dettagli",
     "NO_EVENTS": "Nessun evento trovato",
     "LEGEND_NORMAL": "Normale",
-    "CERTIFIED_NOTE": "Sistema di tracciabilità certificato MedConnect",
+    "CERTIFIED_NOTE": "Sistema di tracciabilità certificato MediFlow",
     "ENTRIES_INDEXED": "voci indicizzate"
   },
   "HELP": {
     "TITLE": "Centro Assistenza e Documentazione",
-    "SUBTITLE": "Guida completa per padroneggiare MedConnect Pro v1.0",
+    "SUBTITLE": "Guida completa per padroneggiare MediFlow Pro v2.0",
     "LOCAL_SUPPORT": "Supporto Locale Attivo",
     "TAB_MEDICAL": "Area Medica",
     "TAB_SECRETARY": "Segreteria",
@@ -272,7 +272,7 @@
     "STAFF_BODY": "Crea accessi per i tuoi collaboratori. In caso di password dimenticata, puoi reimpostarla dalla scheda Amministrazione.",
     "AUDIT_TITLE": "Registro di Audit",
     "AUDIT_BODY": "Il registro di tracciabilità registra ogni accesso e modifica. È la tua garanzia di sicurezza legale.",
-    "COMMERCIAL_EDITION": "Edizione Commerciale v1.0"
+    "COMMERCIAL_EDITION": "Edizione Commerciale v2.0"
   },
   "PERF": {
     "TITLE": "Focus Performance",
@@ -322,5 +322,50 @@
     "VIEW": "Visualizzazione",
     "EDIT": "Modifica",
     "DELETE": "Eliminazione"
+  },
+  "SETUP": {
+    "TAGLINE": "Configurazione iniziale del tuo spazio medico",
+    "WELCOME_TITLE": "Benvenuto su MediFlow",
+    "WELCOME_SUBTITLE": "Configuriamo la tua clinica in pochi semplici passi",
+    "PRIVACY_TITLE": "Privacy Assoluta",
+    "PRIVACY_BODY": "I tuoi dati sono crittografati con AES-256 e non lasciano mai il tuo computer. Nessun server esterno ha accesso.",
+    "SELECT_LANGUAGE": "Scegli la tua lingua",
+    "CLINIC_TITLE": "La tua Clinica",
+    "CLINIC_SUBTITLE": "Inserisci le informazioni del tuo studio medico",
+    "LOGO_HINT": "Formato consigliato: 400×400px (opzionale)",
+    "CLINIC_NAME": "Nome della Clinica",
+    "CLINIC_NAME_PH": "Es: Studio Dr. Rossi",
+    "PHONE": "Telefono",
+    "EMAIL": "Email",
+    "ADDRESS": "Indirizzo",
+    "ADDRESS_PH": "Via, Città, CAP...",
+    "COUNTRY": "Paese",
+    "CURRENCY": "Valuta",
+    "OPENING_HOUR": "Apertura",
+    "CLOSING_HOUR": "Chiusura",
+    "ADMIN_TITLE": "Account Amministratore",
+    "ADMIN_SUBTITLE": "Crea il tuo accesso principale per gestire la clinica",
+    "ADMIN_INFO_TITLE": "Sei il Super Amministratore",
+    "ADMIN_INFO_BODY": "Questo account avrà accesso completo a tutte le funzionalità. Potrai poi creare account per il tuo team.",
+    "FIRST_NAME": "Nome",
+    "LAST_NAME": "Cognome",
+    "USERNAME": "ID di accesso",
+    "USERNAME_PH": "es: dr.rossi",
+    "PASSWORD": "Password",
+    "CONFIRM_PASSWORD": "Conferma password",
+    "PRO_EMAIL": "Email professionale",
+    "SPECIALTY": "Specializzazione medica",
+    "SPECIALTY_PH": "Es: Medico Generico",
+    "CONFIRM_TITLE": "Tutto pronto!",
+    "CONFIRM_SUBTITLE": "Verifica le tue informazioni prima di lanciare MediFlow",
+    "RECAP_CLINIC": "Studio Medico",
+    "RECAP_ADMIN": "Amministratore",
+    "FULL_NAME": "Nome completo",
+    "READY_TITLE": "Pronto per iniziare",
+    "READY_BODY": "La tua clinica è configurata. Clicca su Lancia per accedere alla schermata di login.",
+    "BACK": "Indietro",
+    "NEXT": "Continua",
+    "LAUNCH": "Lancia MediFlow",
+    "FOOTER": "Installazione sicura — Solo dati locali"
   }
 }

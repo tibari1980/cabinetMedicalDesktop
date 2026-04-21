@@ -16,7 +16,7 @@ export class PrescriptionService {
     private auditService: AuditService,
     private authService: AuthService
   ) {
-    const saved = localStorage.getItem('mc_prescriptions');
+    const saved = localStorage.getItem('mf_prescriptions');
     this.prescriptionsSubject.next(saved ? JSON.parse(saved) : []);
   }
 
@@ -37,7 +37,7 @@ export class PrescriptionService {
   }
 
   private saveToLocal(prescriptions: Prescription[]) {
-    localStorage.setItem('mc_prescriptions', JSON.stringify(prescriptions));
+    localStorage.setItem('mf_prescriptions', JSON.stringify(prescriptions));
     this.prescriptionsSubject.next([...prescriptions]);
   }
 }

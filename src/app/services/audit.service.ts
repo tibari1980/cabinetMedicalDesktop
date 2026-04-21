@@ -25,7 +25,7 @@ export class AuditService {
   private async loadLogs() {
     try {
       // 1. Check for legacy localStorage logs
-      const savedLogs = localStorage.getItem('mc_audit_logs');
+      const savedLogs = localStorage.getItem('mf_audit_logs');
       let logs: AuditLog[] = [];
       
       if (savedLogs) {
@@ -35,7 +35,7 @@ export class AuditService {
           const encryptedData = await this.encryptionService.encrypt(log);
           await this.dbService.put('logs', { id: log.id, encryptedData });
         }
-        localStorage.removeItem('mc_audit_logs');
+        localStorage.removeItem('mf_audit_logs');
       } else {
         // 2. Load from IndexedDB
         const rawLogs = await this.dbService.getAll<any>('logs');

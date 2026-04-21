@@ -15,12 +15,12 @@ export class ThemeService {
   toggleDarkMode() {
     const isDark = !this.isDarkModeObj.value;
     this.isDarkModeObj.next(isDark);
-    localStorage.setItem('mc_dark_mode', isDark.toString());
+    localStorage.setItem('mf_dark_mode', isDark.toString());
     this.applyTheme(isDark);
   }
 
   private initTheme() {
-    const saved = localStorage.getItem('mc_dark_mode');
+    const saved = localStorage.getItem('mf_dark_mode');
     if (saved !== null) {
       const isDark = saved === 'true';
       this.isDarkModeObj.next(isDark);

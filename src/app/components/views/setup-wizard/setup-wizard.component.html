@@ -1,0 +1,347 @@
+<!-- ============================================================ -->
+<!-- MediFlow — First-Launch Setup Wizard (Premium Immersive UI)  -->
+<!-- ============================================================ -->
+<div class="setup-wizard">
+  <!-- Animated Background -->
+  <div class="wizard-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="wizard-container">
+    <!-- Brand Header -->
+    <div class="wizard-brand">
+      <div class="brand-icon">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">cardiology</span>
+      </div>
+      <h1 class="brand-title">MediFlow</h1>
+      <p class="brand-tagline">{{ 'SETUP.TAGLINE' | translate }}</p>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper">
+      <div *ngFor="let step of steps; let i = index" class="step-item" [class.active]="i === currentStep" [class.completed]="i < currentStep">
+        <div class="step-circle">
+          <span *ngIf="i < currentStep" class="material-symbols-outlined check-icon">check</span>
+          <span *ngIf="i >= currentStep" class="material-symbols-outlined step-icon">{{ step.icon }}</span>
+        </div>
+        <div class="step-label">{{ step.label }}</div>
+        <div *ngIf="i < steps.length - 1" class="step-connector" [class.filled]="i < currentStep"></div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="wizard-card" [class.slide-out-left]="animating && slideDirection === 'left'" [class.slide-out-right]="animating && slideDirection === 'right'">
+
+      <!-- ===================== STEP 0: WELCOME ===================== -->
+      <div *ngIf="currentStep === 0" class="step-content">
+        <div class="step-header">
+          <span class="material-symbols-outlined header-icon pulse-icon" style="font-variation-settings: 'FILL' 1;">waving_hand</span>
+          <h2>{{ 'SETUP.WELCOME_TITLE' | translate }}</h2>
+          <p>{{ 'SETUP.WELCOME_SUBTITLE' | translate }}</p>
+        </div>
+
+        <div class="info-card">
+          <span class="material-symbols-outlined info-icon">shield</span>
+          <div>
+            <strong>{{ 'SETUP.PRIVACY_TITLE' | translate }}</strong>
+            <p>{{ 'SETUP.PRIVACY_BODY' | translate }}</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">{{ 'SETUP.SELECT_LANGUAGE' | translate }}</label>
+          <div class="language-grid">
+            <button *ngFor="let lang of languages"
+                    (click)="onLanguageSelect(lang.code)"
+                    class="lang-btn"
+                    [class.selected]="selectedLanguage === lang.code">
+              <span class="lang-flag">{{ lang.flag }}</span>
+              <span class="lang-name">{{ lang.name }}</span>
+              <span *ngIf="selectedLanguage === lang.code" class="material-symbols-outlined lang-check">check_circle</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== STEP 1: CLINIC ===================== -->
+      <div *ngIf="currentStep === 1" class="step-content">
+        <div class="step-header">
+          <span class="material-symbols-outlined header-icon" style="font-variation-settings: 'FILL' 1;">domain</span>
+          <h2>{{ 'SETUP.CLINIC_TITLE' | translate }}</h2>
+          <p>{{ 'SETUP.CLINIC_SUBTITLE' | translate }}</p>
+        </div>
+
+        <!-- Logo Upload -->
+        <div class="logo-upload-area">
+          <div class="logo-preview">
+            <img *ngIf="clinicInfo.logo" [src]="clinicInfo.logo" alt="Logo">
+            <div *ngIf="!clinicInfo.logo" class="logo-placeholder">
+              <span class="material-symbols-outlined">add_photo_alternate</span>
+              <span class="logo-text">Logo</span>
+            </div>
+            <input type="file" accept="image/*" (change)="onLogoChange($event)" class="logo-input">
+          </div>
+          <span class="logo-hint">{{ 'SETUP.LOGO_HINT' | translate }}</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label class="field-label">{{ 'SETUP.CLINIC_NAME' | translate }} *</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">business</span>
+              <input [(ngModel)]="clinicInfo.name" type="text" [placeholder]="'SETUP.CLINIC_NAME_PH' | translate" [class.error]="errors['clinicName']">
+            </div>
+            <span *ngIf="errors['clinicName']" class="error-msg">{{ errors['clinicName'] }}</span>
+          </div>
+        </div>
+
+        <div class="form-row two-cols">
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.PHONE' | translate }}</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">call</span>
+              <input [(ngModel)]="clinicInfo.phone" type="tel" placeholder="+33 1 23 45 67 89">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.EMAIL' | translate }}</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">mail</span>
+              <input [(ngModel)]="clinicInfo.email" type="email" placeholder="contact@cabinet.fr">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">{{ 'SETUP.ADDRESS' | translate }}</label>
+          <div class="input-wrapper">
+            <span class="material-symbols-outlined input-icon">location_on</span>
+            <input [(ngModel)]="clinicInfo.address" type="text" [placeholder]="'SETUP.ADDRESS_PH' | translate">
+          </div>
+        </div>
+
+        <div class="form-row two-cols">
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.COUNTRY' | translate }} *</label>
+            <div class="input-wrapper select-wrapper">
+              <span class="material-symbols-outlined input-icon">public</span>
+              <select [(ngModel)]="clinicInfo.country" (change)="onCountryChange()" [class.error]="errors['country']">
+                <option *ngFor="let c of countries" [value]="c.code">{{ c.name }}</option>
+              </select>
+              <span class="material-symbols-outlined select-arrow">expand_more</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.CURRENCY' | translate }}</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">payments</span>
+              <input [(ngModel)]="clinicInfo.currency" type="text" placeholder="€">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row two-cols">
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.OPENING_HOUR' | translate }}</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">schedule</span>
+              <input [(ngModel)]="clinicInfo.openingHour" type="number" min="0" max="23" placeholder="8">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.CLOSING_HOUR' | translate }}</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">schedule</span>
+              <input [(ngModel)]="clinicInfo.closingHour" type="number" min="0" max="23" placeholder="18">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== STEP 2: ADMIN ===================== -->
+      <div *ngIf="currentStep === 2" class="step-content">
+        <div class="step-header">
+          <span class="material-symbols-outlined header-icon" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+          <h2>{{ 'SETUP.ADMIN_TITLE' | translate }}</h2>
+          <p>{{ 'SETUP.ADMIN_SUBTITLE' | translate }}</p>
+        </div>
+
+        <div class="info-card accent">
+          <span class="material-symbols-outlined info-icon">info</span>
+          <div>
+            <strong>{{ 'SETUP.ADMIN_INFO_TITLE' | translate }}</strong>
+            <p>{{ 'SETUP.ADMIN_INFO_BODY' | translate }}</p>
+          </div>
+        </div>
+
+        <div class="form-row two-cols">
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.FIRST_NAME' | translate }} *</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">person</span>
+              <input [(ngModel)]="admin.firstName" type="text" placeholder="Jean" [class.error]="errors['firstName']">
+            </div>
+            <span *ngIf="errors['firstName']" class="error-msg">{{ errors['firstName'] }}</span>
+          </div>
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.LAST_NAME' | translate }} *</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">badge</span>
+              <input [(ngModel)]="admin.lastName" type="text" placeholder="Dupont" [class.error]="errors['lastName']">
+            </div>
+            <span *ngIf="errors['lastName']" class="error-msg">{{ errors['lastName'] }}</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="field-label">{{ 'SETUP.USERNAME' | translate }} *</label>
+          <div class="input-wrapper">
+            <span class="material-symbols-outlined input-icon">alternate_email</span>
+            <input [(ngModel)]="admin.username" type="text" [placeholder]="'SETUP.USERNAME_PH' | translate" [class.error]="errors['username']">
+          </div>
+          <span *ngIf="errors['username']" class="error-msg">{{ errors['username'] }}</span>
+        </div>
+
+        <div class="form-row two-cols">
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.PASSWORD' | translate }} *</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">lock</span>
+              <input [(ngModel)]="admin.password" [type]="hidePassword ? 'password' : 'text'" placeholder="••••••••" [class.error]="errors['password']">
+              <button type="button" (click)="hidePassword = !hidePassword" class="toggle-pw">
+                <span class="material-symbols-outlined">{{ hidePassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+            <span *ngIf="errors['password']" class="error-msg">{{ errors['password'] }}</span>
+          </div>
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.CONFIRM_PASSWORD' | translate }} *</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">lock</span>
+              <input [(ngModel)]="admin.confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'" placeholder="••••••••" [class.error]="errors['confirmPassword']">
+              <button type="button" (click)="hideConfirmPassword = !hideConfirmPassword" class="toggle-pw">
+                <span class="material-symbols-outlined">{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+            <span *ngIf="errors['confirmPassword']" class="error-msg">{{ errors['confirmPassword'] }}</span>
+          </div>
+        </div>
+
+        <div class="form-row two-cols">
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.PRO_EMAIL' | translate }}</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">mail</span>
+              <input [(ngModel)]="admin.email" type="email" placeholder="admin@cabinet.fr">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.SPECIALTY' | translate }}</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">stethoscope</span>
+              <input [(ngModel)]="admin.specialty" type="text" [placeholder]="'SETUP.SPECIALTY_PH' | translate">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== STEP 3: CONFIRMATION ===================== -->
+      <div *ngIf="currentStep === 3" class="step-content">
+        <div class="step-header">
+          <span class="material-symbols-outlined header-icon success-icon" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+          <h2>{{ 'SETUP.CONFIRM_TITLE' | translate }}</h2>
+          <p>{{ 'SETUP.CONFIRM_SUBTITLE' | translate }}</p>
+        </div>
+
+        <!-- Recap Cards -->
+        <div class="recap-section">
+          <div class="recap-card">
+            <div class="recap-header">
+              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">domain</span>
+              <h3>{{ 'SETUP.RECAP_CLINIC' | translate }}</h3>
+            </div>
+            <div class="recap-grid">
+              <div class="recap-item">
+                <span class="recap-label">{{ 'SETUP.CLINIC_NAME' | translate }}</span>
+                <span class="recap-value">{{ clinicInfo.name }}</span>
+              </div>
+              <div class="recap-item" *ngIf="clinicInfo.phone">
+                <span class="recap-label">{{ 'SETUP.PHONE' | translate }}</span>
+                <span class="recap-value">{{ clinicInfo.phone }}</span>
+              </div>
+              <div class="recap-item" *ngIf="clinicInfo.email">
+                <span class="recap-label">{{ 'SETUP.EMAIL' | translate }}</span>
+                <span class="recap-value">{{ clinicInfo.email }}</span>
+              </div>
+              <div class="recap-item">
+                <span class="recap-label">{{ 'SETUP.COUNTRY' | translate }}</span>
+                <span class="recap-value">{{ clinicInfo.country }} — {{ clinicInfo.currency }}</span>
+              </div>
+              <div class="recap-item">
+                <span class="recap-label">{{ 'SETUP.OPENING_HOUR' | translate }}</span>
+                <span class="recap-value">{{ clinicInfo.openingHour }}h → {{ clinicInfo.closingHour }}h</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="recap-card">
+            <div class="recap-header">
+              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+              <h3>{{ 'SETUP.RECAP_ADMIN' | translate }}</h3>
+            </div>
+            <div class="recap-grid">
+              <div class="recap-item">
+                <span class="recap-label">{{ 'SETUP.FULL_NAME' | translate }}</span>
+                <span class="recap-value">{{ admin.firstName }} {{ admin.lastName }}</span>
+              </div>
+              <div class="recap-item">
+                <span class="recap-label">{{ 'SETUP.USERNAME' | translate }}</span>
+                <span class="recap-value">{{ admin.username }}</span>
+              </div>
+              <div class="recap-item">
+                <span class="recap-label">{{ 'SETUP.PASSWORD' | translate }}</span>
+                <span class="recap-value">{{ getMaskedPassword() }}</span>
+              </div>
+              <div class="recap-item" *ngIf="admin.email">
+                <span class="recap-label">{{ 'SETUP.PRO_EMAIL' | translate }}</span>
+                <span class="recap-value">{{ admin.email }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card success">
+          <span class="material-symbols-outlined info-icon">verified</span>
+          <div>
+            <strong>{{ 'SETUP.READY_TITLE' | translate }}</strong>
+            <p>{{ 'SETUP.READY_BODY' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="wizard-nav">
+      <button *ngIf="currentStep > 0 && currentStep < 3" (click)="prevStep()" class="nav-btn secondary">
+        <span class="material-symbols-outlined">arrow_back</span>
+        {{ 'SETUP.BACK' | translate }}
+      </button>
+      <div *ngIf="currentStep === 0" class="nav-spacer"></div>
+
+      <button *ngIf="currentStep < 3" (click)="nextStep()" class="nav-btn primary">
+        {{ 'SETUP.NEXT' | translate }}
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+
+      <button *ngIf="currentStep === 3" (click)="finishSetup()" class="nav-btn launch">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+        {{ 'SETUP.LAUNCH' | translate }}
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <p class="wizard-footer">MediFlow v2.0 PRO — {{ 'SETUP.FOOTER' | translate }}</p>
+  </div>
+</div>

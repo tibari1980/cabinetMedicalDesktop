@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class DatabaseService {
-  private dbName = 'MedConnectDB';
+  private dbName = 'MediFlowDB';
   private dbVersion = 1;
   private db: IDBDatabase | null = null;
 

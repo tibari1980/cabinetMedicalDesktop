@@ -35,6 +35,7 @@ import { BillingComponent } from './components/views/billing/billing.component';
 import { TraceabilityComponent } from './components/views/traceability/traceability.component';
 import { NotFoundComponent } from './components/views/not-found/not-found.component';
 import { SettingsComponent } from './components/views/settings/settings.component';
+import { SetupWizardComponent } from './components/views/setup-wizard/setup-wizard.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { SettingsComponent } from './components/views/settings/settings.componen
     BillingComponent,
     TraceabilityComponent,
     NotFoundComponent,
-    SettingsComponent
+    SettingsComponent,
+    SetupWizardComponent
   ],
   imports: [
     BrowserModule,

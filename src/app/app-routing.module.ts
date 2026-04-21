@@ -6,8 +6,10 @@ import { PatientsComponent } from './components/views/patients/patients.componen
 import { AdminComponent } from './components/views/admin/admin.component';
 import { AppLayoutComponent } from './components/layout/app-layout/app-layout.component';
 import { AuthGuard } from './guards/auth.guard';
+import { SetupGuard } from './guards/setup.guard';
 import { UserRole } from './models/user.model';
 
+import { SetupWizardComponent } from './components/views/setup-wizard/setup-wizard.component';
 import { CalendarComponent } from './components/views/calendar/calendar.component';
 import { MedicalRecordDetailComponent } from './components/views/patients/medical-record-detail/medical-record-detail.component';
 import { PrescriptionComponent } from './components/views/patients/prescription/prescription.component';
@@ -20,12 +22,13 @@ import { NotFoundComponent } from './components/views/not-found/not-found.compon
 import { SettingsComponent } from './components/views/settings/settings.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
+  { path: 'setup', component: SetupWizardComponent },
+  { path: 'login', component: LoginComponent, canActivate: [SetupGuard] },
   { path: 'help', component: HelpComponent },
   {
     path: '',
     component: AppLayoutComponent,
-    canActivate: [AuthGuard],
+    canActivate: [SetupGuard, AuthGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },

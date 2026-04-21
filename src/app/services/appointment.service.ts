@@ -16,7 +16,7 @@ export class AppointmentService {
     private auditService: AuditService,
     private authService: AuthService
   ) {
-    const saved = localStorage.getItem('mc_appointments');
+    const saved = localStorage.getItem('mf_appointments');
     this.appointmentsSubject = new BehaviorSubject<Appointment[]>(saved ? JSON.parse(saved) : []);
     this.appointments$ = this.appointmentsSubject.asObservable();
   }
@@ -51,7 +51,7 @@ export class AppointmentService {
   }
 
   private saveData(data: Appointment[]) {
-    localStorage.setItem('mc_appointments', JSON.stringify(data));
+    localStorage.setItem('mf_appointments', JSON.stringify(data));
     this.appointmentsSubject.next(data);
   }
 }

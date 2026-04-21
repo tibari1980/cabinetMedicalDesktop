@@ -187,7 +187,7 @@
     "LOGO_SPEC": "Logo 400x400",
     "VISUAL_IDENTITY": "Identidad Visual",
     "STRUCTURE_NAME": "Nombre de la Estructura",
-    "STRUCTURE_PLACEHOLDER": "Ej: MedConnect Clinic",
+    "STRUCTURE_PLACEHOLDER": "Ej: MediFlow Clinic",
     "ADDRESS_LABEL": "Dirección Sede",
     "ADDRESS_PLACEHOLDER": "Dirección completa...",
     "LOCALIZATION_MONEY": "Localización y Pagos",
@@ -221,7 +221,7 @@
     "DEMO_ADMIN": "Admin Clínica",
     "DEMO_SUPERADMIN": "Super Admin",
     "USER_GUIDE": "Guía de Uso",
-    "FOOTER": "Proyecto MedConnect v1.0 • Solución Local Segura"
+    "FOOTER": "Proyecto MediFlow v2.0 • Solución Local Segura"
   },
   "TRACE": {
     "TITLE": "Trazabilidad Operativa",
@@ -243,12 +243,12 @@
     "DETAILS": "Detalles",
     "NO_EVENTS": "No se encontraron eventos",
     "LEGEND_NORMAL": "Normal",
-    "CERTIFIED_NOTE": "Sistema de trazabilidad certificado MedConnect",
+    "CERTIFIED_NOTE": "Sistema de trazabilidad certificado MediFlow",
     "ENTRIES_INDEXED": "entradas indexadas"
   },
   "HELP": {
     "TITLE": "Centro de Ayuda y Documentación",
-    "SUBTITLE": "Guía completa para dominar MedConnect Pro v1.0",
+    "SUBTITLE": "Guía completa para dominar MediFlow Pro v2.0",
     "LOCAL_SUPPORT": "Soporte Local Activo",
     "TAB_MEDICAL": "Espacio Médico",
     "TAB_SECRETARY": "Secretaría",
@@ -272,7 +272,7 @@
     "STAFF_BODY": "Cree accesos para sus colaboradores. En caso de contraseña olvidada, puede restablecerla desde su pestaña de Administración.",
     "AUDIT_TITLE": "Registro de Auditoría",
     "AUDIT_BODY": "El registro de trazabilidad registra cada conexión y modificación. Es su garantía de seguridad legal.",
-    "COMMERCIAL_EDITION": "Edición Comercial v1.0"
+    "COMMERCIAL_EDITION": "Edición Comercial v2.0"
   },
   "PERF": {
     "TITLE": "Efoque de Rendimiento",
@@ -322,5 +322,50 @@
     "VIEW": "Vista",
     "EDIT": "Edición",
     "DELETE": "Eliminación"
+  },
+  "SETUP": {
+    "TAGLINE": "Configuración inicial de su espacio médico",
+    "WELCOME_TITLE": "Bienvenido a MediFlow",
+    "WELCOME_SUBTITLE": "Configuremos su clínica en unos pocos pasos sencillos",
+    "PRIVACY_TITLE": "Privacidad Absoluta",
+    "PRIVACY_BODY": "Sus datos están cifrados con AES-256 y nunca salen de su ordenador. Ningún servidor externo tiene acceso.",
+    "SELECT_LANGUAGE": "Elija su idioma",
+    "CLINIC_TITLE": "Su Clínica",
+    "CLINIC_SUBTITLE": "Introduzca la información de su centro médico",
+    "LOGO_HINT": "Formato recomendado: 400×400px (opcional)",
+    "CLINIC_NAME": "Nombre de la Clínica",
+    "CLINIC_NAME_PH": "Ej: Clínica Dr. García",
+    "PHONE": "Teléfono",
+    "EMAIL": "Email",
+    "ADDRESS": "Dirección",
+    "ADDRESS_PH": "Calle, Ciudad, Código postal...",
+    "COUNTRY": "País",
+    "CURRENCY": "Moneda",
+    "OPENING_HOUR": "Apertura",
+    "CLOSING_HOUR": "Cierre",
+    "ADMIN_TITLE": "Cuenta Administrador",
+    "ADMIN_SUBTITLE": "Cree su acceso principal para gestionar la clínica",
+    "ADMIN_INFO_TITLE": "Usted es el Super Administrador",
+    "ADMIN_INFO_BODY": "Esta cuenta tendrá acceso completo a todas las funcionalidades. Luego podrá crear cuentas para su equipo.",
+    "FIRST_NAME": "Nombre",
+    "LAST_NAME": "Apellido",
+    "USERNAME": "Identificador de acceso",
+    "USERNAME_PH": "ej: dr.garcia",
+    "PASSWORD": "Contraseña",
+    "CONFIRM_PASSWORD": "Confirmar contraseña",
+    "PRO_EMAIL": "Email profesional",
+    "SPECIALTY": "Especialidad médica",
+    "SPECIALTY_PH": "Ej: Médico General",
+    "CONFIRM_TITLE": "¡Todo listo!",
+    "CONFIRM_SUBTITLE": "Verifique su información antes de lanzar MediFlow",
+    "RECAP_CLINIC": "Clínica Médica",
+    "RECAP_ADMIN": "Administrador",
+    "FULL_NAME": "Nombre completo",
+    "READY_TITLE": "Listo para empezar",
+    "READY_BODY": "Su clínica está configurada. Haga clic en Lanzar para acceder a la pantalla de inicio de sesión.",
+    "BACK": "Atrás",
+    "NEXT": "Continuar",
+    "LAUNCH": "Lanzar MediFlow",
+    "FOOTER": "Instalación segura — Solo datos locales"
   }
 }

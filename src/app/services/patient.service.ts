@@ -47,14 +47,14 @@ export class PatientService {
       
       // 2. Fallback / Migration: If IndexedDB is empty, check localStorage
       if (patients.length === 0) {
-        const localPatients = localStorage.getItem('mc_patients');
+        const localPatients = localStorage.getItem('mf_patients');
         if (localPatients) {
           patients = JSON.parse(localPatients);
           // Migrate to IndexedDB with encryption
           for (const p of patients) {
             await this.addPatient(p);
           }
-          localStorage.removeItem('mc_patients');
+          localStorage.removeItem('mf_patients');
         } else {
           // 3. Last fallback: Load from JSON assets
           this.http.get<Patient[]>(this.dataUrl).pipe(

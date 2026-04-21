@@ -27,14 +27,14 @@ export class BillingService {
 
   private async loadInvoices() {
     // Migration logic from localStorage if found
-    const saved = localStorage.getItem('mc_invoices');
+    const saved = localStorage.getItem('mf_invoices');
     let invoices: Invoice[] = [];
     
     if (saved) {
       invoices = JSON.parse(saved);
       // Migrate to IndexedDB
       await this.dbService.putAll('invoices', invoices);
-      localStorage.removeItem('mc_invoices');
+      localStorage.removeItem('mf_invoices');
     } else {
       // Create 'invoices' store if it doesn't exist in init() - done in database.service already? 
       // I should update database.service to include invoices store.

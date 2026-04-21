@@ -187,7 +187,7 @@
     "LOGO_SPEC": "شعار 400x400",
     "VISUAL_IDENTITY": "الهوية البصرية",
     "STRUCTURE_NAME": "اسم المنشأة",
-    "STRUCTURE_PLACEHOLDER": "مثال: عيادة MedConnect",
+    "STRUCTURE_PLACEHOLDER": "مثال: عيادة MediFlow",
     "ADDRESS_LABEL": "عنوان المقر",
     "ADDRESS_PLACEHOLDER": "العنوان الكامل...",
     "LOCALIZATION_MONEY": "التوطين والعملة",
@@ -221,7 +221,7 @@
     "DEMO_ADMIN": "مدير العيادة",
     "DEMO_SUPERADMIN": "مدير عام",
     "USER_GUIDE": "دليل الاستخدام",
-    "FOOTER": "مشروع MedConnect v1.0 • حل محلي آمن"
+    "FOOTER": "مشروع MediFlow v2.0 • حل محلي آمن"
   },
   "TRACE": {
     "TITLE": "التتبع التشغيلي",
@@ -243,12 +243,12 @@
     "DETAILS": "التفاصيل",
     "NO_EVENTS": "لم يتم العثور على أحداث",
     "LEGEND_NORMAL": "عادي",
-    "CERTIFIED_NOTE": "نظام تتبع معتمد من MedConnect",
+    "CERTIFIED_NOTE": "نظام تتبع معتمد من MediFlow",
     "ENTRIES_INDEXED": "مدخلات مفهرسة"
   },
   "HELP": {
     "TITLE": "مركز المساعدة والوثائق",
-    "SUBTITLE": "دليل كامل لإتقان MedConnect Pro v1.0",
+    "SUBTITLE": "دليل كامل لإتقان MediFlow Pro v2.0",
     "LOCAL_SUPPORT": "الدعم المحلي نشط",
     "TAB_MEDICAL": "المجال الطبي",
     "TAB_SECRETARY": "السكرتارية",
@@ -272,7 +272,7 @@
     "STAFF_BODY": "أنشئ حسابات لزملائك. في حالة نسيان كلمة المرور، يمكنك إعادة تعيينها من تبويب الإدارة.",
     "AUDIT_TITLE": "سجل التدقيق",
     "AUDIT_BODY": "يسجل سجل التتبع كل عملية دخول وتعديل. هذا هو ضمانك للأمان القانوني.",
-    "COMMERCIAL_EDITION": "النسخة التجارية v1.0"
+    "COMMERCIAL_EDITION": "النسخة التجارية v2.0"
   },
   "PERF": {
     "TITLE": "تركيز الأداء",
@@ -322,5 +322,50 @@
     "VIEW": "عرض",
     "EDIT": "تعديل",
     "DELETE": "حذف"
+  },
+  "SETUP": {
+    "TAGLINE": "التهيئة الأولية لمساحتك الطبية",
+    "WELCOME_TITLE": "مرحباً بك في MediFlow",
+    "WELCOME_SUBTITLE": "لنقم بتهيئة عيادتك في بضع خطوات بسيطة",
+    "PRIVACY_TITLE": "خصوصية مطلقة",
+    "PRIVACY_BODY": "بياناتك مشفرة بتقنية AES-256 ولا تغادر حاسوبك أبداً. لا يوجد خادم خارجي لديه وصول.",
+    "SELECT_LANGUAGE": "اختر لغتك",
+    "CLINIC_TITLE": "عيادتك",
+    "CLINIC_SUBTITLE": "أدخل معلومات مؤسستك الطبية",
+    "LOGO_HINT": "الحجم الموصى: 400×400 بكسل (اختياري)",
+    "CLINIC_NAME": "اسم العيادة",
+    "CLINIC_NAME_PH": "مثال: عيادة الدكتور أحمد",
+    "PHONE": "الهاتف",
+    "EMAIL": "البريد الإلكتروني",
+    "ADDRESS": "العنوان",
+    "ADDRESS_PH": "الشارع، المدينة، الرمز البريدي...",
+    "COUNTRY": "البلد",
+    "CURRENCY": "العملة",
+    "OPENING_HOUR": "الفتح",
+    "CLOSING_HOUR": "الإغلاق",
+    "ADMIN_TITLE": "حساب المدير",
+    "ADMIN_SUBTITLE": "أنشئ حساب الوصول الرئيسي لإدارة العيادة",
+    "ADMIN_INFO_TITLE": "أنت المدير العام",
+    "ADMIN_INFO_BODY": "سيكون لهذا الحساب وصول كامل لجميع الميزات. يمكنك بعد ذلك إنشاء حسابات لفريقك.",
+    "FIRST_NAME": "الاسم الشخصي",
+    "LAST_NAME": "اسم العائلة",
+    "USERNAME": "معرف الدخول",
+    "USERNAME_PH": "مثال: dr.ahmed",
+    "PASSWORD": "كلمة المرور",
+    "CONFIRM_PASSWORD": "تأكيد كلمة المرور",
+    "PRO_EMAIL": "البريد المهني",
+    "SPECIALTY": "التخصص الطبي",
+    "SPECIALTY_PH": "مثال: طبيب عام",
+    "CONFIRM_TITLE": "كل شيء جاهز!",
+    "CONFIRM_SUBTITLE": "راجع معلوماتك قبل تشغيل MediFlow",
+    "RECAP_CLINIC": "العيادة الطبية",
+    "RECAP_ADMIN": "المدير",
+    "FULL_NAME": "الاسم الكامل",
+    "READY_TITLE": "جاهز للبدء",
+    "READY_BODY": "تم تهيئة عيادتك. انقر على تشغيل للوصول إلى شاشة تسجيل الدخول.",
+    "BACK": "رجوع",
+    "NEXT": "متابعة",
+    "LAUNCH": "تشغيل MediFlow",
+    "FOOTER": "تثبيت آمن — بيانات محلية فقط"
   }
 }

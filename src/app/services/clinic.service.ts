@@ -10,39 +10,51 @@ export class ClinicService {
   public clinic$: Observable<ClinicInfo>;
 
   private defaultInfo: ClinicInfo = {
-    name: 'MedConnect Practice',
-    address: 'Av. Mohammed V, Casablanca',
-    phone: '+212 522-000000',
-    email: 'contact@clinique-test.ma',
-    version: 'v1.0.4 PRO',
+    name: 'MediFlow Practice',
+    address: '',
+    phone: '',
+    email: '',
+    version: 'v2.0.0 PRO',
     logo: '',
     openingHour: 8,
     closingHour: 18,
-    country: 'MA',
+    country: 'FR',
     language: 'Français',
-    currency: 'DH',
+    currency: '€',
     taxTvaRate: 0,
     legalIds: {
-      ice: '',
-      rc: '',
-      patente: '',
-      if: ''
+      siret: '',
+      tva: ''
     }
   };
 
   constructor() {
-    const saved = localStorage.getItem('mc_clinic_info');
+    const saved = localStorage.getItem('mf_clinic_info');
     this.clinicSubject = new BehaviorSubject<ClinicInfo>(saved ? JSON.parse(saved) : this.defaultInfo);
     this.clinic$ = this.clinicSubject.asObservable();
   }
 
   updateInfo(info: ClinicInfo) {
-    localStorage.setItem('mc_clinic_info', JSON.stringify(info));
+    localStorage.setItem('mf_clinic_info', JSON.stringify(info));
     this.clinicSubject.next(info);
   }
 
   getClinicValue(): ClinicInfo {
     return this.clinicSubject.value;
+  }
+
+  /**
+   * Returns true if the clinic has been configured (setup wizard completed).
+   */
+  isConfigured(): boolean {
+    return !!localStorage.getItem('mf_setup_complete');
+  }
+
+  /**
+   * Marks the initial setup as complete.
+   */
+  markSetupComplete(): void {
+    localStorage.setItem('mf_setup_complete', 'true');
   }
 
   /**
