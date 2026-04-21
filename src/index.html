@@ -5,49 +5,12 @@
   <title>MedConnect | Clinical Sanctuary</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google" content="notranslate">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <!-- Fonts & Icons localized in styles.css -->
   
-  <!-- Tailwind CDN (with plugins) -->
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  
-  <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "primary": "var(--color-primary)",
-            "primary-container": "var(--color-primary-container)",
-            "on-primary": "var(--color-on-primary)",
-            "surface": "var(--color-surface)",
-            "on-surface": "var(--color-on-surface)",
-            "on-surface-variant": "var(--color-on-surface-variant)",
-            "surface-container-low": "var(--color-surface-container-low)",
-            "surface-container-lowest": "var(--color-surface-container-lowest)",
-            "surface-container-high": "var(--color-surface-container-high)",
-            "surface-container-highest": "var(--color-surface-container-highest)",
-            "outline-variant": "var(--color-outline-variant)",
-            "tertiary": "var(--color-tertiary)",
-            "error": "var(--color-error)",
-            "error-container": "var(--color-error-container)",
-            "on-error-container": "var(--color-on-error-container)"
-          },
-          borderRadius: {
-            "DEFAULT": "0.125rem",
-            "lg": "0.25rem",
-            "xl": "0.5rem",
-            "2xl": "1rem",
-            "3xl": "1.5rem",
-            "full": "9999px"
-          }
-        }
-      }
-    }
-  </script>
+
   
   <style>
     body { 
@@ -68,9 +31,19 @@
     }
     
     .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
       display: inline-block;
       line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: 'liga';
     }
 
     /* Animation utility */

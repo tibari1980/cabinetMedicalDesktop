@@ -6,8 +6,12 @@ import { AppointmentService } from '../../../services/appointment.service';
 import { ClinicService } from '../../../services/clinic.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { Appointment, AppointmentType, AppointmentStatus } from '../../../models/appointment.model';
+import { UserRole } from '../../../models/user.model';
 import { MedicalRecordService } from '../../../services/medical-record.service';
+import { BillingService } from '../../../services/billing.service';
+import { AuditService } from '../../../services/audit.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +19,10 @@ import { Subscription } from 'rxjs';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   patients: Patient[] = [];
+  computedFilteredPatients: Patient[] = [];
+  clinic: any;
+  minTime: string = '08:00';
+  maxTime: string = '18:00';
   today = new Date();
   private subs: Subscription[] = [];
 
@@ -25,15 +33,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   patientGrowth = 0;
   pendingCount = 0;
   occupationRate = 0;
-  waitingList: Appointment[] = [];
-
-  // Booking Modal
-  showModal = false;
-  isNewPatient = false;
-  bookingStatus: 'idle' | 'saving' | 'success' = 'idle';
-  patientSearchTerm = '';
-  newApt: Partial<Appointment> = {};
-  newPatient: Partial<Patient> = { gender: 'Masculin' };
+  // Files
+  recentLogs: any[] = [];
+  UserRole = UserRole;
 
   constructor(
     private patientService: PatientService,
@@ -41,30 +43,50 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private medicalRecordService: MedicalRecordService,
     private clinicService: ClinicService,
     private statsService: StatisticsService,
+    private billingService: BillingService,
+    private auditService: AuditService,
+    private router: Router,
     public authService: AuthService
   ) {}
 
-  get filteredPatients(): Patient[] {
-    if (!this.patientSearchTerm) return this.patients;
-    const term = this.patientSearchTerm.toLowerCase();
-    return this.patients.filter(p => 
-      p.firstName.toLowerCase().includes(term) || 
-      p.lastName.toLowerCase().includes(term) ||
-      p.phone.includes(term)
+  onPatientSearchTermChange(term: string) {
+    this.patientSearchTerm = term;
+    if (!this.patientSearchTerm) {
+      this.computedFilteredPatients = this.patients;
+      return;
+    }
+    const txt = this.patientSearchTerm.toLowerCase();
+    this.computedFilteredPatients = this.patients.filter(p => 
+      p.firstName.toLowerCase().includes(txt) || 
+      p.lastName.toLowerCase().includes(txt) ||
+      p.phone.includes(txt)
     );
   }
 
   ngOnInit() {
     const todayStr = this.today.toISOString().split('T')[0];
 
+    const sub0 = this.clinicService.clinic$.subscribe(c => {
+      this.clinic = c;
+      const open = c.openingHour;
+      const close = c.closingHour;
+      this.minTime = (open < 10 ? '0' + open : open) + ':00';
+      this.maxTime = (close < 10 ? '0' + close : close) + ':00';
+    });
+
     const sub1 = this.patientService.getPatients().subscribe(data => {
       this.patients = data;
       this.totalPatients = data.length;
+      this.onPatientSearchTermChange(this.patientSearchTerm);
     });
 
     const sub2 = this.appointmentService.appointments$.subscribe(allApts => {
       const todayStr = this.today.toISOString().split('T')[0];
-      const apts = allApts.filter(a => a.date === todayStr);
+      const apts = allApts.filter(a => {
+        if (a.date !== todayStr || !a.time) return false;
+        const hour = parseInt(a.time.split(':')[0], 10);
+        return hour >= this.clinic.openingHour && hour < this.clinic.closingHour;
+      });
       
       this.pendingCount = apts.filter(a => a.status === AppointmentStatus.CONFIRMED || a.status === AppointmentStatus.WAITING).length;
       this.waitingList = apts.filter(a => a.status !== AppointmentStatus.CANCELLED && a.status !== AppointmentStatus.DONE);
@@ -77,8 +99,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.revenueWeek = stats.totalRevenue; // Synchronized from StatisticsService
     });
 
-    this.subs.push(sub1, sub2, sub3);
+    const sub4 = this.auditService.logs$.subscribe(logs => {
+      this.recentLogs = logs.slice(0, 5);
+    });
+
+    this.subs.push(sub0, sub1, sub2, sub3, sub4);
   }
+
+  // Restore variables potentially cleared by previous edit
+  waitingList: Appointment[] = [];
+  showModal = false;
+  isNewPatient = false;
+  bookingStatus: 'idle' | 'saving' | 'success' = 'idle';
+  patientSearchTerm = '';
+  newApt: Partial<Appointment> = {};
+  newPatient: Partial<Patient> = { gender: 'Masculin' };
+  appointmentTypes = Object.values(AppointmentType);
 
   ngOnDestroy() {
     this.subs.forEach(s => s.unsubscribe());
@@ -92,10 +128,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   openBookingModal() {
+    const openHour = this.clinic?.openingHour || 8;
     this.newApt = {
       id: Math.random().toString(36).substr(2, 9),
+      patientId: '',
       date: this.today.toISOString().split('T')[0],
-      time: '09:00',
+      time: (openHour < 10 ? '0' + openHour : openHour) + ':00',
       type: AppointmentType.CONSULTATION,
       status: AppointmentStatus.CONFIRMED,
       duration: 30,
@@ -108,14 +146,41 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.patientSearchTerm = '';
   }
 
+
+
   onTypeChange() {
     // Expert Logic: Propose default fees based on type
     if (this.newApt.type === AppointmentType.EMERGENCY) this.newApt.fee = 500;
-    else if (this.newApt.type === AppointmentType.CONTROL) this.newApt.fee = 150;
+    else if (this.newApt.type === AppointmentType.FOLLOW_UP) this.newApt.fee = 150;
     else this.newApt.fee = 300;
   }
 
   submitAppointment() {
+    if (this.newApt.time) {
+      const aptHour = parseInt(this.newApt.time.split(':')[0], 10);
+      const clinic = this.clinic;
+      if (aptHour < clinic.openingHour || aptHour >= clinic.closingHour) {
+        alert(`Attention: Les rendez-vous ne sont permis que pendant les horaires d\'ouverture du cabinet (${clinic.openingHour}h00 - ${clinic.closingHour}h00).`);
+        return;
+      }
+
+      // Anti-Overlap Logic: 15 minutes strict spacing minimal
+      const [newH, newM] = this.newApt.time.split(':').map(Number);
+      const newTimeInMin = newH * 60 + newM;
+      
+      const sameDayApts = this.appointmentService.getAppointmentsValue().filter(a => a.date === this.newApt.date && a.status !== AppointmentStatus.CANCELLED);
+      for (const existing of sameDayApts) {
+        if (!existing.time) continue;
+        const [exH, exM] = existing.time.split(':').map(Number);
+        const exTimeInMin = exH * 60 + exM;
+        
+        if (Math.abs(newTimeInMin - exTimeInMin) < 15) {
+          alert(`PROTECTION AGENDA : Le créneau ${this.newApt.time} est trop proche du rendez-vous déjà prévu à ${existing.time}. Veuillez espacer d'au moins 15 minutes.`);
+          return;
+        }
+      }
+    }
+
     if (this.isNewPatient) {
       if (!this.newPatient.firstName || !this.newPatient.lastName || !this.newPatient.phone) {
         alert('Veuillez remplir le nom, prénom et téléphone du patient.');
@@ -163,8 +228,52 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   updateAptStatus(apt: Appointment, status: string) {
+    // Rend le prix obligatoire à la "Fin" de consultation
+    if (status === 'Terminé' && (!apt.fee || apt.fee <= 0)) {
+       const input = prompt(`Fin de consultation. Veuillez saisir le montant total à régler par ${apt.patientName} (en ${this.clinic.currency || 'DH'}) :`);
+       if (input === null || input.trim() === '') {
+         alert("Action annulée : Le montant de la consultation est obligatoire !");
+         return;
+       }
+       const fee = parseFloat(input);
+       if (isNaN(fee) || fee <= 0) {
+         alert("Action annulée : Le montant saisi est invalide.");
+         return;
+       }
+       apt.fee = fee;
+    }
+
     apt.status = status as AppointmentStatus;
     this.appointmentService.updateAppointment(apt);
+  }
+
+  generateInvoice(apt: Appointment) {
+    // Vérification de sécurité experte : Personne n'a le droit de facturer avant la clôture officielle
+    if (apt.status !== 'Terminé') {
+        alert("Protection Métier : La facture ne peut être générée que si la consultation est clôturée (Terminée).");
+        return;
+    }
+
+    // Si la facture est demandée mais que le prix n'a pas encore été renseigné
+    if (!apt.fee || apt.fee <= 0) {
+       const input = prompt(`Veuillez définir le montant de la prestation pour générer la facture de ${apt.patientName} (en ${this.clinic.currency || 'DH'}) :`);
+       if (input === null || input.trim() === '') {
+         alert("La facturation a été annulée car le prix est obligatoire.");
+         return;
+       }
+       const fee = parseFloat(input);
+       if (isNaN(fee) || fee <= 0) {
+           alert("Montant saisi invalide.");
+           return;
+       }
+       apt.fee = fee;
+       this.appointmentService.updateAppointment(apt);
+    }
+
+    if(confirm(`Voulez-vous générer une facture pour ${apt.patientName} d'un montant de ${apt.fee} ${this.clinic.currency || 'DH'} ?`)) {
+      this.billingService.generateInvoiceFromAppointment(apt);
+      this.router.navigate(['/billing']);
+    }
   }
 
   trackByApt(index: number, apt: Appointment): string {

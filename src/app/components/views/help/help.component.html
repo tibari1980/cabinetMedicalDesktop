@@ -3,10 +3,10 @@
   <header class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
     <div class="flex items-center gap-4">
       <div class="flex gap-2">
-        <button (click)="goBack()" class="p-4 bg-white rounded-2xl shadow-sm hover:bg-slate-50 transition-all group" title="Retour">
+        <button (click)="goBack()" class="p-4 bg-surface-container-lowest rounded-2xl shadow-sm hover:bg-slate-50 transition-all group" title="Retour">
           <span class="material-symbols-outlined text-on-surface-variant group-hover:-translate-x-1 transition-transform">arrow_back</span>
         </button>
-        <button routerLink="/dashboard" class="p-4 bg-white rounded-2xl shadow-sm hover:bg-slate-50 transition-all group text-primary font-bold flex items-center gap-2" title="Dashboard">
+        <button routerLink="/dashboard" class="p-4 bg-surface-container-lowest rounded-2xl shadow-sm hover:bg-slate-50 transition-all group text-primary font-bold flex items-center gap-2" title="Dashboard">
           <span class="material-symbols-outlined">dashboard</span>
           <span class="hidden md:inline text-xs uppercase tracking-widest">Dashboard</span>
         </button>
@@ -24,7 +24,7 @@
 
   <!-- Navigation Tabs -->
   <nav class="max-w-6xl mx-auto flex justify-center mb-12">
-    <div class="bg-white p-2 rounded-[2rem] shadow-xl flex gap-1 border border-outline-variant/10">
+    <div class="bg-surface-container-lowest p-2 rounded-[2rem] shadow-xl flex gap-1 border border-outline-variant/10">
       <button (click)="setTab('doctor')" 
               [class]="activeTab === 'doctor' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-slate-50'"
               class="flex items-center gap-3 px-8 py-4 rounded-[1.5rem] font-bold text-sm transition-all">
@@ -49,7 +49,7 @@
   <main class="max-w-6xl mx-auto">
     <!-- DOCTOR SECTION -->
     <div *ngIf="activeTab === 'doctor'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-scale-up">
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 relative overflow-hidden group">
+      <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 relative overflow-hidden group">
         <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6">
           <span class="material-symbols-outlined">edit_note</span>
         </div>
@@ -58,7 +58,7 @@
         <div class="text-[10px] font-black text-primary uppercase tracking-widest bg-primary/5 p-3 rounded-xl border border-primary/10">Astuce : Sauvegardez en brouillon pour finir plus tard !</div>
       </div>
 
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 group">
+      <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 group">
         <div class="w-12 h-12 bg-tertiary/10 rounded-2xl flex items-center justify-center text-tertiary mb-6">
           <span class="material-symbols-outlined">description</span>
         </div>
@@ -75,7 +75,7 @@
 
     <!-- SECRETARY SECTION -->
     <div *ngIf="activeTab === 'secretary'" class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-scale-up">
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10">
+      <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10">
         <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
           <span class="material-symbols-outlined text-tertiary">person_add</span>
           Gestion des Patients
@@ -92,7 +92,7 @@
         </ul>
       </div>
 
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10">
+      <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10">
         <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
           <span class="material-symbols-outlined text-tertiary">calendar_today</span>
           Agenda & File d'attente
@@ -103,7 +103,7 @@
 
     <!-- ADMIN SECTION -->
     <div *ngIf="activeTab === 'admin'" class="space-y-6 animate-scale-up">
-      <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline-variant/10">
+      <div class="bg-surface-container-lowest rounded-[2.5rem] p-8 shadow-sm border border-outline-variant/10">
         <h3 class="text-2xl font-black mb-8 text-secondary tracking-tight">Configuration de la Clinique</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div class="space-y-4">

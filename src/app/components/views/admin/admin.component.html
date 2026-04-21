@@ -1,237 +1,206 @@
 <div class="space-y-8 pb-20">
-  <section class="flex justify-between items-end">
+  <!-- HEADER SECTION (Personnel focused) -->
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
     <div>
-      <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Administration & Sécurité</h2>
-      <p class="text-on-surface-variant mt-1">Gestion locale, Branding et Traçabilité permanente</p>
-    </div>
-  </section>
-
-  <!-- CLINIC BRANDING SECTION -->
-  <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-    <div class="lg:col-span-1 space-y-6">
-      <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 ambient-glow relative overflow-hidden">
-        <h3 class="text-lg font-bold text-on-surface mb-6 flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">id_card</span>
-          Identité du Cabinet
-        </h3>
-        
-        <!-- Logo Upload -->
-        <div class="mb-8 group relative flex flex-col items-center">
-          <div class="w-24 h-24 rounded-3xl bg-surface-container-high overflow-hidden flex items-center justify-center border-2 border-dashed border-outline-variant/30 group-hover:border-primary transition-all cursor-pointer relative">
-            <img *ngIf="clinicInfo.logo" [src]="clinicInfo.logo" class="w-full h-full object-contain p-2">
-            <span *ngIf="!clinicInfo.logo" class="material-symbols-outlined text-3xl text-on-surface-variant/50">add_photo_alternate</span>
-            <input type="file" (change)="onLogoChange($event)" class="absolute inset-0 opacity-0 cursor-pointer">
-          </div>
-          <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mt-3">Logo du Cabinet</p>
+      <div class="flex items-center gap-4 mb-2">
+        <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shadow-inner-sm border border-primary/5">
+          <span class="material-symbols-outlined text-3xl" translate="no">manage_accounts</span>
         </div>
-
-        <div class="space-y-4">
-          <div class="space-y-1">
-            <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Nom de la Clinique</label>
-            <input [(ngModel)]="clinicInfo.name" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none transition-all" placeholder="Nom du cabinet">
-          </div>
-          <div class="space-y-1">
-            <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Adresse</label>
-            <input [(ngModel)]="clinicInfo.address" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none transition-all" placeholder="Adresse complète">
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div class="space-y-1">
-              <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Ouverture (H)</label>
-              <input type="number" [(ngModel)]="clinicInfo.openingHour" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none transition-all" min="0" max="23">
-            </div>
-            <div class="space-y-1">
-              <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Fermeture (H)</label>
-              <input type="number" [(ngModel)]="clinicInfo.closingHour" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none transition-all" min="0" max="23">
-            </div>
-          </div>
-          <button (click)="saveClinicInfo()" 
-                  class="w-full mt-4 bg-primary text-white py-3 rounded-xl font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/10">
-            Enregistrer les infos
-          </button>
-        </div>
-      </div>
-
-      <div class="bg-gradient-to-br from-tertiary to-tertiary-container p-8 rounded-[2.5rem] text-white shadow-xl shadow-tertiary/20">
-        <span class="material-symbols-outlined text-3xl mb-4">security</span>
-        <h4 class="text-xl font-bold leading-tight">Confidentialité Totale</h4>
-        <p class="text-white/80 text-xs mt-3 leading-relaxed">
-          Toutes les données saisies ici sont enregistrées localement sur ce poste. 
-          Aucune donnée ne sort du cabinet. MedConnect Pro garantit une isolation parfaite par rapport au Cloud.
-        </p>
-        <div class="mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest bg-white/10 p-2 rounded-lg">
-          <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-          Stockage Interne Sécurisé
+        <div>
+          <h2 class="text-3xl font-black text-on-surface tracking-tight">Gestion du Personnel</h2>
+          <p class="text-sm text-on-surface-variant font-medium opacity-70">Administration des comptes, rôles et accès sécurisés</p>
         </div>
       </div>
     </div>
+  </header>
 
-    <!-- AUDIT TRAIL SECTION -->
+  <div class="grid grid-cols-1 gap-8">
+
+    <!-- MAIN CONTENT AREA -->
     <div class="lg:col-span-2 space-y-6">
-      <div class="bg-white rounded-[2.5rem] shadow-sm border border-outline-variant/10 overflow-hidden ambient-glow">
-        <div class="p-8 border-b border-outline-variant/10 flex items-center justify-between">
-          <div>
-            <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
-              <span class="material-symbols-outlined text-error">history</span>
-              Journal de Traçabilité Permanente
-            </h3>
-            <p class="text-xs text-on-surface-variant mt-1">Historique non modifiable des actions système</p>
+      
+      <!-- STAFF MANAGEMENT SECTION (PROMOTED TO TOP) -->
+      <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] border border-outline-variant/5 shadow-sm overflow-hidden ambient-glow animate-fade-in-up">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+              <span class="material-symbols-outlined text-2xl">groups</span>
+            </div>
+            <div>
+              <h3 class="text-xl font-black text-on-surface tracking-tight">Gestion de l'Équipe</h3>
+              <p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest opacity-60">Administration des accès et rôles</p>
+            </div>
           </div>
-          <div class="flex items-center gap-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest bg-slate-50 px-3 py-1 rounded-full">
-            <span class="material-symbols-outlined text-sm">database</span>
-            Base de données interne
+          <div class="flex flex-1 max-w-md items-center gap-3">
+            <div class="relative flex-1 group">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg transition-colors group-focus-within:text-primary" translate="no">search</span>
+              <input [(ngModel)]="staffSearchTerm" (ngModelChange)="applyStaffFilter()"
+                     class="w-full bg-surface-container-low border-none rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold focus:ring-2 focus:ring-primary/10 transition-all outline-none shadow-inner-sm" 
+                     placeholder="Filtrer par nom, rôle..." type="text"/>
+            </div>
+            <button (click)="openProfileModal()" class="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">
+              <span class="material-symbols-outlined text-2xl">person_add</span>
+            </button>
           </div>
         </div>
 
-        <div class="max-h-[600px] overflow-y-auto">
-          <table class="w-full text-left">
-            <thead class="sticky top-0 bg-white/90 backdrop-blur-md z-10 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/70 border-b border-outline-variant/5">
-              <tr>
-                <th class="px-8 py-4">Horodatage</th>
-                <th class="px-8 py-4">Utilisateur</th>
-                <th class="px-8 py-4">Action</th>
-                <th class="px-8 py-4">Détails</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-outline-variant/5">
-              <tr *ngFor="let log of logs$ | async" class="hover:bg-slate-50/50 transition-all text-xs">
-                <td class="px-8 py-4 font-medium text-on-surface-variant">
-                  {{ log.timestamp | date:'dd/MM HH:mm:ss' }}
-                </td>
-                <td class="px-8 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold text-on-surface">{{ log.userName }}</span>
-                  </div>
-                </td>
-                <td class="px-8 py-4">
-                  <span class="px-2 py-0.5 rounded-md font-bold text-[9px] uppercase tracking-tighter"
-                        [class.bg-blue-100]="log.action.includes('CONNEXION')"
-                        [class.text-blue-700]="log.action.includes('CONNEXION')"
-                        [class.bg-amber-100]="log.action.includes('MODIF')"
-                        [class.text-amber-700]="log.action.includes('MODIF')"
-                        [class.bg-green-100]="log.action.includes('CRÉATION')"
-                        [class.text-green-700]="log.action.includes('CRÉATION')">
-                    {{ log.action }}
-                  </span>
-                </td>
-                <td class="px-8 py-4 text-on-surface-variant font-medium">
-                  {{ log.details }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div *ngIf="(logs$ | async)?.length === 0" class="p-20 text-center space-y-4">
-            <span class="material-symbols-outlined text-4xl text-outline-variant/30">list_alt</span>
-            <p class="text-on-surface-variant text-sm font-medium">Aucun log enregistré pour le moment.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-surface-container-lowest p-8 rounded-[2.5rem] border border-outline-variant/5 shadow-sm">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-lg font-bold text-on-surface flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">group</span>
-            Équipe & Accès
-          </h3>
-          <button (click)="openProfileModal()" class="text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-all">
-            + Ajouter
-          </button>
-        </div>
-        <div class="space-y-4">
-          <div *ngFor="let member of staff$ | async" (click)="openProfileModal(member)" class="flex items-center justify-between p-4 bg-surface-container-low/50 rounded-2xl hover:bg-white border border-transparent hover:border-primary/20 transition-all cursor-pointer group shadow-sm hover:shadow-md">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div *ngFor="let member of filteredStaff" (click)="openProfileModal(member)" class="flex items-center justify-between p-5 bg-surface-container-low/30 rounded-3xl hover:bg-surface-container-low border border-transparent hover:border-primary/10 transition-all cursor-pointer group shadow-sm">
             <div class="flex items-center gap-4">
-              <div class="w-10 h-10 rounded-xl bg-primary-container text-primary flex items-center justify-center font-bold">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-container to-secondary-container text-primary flex items-center justify-center font-black text-sm shadow-inner-sm">
                 {{ member.firstName[0] }}{{ member.lastName[0] }}
               </div>
               <div>
-                <p class="text-sm font-bold text-on-surface">{{ member.firstName }} {{ member.lastName }}</p>
+                <p class="text-base font-black text-on-surface group-hover:text-primary transition-colors tracking-tight">{{ member.firstName }} {{ member.lastName }}</p>
                 <div class="flex items-center gap-2 mt-1">
-                  <span class="text-[9px] text-on-surface-variant font-label uppercase tracking-widest bg-surface-container-high px-2 py-0.5 rounded-full">{{ member.role }}</span>
-                  <span class="text-[9px] text-primary font-bold italic" *ngIf="member.specialty">{{ member.specialty }}</span>
+                  <span class="px-2.5 py-1 bg-surface-container-high/50 text-[10px] text-on-surface-variant font-black uppercase tracking-widest rounded-lg border border-outline-variant/10">
+                    {{ member.role }}
+                  </span>
+                  <span class="text-[10px] text-primary/70 font-bold italic" *ngIf="member.specialty">
+                    {{ member.specialty }}
+                  </span>
                 </div>
               </div>
             </div>
-            <div class="flex items-center gap-2">
-              <button (click)="deleteProfile(member, $event)" aria-label="Supprimer le profil" class="p-2 text-error/30 hover:text-error hover:bg-error/10 rounded-xl transition-all opacity-0 group-hover:opacity-100">
-                <span class="material-symbols-outlined text-sm">delete</span>
+            <div class="flex items-center gap-1">
+              <button *ngIf="authService.canManage(member)" (click)="deleteProfile(member, $event)" aria-label="Supprimer" class="w-10 h-10 flex items-center justify-center text-error/30 hover:text-error hover:bg-error/10 rounded-2xl transition-all opacity-0 group-hover:opacity-100">
+                <span class="material-symbols-outlined text-xl">delete</span>
               </button>
-              <button class="text-on-surface-variant/30 group-hover:text-primary transition-all">
-                <span class="material-symbols-outlined">edit</span>
+              <button *ngIf="authService.canManage(member) || member.id === authService.currentUserValue?.id" class="w-10 h-10 flex items-center justify-center text-on-surface-variant/30 group-hover:text-primary transition-all">
+                <span class="material-symbols-outlined text-xl">edit</span>
               </button>
             </div>
           </div>
+          
+          <div *ngIf="filteredStaff.length === 0" class="col-span-full p-20 text-center">
+            <p class="text-on-surface-variant font-bold italic opacity-40">Aucun collaborateur trouvé.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUDIT LOG SECTION (DEMOTED TO BOTTOM / SECONDARY) -->
+      <div class="bg-surface-container-lowest/50 backdrop-blur-xl rounded-[2.5rem] shadow-sm border border-outline-variant/10 overflow-hidden opacity-80 hover:opacity-100 transition-opacity">
+        <div class="p-6 border-b border-outline-variant/5 flex items-center justify-between bg-surface-container-low/20">
+          <div>
+            <h3 class="text-base font-bold text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">history_edu</span>
+              Dernières Activités Système
+            </h3>
+          </div>
+          <button routerLink="/traceability" class="text-[10px] font-black text-primary uppercase tracking-widest hover:underline">
+            Voir tout le journal
+          </button>
+        </div>
+
+        <div class="max-h-[300px] overflow-y-auto custom-scrollbar">
+          <table class="w-full text-left">
+            <tbody class="divide-y divide-outline-variant/5">
+              <tr *ngFor="let log of (logs$ | async)?.slice(0, 10)" class="hover:bg-primary/5 transition-all text-[11px]">
+                <td class="px-6 py-3 font-medium text-on-surface-variant/70">{{ log.timestamp | date:'HH:mm' }}</td>
+                <td class="px-6 py-3 font-black text-on-surface">{{ log.userName }}</td>
+                <td class="px-6 py-3 font-bold opacity-60">{{ log.action }}</td>
+                <td class="px-6 py-3 text-on-surface-variant italic truncate max-w-[200px]">{{ log.details }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-  </section>
+
+  </div>
 </div>
 
-<!-- PROFILE EDIT MODAL -->
+<!-- PROFILE EDIT MODAL (Premium Glassmorphism Edition) -->
 <div *ngIf="showProfileModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-  <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm animate-fade-in" (click)="showProfileModal = false"></div>
-  <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden">
-    <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
-      <div>
-        <h3 class="text-xl font-bold text-on-surface">{{ isNewProfile ? 'Nouveau Collaborateur' : 'Édition du Profil' }}</h3>
-        <p class="text-xs text-on-surface-variant font-medium mt-1">Gestion des accès et rôles MedConnect</p>
+  <!-- Immersive Radial Overlay -->
+  <div class="absolute inset-0 bg-on-surface/30 backdrop-blur-[10px] animate-fade-in transition-all" (click)="showProfileModal = false">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-tertiary/5"></div>
+  </div>
+  
+  <!-- Modal Glass Shell -->
+  <div class="bg-surface-container-lowest/90 backdrop-blur-2xl w-full max-w-xl rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden border border-white/20">
+    <!-- Decorative Glow Elements -->
+    <div class="absolute -top-12 -left-12 w-32 h-32 bg-primary/20 rounded-full blur-3xl opacity-30 select-none"></div>
+    <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-tertiary/20 rounded-full blur-3xl opacity-30 select-none"></div>
+
+    <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center relative z-10">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-2xl" translate="no">manage_accounts</span>
+        </div>
+        <div>
+          <h3 class="text-2xl font-black text-on-surface tracking-tight">{{ isNewProfile ? 'Nouveau Collaborateur' : 'Édition du Profil' }}</h3>
+          <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">Gestion Médicale</p>
+        </div>
       </div>
-      <button (click)="showProfileModal = false" aria-label="Fermer" class="text-on-surface-variant/40 hover:text-error transition-colors">
-        <span class="material-symbols-outlined text-3xl">close</span>
+      <button (click)="showProfileModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
+        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform" translate="no">close</span>
       </button>
     </div>
 
-    <div class="p-8 space-y-5 max-h-[60vh] overflow-y-auto">
-      <div class="grid grid-cols-2 gap-4">
-        <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
-          <input [(ngModel)]="selectedProfile.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Pénome">
+    <div class="p-8 space-y-6 max-h-[65vh] overflow-y-auto relative z-10 custom-scrollbar">
+      <div class="grid grid-cols-2 gap-5">
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Prénom *</label>
+          <input [(ngModel)]="selectedProfile.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Prénom">
         </div>
-        <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
-          <input [(ngModel)]="selectedProfile.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom de famille">
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Identifiant (Connexion) *</label>
-          <input [(ngModel)]="selectedProfile.username" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="dr.nom">
-        </div>
-        <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-error tracking-widest pl-1">Mot de Passe *</label>
-          <input [(ngModel)]="selectedProfile.password" type="text" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner font-mono" placeholder="demo123">
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Nom *</label>
+          <input [(ngModel)]="selectedProfile.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Nom">
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-4">
-        <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rôle Système</label>
-          <select [(ngModel)]="selectedProfile.role" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none font-bold">
-            <option [value]="UserRole.DOCTOR">Médecin (DOCTOR)</option>
-            <option [value]="UserRole.SECRETARY">Secrétaire (SECRETARY)</option>
-            <option [value]="UserRole.ADMIN">Directeur (ADMIN)</option>
-          </select>
+      <div class="grid grid-cols-2 gap-5">
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Identifiant *</label>
+          <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 text-sm" translate="no">alternate_email</span>
+            <input [(ngModel)]="selectedProfile.username" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all" placeholder="username">
+          </div>
         </div>
-        <div class="space-y-1" *ngIf="selectedProfile.role === UserRole.DOCTOR">
-          <label class="text-[10px] uppercase font-bold text-tertiary tracking-widest pl-1">Spécialité</label>
-          <input [(ngModel)]="selectedProfile.specialty" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Ex: Cardiologue">
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-error tracking-[0.2em] pl-1 opacity-70">Mot de Passe *</label>
+          <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-error/30 text-sm" translate="no">key</span>
+            <input [(ngModel)]="selectedProfile.password" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-mono font-semibold outline-none focus:ring-2 focus:ring-error/10 transition-all" placeholder="••••••••">
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-4">
-        <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Email Professionnel</label>
-          <input [(ngModel)]="selectedProfile.email" type="email" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="contact@clinique.ma">
+      <div class="grid grid-cols-2 gap-5 pt-4 border-t border-outline-variant/10">
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Rôle Système</label>
+          <div class="relative">
+            <select [(ngModel)]="selectedProfile.role" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
+              <option [value]="UserRole.DOCTOR">Médecin (DOCTOR)</option>
+              <option [value]="UserRole.SECRETARY">Secrétaire (SECRETARY)</option>
+              <option [value]="UserRole.ADMIN">Administrateur (ADMIN)</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">badge</span>
+          </div>
         </div>
-        <div class="space-y-1">
-          <label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Téléphone Direct</label>
-          <input [(ngModel)]="selectedProfile.phone" type="tel" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 6XX XX XX XX">
+        <div class="space-y-2" *ngIf="selectedProfile.role === UserRole.DOCTOR">
+          <label class="text-[10px] uppercase font-black text-tertiary tracking-[0.2em] pl-1 opacity-70">Spécialité Médicale</label>
+          <input [(ngModel)]="selectedProfile.specialty" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="Ex: Cardiologue">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-5">
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Email Pro</label>
+          <input [(ngModel)]="selectedProfile.email" type="email" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="contact@clinique.ma">
+        </div>
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Tél Direct</label>
+          <input [(ngModel)]="selectedProfile.phone" type="tel" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="+212 ...">
         </div>
       </div>
     </div>
 
-    <div class="p-8 bg-surface-container-low/20 flex gap-4">
-      <button (click)="showProfileModal = false" class="flex-1 py-4 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">Annuler</button>
-      <button (click)="saveProfile()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:brightness-110 transition-all">Enregistrer le Profil</button>
+    <!-- Final Actions -->
+    <div class="p-8 bg-surface-container-low/40 backdrop-blur-xl flex gap-4 relative z-10 border-t border-outline-variant/10">
+      <button (click)="showProfileModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">Annuler</button>
+      <button (click)="saveProfile()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">Enregistrer le Profil</button>
     </div>
   </div>
 </div>

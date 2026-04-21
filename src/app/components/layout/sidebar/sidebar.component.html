@@ -11,7 +11,7 @@
     <!-- Dashboard: Accessible to ALL -->
     <a routerLink="/dashboard" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaDash="routerLinkActive"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110" 
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" translate="no"
             [style.font-variation-settings]="getIconSettings(rlaDash.isActive)">dashboard</span>
       <span class="text-sm">Dashboard</span>
     </a>
@@ -19,7 +19,7 @@
     <!-- Calendar: Accessible to ALL -->
     <a routerLink="/calendar" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaCalendar="routerLinkActive"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110" 
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" translate="no"
             [style.font-variation-settings]="getIconSettings(rlaCalendar.isActive)">calendar_month</span>
       <span class="text-sm">Agenda</span>
     </a>
@@ -28,16 +28,16 @@
     <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.SECRETARY])"
        routerLink="/patients" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaPatients="routerLinkActive"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" translate="no"
             [style.font-variation-settings]="getIconSettings(rlaPatients.isActive)">person_search</span>
       <span class="text-sm">Patients</span>
     </a>
 
-    <!-- Records: Doctors only -->
-    <a *ngIf="authService.hasRole([UserRole.DOCTOR, UserRole.SUPER_ADMIN])"
+    <!-- Records: Doctors & Admins only -->
+    <a *ngIf="authService.hasRole([UserRole.DOCTOR, UserRole.SUPER_ADMIN, UserRole.ADMIN])"
        routerLink="/records" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaRecords="routerLinkActive"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" translate="no"
             [style.font-variation-settings]="getIconSettings(rlaRecords.isActive)">assignment</span>
       <span class="text-sm">Dossiers</span>
     </a>
@@ -46,18 +46,45 @@
     <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])"
        routerLink="/admin" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaAdmin="routerLinkActive"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
-            [style.font-variation-settings]="getIconSettings(rlaAdmin.isActive)">settings_account_box</span>
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" translate="no"
+            [style.font-variation-settings]="getIconSettings(rlaAdmin.isActive)">groups</span>
       <span class="text-sm">Gestion Staff</span>
+    </a>
+
+    <!-- Settings: SaaS Parameters (SUPER_ADMIN ONLY) -->
+    <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN])"
+       routerLink="/settings" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaSettings="routerLinkActive"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" translate="no"
+            [style.font-variation-settings]="getIconSettings(rlaSettings.isActive)">tune</span>
+      <span class="text-sm">Paramètres SaaS</span>
     </a>
 
     <!-- Performance: Super Admin & Admin -->
     <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])"
        routerLink="/performance" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaPerf="routerLinkActive"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" translate="no"
             [style.font-variation-settings]="getIconSettings(rlaPerf.isActive)">insights</span>
       <span class="text-sm">Performances</span>
+    </a>
+
+    <!-- Billing: Super Admin, Admin, Secretary -->
+    <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SECRETARY])"
+       routerLink="/billing" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaBilling="routerLinkActive"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" translate="no"
+            [style.font-variation-settings]="getIconSettings(rlaBilling.isActive)">receipt_long</span>
+      <span class="text-sm">Facturation</span>
+    </a>
+
+    <!-- Traceability: Super Admin & Admin -->
+    <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])"
+       routerLink="/traceability" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaTrace="routerLinkActive"
+       class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" translate="no"
+            [style.font-variation-settings]="getIconSettings(rlaTrace.isActive)">history</span>
+      <span class="text-sm">Traçabilité</span>
     </a>
   </nav>
   

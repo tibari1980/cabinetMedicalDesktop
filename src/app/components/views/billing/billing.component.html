@@ -1,0 +1,209 @@
+<div class="h-full flex flex-col print:hidden pb-20 space-y-8">
+  <section class="flex justify-between items-end">
+    <div>
+      <h2 class="text-3xl font-extrabold tracking-tight text-on-surface">Facturations & Devis</h2>
+      <p class="text-on-surface-variant mt-1">Gestion financière légale globale</p>
+    </div>
+  </section>
+
+  <div class="bg-surface-container-lowest/50 backdrop-blur-xl rounded-[2rem] shadow-sm border border-outline-variant/10 overflow-hidden" *ngIf="!selectedInvoice">
+    <div class="p-8 border-b border-outline-variant/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-surface-container-low/20">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-2xl">receipt_long</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-on-surface">Historique des Factures</h3>
+          <p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold opacity-60">Archive locale sécurisée</p>
+        </div>
+      </div>
+
+      <div class="relative w-full max-w-md group">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg transition-colors group-focus-within:text-primary" translate="no">search</span>
+        <input [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()"
+               class="w-full bg-surface-container-lowest/80 border-none rounded-2xl py-3.5 pl-12 pr-6 text-sm font-medium focus:ring-2 focus:ring-primary/10 transition-all outline-none shadow-inner-sm" 
+               placeholder="Rechercher facture, patient..." type="text"/>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="invoices.length === 0" class="p-16 flex flex-col items-center justify-center text-center space-y-4">
+      <div class="w-20 h-20 bg-surface-container-high rounded-full flex items-center justify-center text-on-surface-variant/30">
+        <span class="material-symbols-outlined text-4xl">folder_off</span>
+      </div>
+      <p class="text-on-surface-variant font-medium">Aucune facture générée pour le moment.<br>Les factures sont générées depuis les rendez-vous du Dashboard.</p>
+    </div>
+
+    <!-- No results state -->
+    <div *ngIf="invoices.length > 0 && filteredInvoices.length === 0" class="p-16 text-center">
+      <p class="text-on-surface-variant font-bold italic opacity-60">Aucun résultat correspondant à votre recherche.</p>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto" *ngIf="filteredInvoices.length > 0">
+      <table class="w-full text-left">
+        <thead class="bg-surface-container-low/50 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/70 border-b border-outline-variant/5">
+          <tr>
+            <th class="px-8 py-5">N° Facture</th>
+            <th class="px-8 py-5">Date</th>
+            <th class="px-8 py-5">Patient</th>
+            <th class="px-8 py-5">Montant TTC</th>
+            <th class="px-8 py-5 text-center">Statut</th>
+            <th class="px-8 py-5 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/5">
+          <tr *ngFor="let inv of filteredInvoices" class="hover:bg-primary/5 transition-all group text-sm animate-fade-in-up">
+            <td class="px-8 py-5 font-bold text-on-surface tracking-tight">{{ inv.id }}</td>
+            <td class="px-8 py-5 text-on-surface-variant/60">{{ inv.date | date:'dd MMM yyyy • HH:mm' }}</td>
+            <td class="px-8 py-5 font-black text-on-surface/80 uppercase tracking-tighter">{{ inv.patientName }}</td>
+            <td class="px-8 py-5 font-bold text-primary">{{ inv.totalTTC | number:'1.2-2' }} {{ clinic.currency || 'DH' }}</td>
+            <td class="px-8 py-5">
+              <span class="mx-auto px-4 py-1.5 bg-tertiary/10 text-tertiary text-[10px] font-black uppercase tracking-widest rounded-full flex items-center gap-1.5 w-max border border-tertiary/10">
+                <span class="material-symbols-outlined text-[14px]">verified</span>
+                Payée
+              </span>
+            </td>
+            <td class="px-8 py-5 text-right">
+              <div class="flex items-center justify-end gap-3">
+                <button (click)="viewInvoice(inv)" class="w-10 h-10 flex items-center justify-center bg-surface-container-highest hover:bg-primary/10 text-primary rounded-2xl transition-all shadow-sm" title="Imprimer">
+                  <span class="material-symbols-outlined text-lg">print</span>
+                </button>
+                <button (click)="deleteInvoice(inv.id)" class="w-10 h-10 flex items-center justify-center bg-surface-container-highest hover:bg-error/10 text-error rounded-2xl transition-all shadow-sm" title="Supprimer">
+                  <span class="material-symbols-outlined text-lg">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- A4 PRINT INVOICE PREVIEW -->
+<!-- ============================================== -->
+<div *ngIf="selectedInvoice" class="fixed inset-0 z-[200] overflow-y-auto bg-surface-container-high/90 backdrop-blur-md p-4 md:p-8 flex justify-center 
+     print:p-0 print:bg-white print:block print:-m-8">
+  
+  <!-- Overlay Actions -->
+  <div class="fixed top-8 right-8 flex flex-col gap-4 z-[210] print:hidden">
+    <button (click)="closeInvoice()" class="bg-surface-container-lowest w-12 h-12 rounded-full shadow-xl text-on-surface-variant hover:text-error transition-all hover:scale-105 flex items-center justify-center">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <button (click)="printInvoice()" class="bg-primary w-12 h-12 rounded-full shadow-xl text-white hover:brightness-110 transition-all hover:scale-105 flex items-center justify-center">
+      <span class="material-symbols-outlined">print</span>
+    </button>
+  </div>
+
+  <!-- A4 Paper Concept -->
+  <!-- Dimensions A4 stricte: w-[210mm] min-h-[297mm] -->
+  <div class="w-full max-w-[210mm] min-h-[297mm] bg-white text-slate-800 shadow-2xl p-[15mm] sm:p-[20mm] relative animate-fade-in-up origin-top 
+       font-sans print:shadow-none print:w-full print:h-full print:max-w-none print:overflow-hidden box-border mx-auto border border-slate-200">
+    
+    <!-- Top Decorative Line -->
+    <div class="absolute top-0 left-0 w-full h-3 bg-slate-800 print:bg-slate-800" style="background-color: #1e293b !important; -webkit-print-color-adjust: exact;"></div>
+    <div class="absolute top-0 left-0 w-full h-3 bg-primary print:bg-primary" style="background-color: var(--color-primary) !important; width: 33%; -webkit-print-color-adjust: exact;"></div>
+
+    <!-- Header Section -->
+    <header class="flex justify-between items-start pt-8 pb-12 border-b-2 border-slate-100">
+      <div class="w-1/2">
+        <!-- Logo -->
+        <div class="h-20 mb-4 flex items-center">
+          <img *ngIf="clinic.logo" [src]="clinic.logo" class="max-h-full max-w-[200px] object-contain object-left">
+          <div *ngIf="!clinic.logo" class="text-3xl font-black text-slate-900 tracking-tight">{{ clinic.name || 'Cab. Médical' }}</div>
+        </div>
+        
+        <h1 class="text-lg font-bold text-slate-800 mb-1">{{ clinic.name }}</h1>
+        <p class="text-xs text-slate-500 whitespace-pre-line leading-relaxed">{{ clinic.address }}</p>
+      </div>
+
+      <div class="w-1/2 text-right space-y-1">
+        <h2 class="text-4xl font-light text-slate-300 tracking-widest uppercase mb-4">Facture</h2>
+        <p class="text-sm font-bold text-slate-800">N° {{ selectedInvoice.id }}</p>
+        <p class="text-xs font-medium text-slate-500">Date: {{ selectedInvoice.date | date:'dd/MM/yyyy' }}</p>
+      </div>
+    </header>
+
+    <!-- Client Info -->
+    <section class="flex flex-col md:flex-row justify-between mt-12 mb-16 gap-8">
+      <div class="w-1/2 text-xs text-slate-500 leading-relaxed max-w-[60%]">
+        <p class="font-bold text-slate-800 mb-2 uppercase tracking-widest text-[10px]">Mentions Légales Cabinet</p>
+        <ng-container *ngIf="clinic.legalIds">
+          <!-- Marocain legal info -->
+          <div *ngIf="clinic.country === 'MA'">
+             <span *ngIf="clinic.legalIds.ice">ICE : {{ clinic.legalIds.ice }}<br></span>
+             <span *ngIf="clinic.legalIds.if">IF : {{ clinic.legalIds.if }}<br></span>
+             <span *ngIf="clinic.legalIds.rc">RC : {{ clinic.legalIds.rc }}<br></span>
+          </div>
+          <!-- French/European legal info -->
+          <div *ngIf="clinic.country === 'FR' || clinic.country === 'ES' || clinic.country === 'PT' || clinic.country === 'IT'">
+             <span *ngIf="clinic.legalIds.siret">SIRET/NIF : {{ clinic.legalIds.siret }}<br></span>
+             <span *ngIf="clinic.legalIds.tva">TVA Intracom. : {{ clinic.legalIds.tva }}<br></span>
+          </div>
+           <!-- Autres pays -->
+           <div *ngIf="clinic.country === 'US' || clinic.country === 'GB'">
+             <span *ngIf="clinic.legalIds.siret">Tax ID : {{ clinic.legalIds.siret }}<br></span>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="w-1/2 text-right">
+        <p class="font-bold text-slate-800 mb-2 uppercase tracking-widest text-[10px]">Facturé à</p>
+        <p class="text-lg font-bold text-slate-900">{{ selectedInvoice.patientName }}</p>
+        <p class="text-sm text-slate-500 mt-1">{{ selectedInvoice.patientAddress || 'Patient du cabinet' }}</p>
+      </div>
+    </section>
+
+    <!-- Invoice Details Table -->
+    <table class="w-full text-left mt-8 mb-12 border-collapse">
+      <thead>
+        <tr class="border-b-2 border-slate-800">
+          <th class="py-3 px-2 text-[10px] font-bold text-slate-800 uppercase tracking-widest">Désignation</th>
+          <th class="py-3 px-2 text-[10px] font-bold text-slate-800 uppercase tracking-widest text-right">Montant ({{ clinic.currency || 'DH' }})</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-slate-100">
+          <td class="py-4 px-2 text-sm font-medium text-slate-700">
+            {{ selectedInvoice.description || 'Prestation médicale' }}
+          </td>
+          <td class="py-4 px-2 text-sm font-bold text-slate-900 text-right">
+            {{ selectedInvoice.amountModifier | number:'1.2-2' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Totals -->
+    <div class="flex justify-end mt-8">
+      <div class="w-1/2 xs:w-full sm:w-2/3 md:w-1/2">
+        <div class="flex justify-between py-2 text-sm text-slate-600">
+          <span>Total HT</span>
+          <span class="font-bold">{{ selectedInvoice.amountModifier | number:'1.2-2' }} {{ clinic.currency || 'DH' }}</span>
+        </div>
+        <div class="flex justify-between py-2 text-sm text-slate-600 border-b border-slate-200">
+          <span>TVA ({{ selectedInvoice.taxRate }}%)</span>
+          <span class="font-bold">{{ tvaAmount | number:'1.2-2' }} {{ clinic.currency || 'DH' }}</span>
+        </div>
+        <div class="flex justify-between py-4 text-xl font-black text-slate-800">
+          <span>Total TTC</span>
+          <span>{{ selectedInvoice.totalTTC | number:'1.2-2' }} {{ clinic.currency || 'DH' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Rules -->
+    <footer class="absolute bottom-[20mm] left-[20mm] right-[20mm] text-center pt-8 border-t border-slate-200">
+      <p *ngIf="clinic.country === 'FR' && selectedInvoice.taxRate === 0" class="text-[10px] text-slate-400 font-bold mb-1">
+        TVA non applicable, art. 293 B du CGI (Exonération médicale).
+      </p>
+      <p class="text-[10px] text-slate-400">
+        En cas de retard de paiement, une indemnité forfaitaire pour frais de recouvrement peut être exigée.<br>
+        Merci de votre confiance.
+      </p>
+    </footer>
+
+  </div>
+</div>

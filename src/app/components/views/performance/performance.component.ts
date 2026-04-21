@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ClinicService } from '../../../services/clinic.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -10,7 +11,14 @@ export class PerformanceComponent implements OnInit, OnDestroy {
   stats: any = null;
   private sub!: Subscription;
 
-  constructor(private statsService: StatisticsService) {}
+  constructor(
+    private statsService: StatisticsService,
+    private clinicService: ClinicService
+  ) {}
+
+  get clinic() {
+    return this.clinicService.getClinicValue();
+  }
 
   ngOnInit(): void {
     this.sub = this.statsService.getPerformanceStats().subscribe(data => {

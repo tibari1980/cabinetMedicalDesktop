@@ -10,20 +10,20 @@
     </button>
   </section>
 
-  <div class="bg-surface-container-lowest rounded-3xl ambient-glow overflow-hidden shadow-sm">
-    <div class="p-6 border-b border-outline-variant/10 flex items-center justify-between bg-surface-container-low/30">
-      <div class="relative w-72 group">
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-sm">search</span>
+  <div class="bg-surface-container-lowest/50 backdrop-blur-xl rounded-[2rem] shadow-sm border border-outline-variant/10 overflow-hidden">
+    <div class="p-6 border-b border-outline-variant/5 flex items-center justify-between bg-surface-container-low/20">
+      <div class="relative w-full max-w-sm group">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg transition-colors group-focus-within:text-primary" translate="no">search</span>
         <input [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()"
-               class="w-full bg-white border border-outline-variant/20 rounded-xl py-2 pl-10 pr-4 text-xs focus:ring-2 focus:ring-primary/10 outline-none transition-all" 
-               placeholder="Rechercher par nom, téléphone..." type="text"/>
+               class="w-full bg-surface-container-lowest/80 border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/10 transition-all outline-none shadow-inner-sm" 
+               placeholder="Rechercher par nom, téléphone, email..." type="text"/>
       </div>
-      <div class="flex gap-2">
-        <button aria-label="Filtrer la liste" class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all border border-outline-variant/20">
-          <span class="material-symbols-outlined text-sm">filter_list</span>
+      <div class="flex gap-3">
+        <button aria-label="Filtrer la liste" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-outline-variant/10 hover:border-primary/20 hover:text-primary">
+          <span class="material-symbols-outlined text-xl">filter_list</span>
         </button>
-        <button (click)="exportPatientsCSV()" aria-label="Télécharger les patients en CSV" class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-xl transition-all border border-outline-variant/20 hover:text-primary">
-          <span class="material-symbols-outlined text-sm">download</span>
+        <button (click)="exportPatientsCSV()" aria-label="Exporter CSV" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-outline-variant/10 hover:border-tertiary/20 hover:text-tertiary">
+          <span class="material-symbols-outlined text-xl">download</span>
         </button>
       </div>
     </div>
@@ -40,7 +40,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-outline-variant/5">
-          <tr *ngFor="let patient of paginatedPatients; trackBy: trackByPatient" class="hover:bg-surface-container-low/20 transition-all group">
+          <tr *ngFor="let patient of computedPaginatedPatients; trackBy: trackByPatient" class="hover:bg-surface-container-low/20 transition-all group">
             <td class="px-8 py-6">
               <div class="flex items-center gap-4">
                 <div class="w-11 h-11 rounded-2xl bg-surface-container-high flex items-center justify-center font-extrabold text-primary transition-all group-hover:bg-primary group-hover:text-white">
@@ -74,14 +74,14 @@
     </div>
     
     <div class="p-6 bg-surface-container-low/20 border-t border-outline-variant/10 flex items-center justify-between">
-      <p class="text-[11px] text-on-surface-variant font-medium">Affichage de {{ paginatedPatients.length }} patients (Page {{ currentPage }} sur {{ totalPages }}) • Total: {{ filteredPatients.length }}</p>
+      <p class="text-[11px] text-on-surface-variant font-medium">Affichage de {{ computedPaginatedPatients.length }} patients (Page {{ currentPage }} sur {{ computedTotalPages }}) • Total: {{ filteredPatients.length }}</p>
       <nav class="flex gap-2">
         <button (click)="changePage(-1)" [disabled]="currentPage === 1" [class.opacity-50]="currentPage === 1"
-                aria-label="Page précédente" class="p-2 border border-outline-variant/20 rounded-xl bg-white hover:bg-surface-container-high transition-all max-disabled:pointer-events-none">
+                aria-label="Page précédente" class="p-2 border border-outline-variant/20 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high transition-all max-disabled:pointer-events-none">
           <span class="material-symbols-outlined text-xs">chevron_left</span>
         </button>
-        <button (click)="changePage(1)" [disabled]="currentPage === totalPages" [class.opacity-50]="currentPage === totalPages"
-                aria-label="Page suivante" class="p-2 border border-outline-variant/20 rounded-xl bg-white hover:bg-surface-container-high transition-all max-disabled:pointer-events-none">
+        <button (click)="changePage(1)" [disabled]="currentPage === computedTotalPages" [class.opacity-50]="currentPage === computedTotalPages"
+                aria-label="Page suivante" class="p-2 border border-outline-variant/20 rounded-xl bg-surface-container-lowest hover:bg-surface-container-high transition-all max-disabled:pointer-events-none">
           <span class="material-symbols-outlined text-xs">chevron_right</span>
         </button>
       </nav>
@@ -89,65 +89,89 @@
   </div>
 </div>
 
-<!-- Patient Creation Modal -->
+<!-- Patient Creation Modal (Premium Glassmorphism Edition) -->
 <div *ngIf="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-  <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm animate-fade-in" (click)="showModal = false"></div>
-  <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden">
-    <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
-      <div>
-        <h3 class="text-xl font-bold text-on-surface">Nouveau Patient</h3>
-        <p class="text-xs text-on-surface-variant font-medium mt-1">Création d'un dossier médical complet</p>
+  <!-- Immersive Radial Overlay -->
+  <div class="absolute inset-0 bg-on-surface/30 backdrop-blur-[10px] animate-fade-in transition-all" (click)="showModal = false">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-tertiary/5"></div>
+  </div>
+  
+  <!-- Modal Glass Shell -->
+  <div class="bg-surface-container-lowest/90 backdrop-blur-2xl w-full max-w-xl rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden border border-white/20">
+    <!-- Decorative Glow Elements -->
+    <div class="absolute -top-12 -left-12 w-32 h-32 bg-primary/20 rounded-full blur-3xl opacity-30 select-none"></div>
+    <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-tertiary/20 rounded-full blur-3xl opacity-30 select-none"></div>
+
+    <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center relative z-10">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+          <span class="material-symbols-outlined text-2xl" translate="no">person_add</span>
+        </div>
+        <div>
+          <h3 class="text-2xl font-black text-on-surface tracking-tight">Nouveau Patient</h3>
+          <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">Création de Dossier</p>
+        </div>
       </div>
-      <button (click)="showModal = false" aria-label="Fermer" class="text-on-surface-variant/40 hover:text-error transition-colors">
-        <span class="material-symbols-outlined text-3xl">close</span>
+      <button (click)="showModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
+        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform" translate="no">close</span>
       </button>
     </div>
 
-    <div class="p-8 space-y-5 max-h-[60vh] overflow-y-auto">
-      <div class="grid grid-cols-2 gap-4">
-        <div class="space-y-1">
-          <label for="p-lastname" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
-          <input id="p-lastname" [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom de famille">
+    <div class="p-8 space-y-6 max-h-[65vh] overflow-y-auto relative z-10 custom-scrollbar">
+      <div class="grid grid-cols-2 gap-5">
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Nom de famille *</label>
+          <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Nom">
         </div>
-        <div class="space-y-1">
-          <label for="p-firstname" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
-          <input id="p-firstname" [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Prénom">
-        </div>
-      </div>
-
-      <div class="space-y-1">
-        <label for="p-phone" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Numéro de Téléphone *</label>
-        <input id="p-phone" [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 600-000000">
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <div class="space-y-1">
-          <label for="p-birth" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Date de Naissance *</label>
-          <input id="p-birth" type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner">
-        </div>
-        <div class="space-y-1">
-          <label for="p-gender" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Genre</label>
-          <select id="p-gender" [(ngModel)]="newPatient.gender" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none">
-            <option value="Masculin">Masculin</option>
-            <option value="Féminin">Féminin</option>
-          </select>
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Prénom *</label>
+          <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Prénom">
         </div>
       </div>
 
-      <div class="space-y-1">
-        <label for="p-addr" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Adresse Postale *</label>
-        <textarea id="p-addr" [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" rows="2" placeholder="Adresse complète du patient"></textarea>
+      <div class="space-y-2">
+        <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Numéro de Téléphone *</label>
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40" translate="no">phone</span>
+          <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="+212 ...">
+        </div>
       </div>
 
-      <div class="space-y-1">
-        <label for="p-email" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Email (optionnel)</label>
-        <input id="p-email" [(ngModel)]="newPatient.email" type="email" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="email@exemple.com">
+      <div class="grid grid-cols-2 gap-5">
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Date de Naissance *</label>
+          <input type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all text-on-surface">
+        </div>
+        <div class="space-y-2">
+          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Genre</label>
+          <div class="relative">
+            <select [(ngModel)]="newPatient.gender" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
+              <option value="Masculin">Masculin</option>
+              <option value="Féminin">Féminin</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">wc</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Adresse Postale *</label>
+        <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" placeholder="Résidence, Rue, Ville..."></textarea>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Email (optionnel)</label>
+        <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30" translate="no">mail</span>
+          <input [(ngModel)]="newPatient.email" type="email" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:font-normal" placeholder="email@exemple.com">
+        </div>
       </div>
     </div>
 
-    <div class="p-8 bg-surface-container-low/20 flex gap-4">
-      <button (click)="showModal = false" class="flex-1 py-4 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">Annuler</button>
-      <button (click)="submitNewPatient()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold text-sm shadow-lg shadow-primary/20 hover:brightness-110 transition-all">Créer le Dossier</button>
+    <!-- Final Actions -->
+    <div class="p-8 bg-surface-container-low/40 backdrop-blur-xl flex gap-4 relative z-10 border-t border-outline-variant/10">
+      <button (click)="showModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">Annuler</button>
+      <button (click)="submitNewPatient()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">Enregistrer le Dossier</button>
     </div>
   </div>
 </div>

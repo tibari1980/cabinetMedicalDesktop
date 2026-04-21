@@ -6,6 +6,7 @@ import { Patient } from '../models/patient.model';
 import { AuthService } from './auth.service';
 import { AuditService } from './audit.service';
 import { AuditAction } from '../models/audit.model';
+import { DatabaseService } from './database.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,35 +19,55 @@ export class PatientService {
   constructor(
     private http: HttpClient,
     private authService: AuthService,
-    private auditService: AuditService
+    private auditService: AuditService,
+    private dbService: DatabaseService
   ) {
     this.loadInitialPatients();
   }
 
-  private loadInitialPatients() {
-    const localPatients = localStorage.getItem('mc_patients');
-    if (localPatients) {
-      this.patientsSubject.next(JSON.parse(localPatients));
-    } else {
-      this.http.get<Patient[]>(this.dataUrl).pipe(
-        catchError(() => {
-          console.warn('Impossible de charger patients.json, démarrage avec une liste vide.');
-          return of([]);
-        })
-      ).subscribe(patients => {
-        this.saveToLocal(patients);
-      });
+  private async loadInitialPatients() {
+    // 1. Try to load from IndexedDB (Scalable storage)
+    let patients = await this.dbService.getAll<Patient>('patients');
+    
+    // 2. Fallback / Migration: If IndexedDB is empty, check localStorage
+    if (patients.length === 0) {
+      const localPatients = localStorage.getItem('mc_patients');
+      if (localPatients) {
+        patients = JSON.parse(localPatients);
+        // Migrate to IndexedDB
+        await this.dbService.putAll('patients', patients);
+        // Cleanup old storage
+        localStorage.removeItem('mc_patients');
+      } else {
+        // 3. Last fallback: Load from JSON assets
+        this.http.get<Patient[]>(this.dataUrl).pipe(
+          catchError(() => {
+            console.warn('Impossible de charger patients.json, démarrage avec une liste vide.');
+            return of([]);
+          })
+        ).subscribe(async (jsonPatients) => {
+          await this.dbService.putAll('patients', jsonPatients);
+          this.patientsSubject.next(jsonPatients);
+        });
+        return;
+      }
     }
+    
+    this.patientsSubject.next(patients);
   }
 
   getPatients(): Observable<Patient[]> {
     return this.patients$;
   }
 
-  addPatient(patient: Patient) {
+  getPatientsValue(): Patient[] {
+    return this.patientsSubject.value;
+  }
+
+  async addPatient(patient: Patient) {
+    await this.dbService.put('patients', patient);
     const current = this.patientsSubject.value;
-    const updated = [...current, patient];
-    this.saveToLocal(updated);
+    this.patientsSubject.next([...current, patient]);
     
     this.auditService.log(
       this.authService.currentUserValue,
@@ -55,12 +76,13 @@ export class PatientService {
     );
   }
 
-  updatePatient(patient: Patient) {
+  async updatePatient(patient: Patient) {
+    await this.dbService.put('patients', patient);
     const current = this.patientsSubject.value;
     const index = current.findIndex(p => p.id === patient.id);
     if (index !== -1) {
       current[index] = patient;
-      this.saveToLocal([...current]);
+      this.patientsSubject.next([...current]);
 
       this.auditService.log(
         this.authService.currentUserValue,
@@ -83,11 +105,6 @@ export class PatientService {
         }
       })
     );
-  }
-
-  private saveToLocal(patients: Patient[]) {
-    localStorage.setItem('mc_patients', JSON.stringify(patients));
-    this.patientsSubject.next(patients);
   }
 }
 

@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { ClinicService } from '../../../services/clinic.service';
 import { AuditService } from '../../../services/audit.service';
-import { ClinicInfo } from '../../../models/clinic.model';
 import { AuditAction } from '../../../models/audit.model';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole, User } from '../../../models/user.model';
@@ -11,29 +9,46 @@ import { UserRole, User } from '../../../models/user.model';
   templateUrl: './admin.component.html'
 })
 export class AdminComponent {
-  clinicInfo: ClinicInfo = { name: '', openingHour: 8, closingHour: 18 };
   logs$ = this.auditService.logs$;
 
-  staff$ = this.authService.users$;
+  staff: User[] = [];
+  filteredStaff: User[] = [];
+  staffSearchTerm: string = '';
 
   UserRole = UserRole;
 
   constructor(
-    private clinicService: ClinicService,
     private auditService: AuditService,
-    private authService: AuthService
+    public authService: AuthService
   ) {
-    this.clinicInfo = { ...this.clinicService.getClinicValue() };
+    this.authService.users$.subscribe(users => {
+      this.staff = users;
+      this.applyStaffFilter();
+    });
   }
 
-  saveClinicInfo() {
-    this.clinicService.updateInfo(this.clinicInfo);
-    this.auditService.log(
-      this.authService.currentUserValue, 
-      AuditAction.EDIT_SETTINGS, 
-      `Mise à jour des informations du cabinet : ${this.clinicInfo.name}`
+  applyStaffFilter() {
+    const term = this.staffSearchTerm.toLowerCase().trim();
+    const currentUser = this.authService.currentUserValue;
+
+    // Hierarchy Filter: Only show users the current user can manage
+    // Exception: Show yourself if you are an admin
+    let visibleUsers = this.staff.filter(u => 
+      this.authService.canManage(u) || u.id === currentUser?.id
     );
-    alert('Paramètres enregistrés localement avec succès !');
+
+    if (!term) {
+      this.filteredStaff = visibleUsers;
+      return;
+    }
+
+    this.filteredStaff = visibleUsers.filter(u =>
+      u.firstName.toLowerCase().includes(term) ||
+      u.lastName.toLowerCase().includes(term) ||
+      u.username.toLowerCase().includes(term) ||
+      u.role.toLowerCase().includes(term) ||
+      u.specialty?.toLowerCase().includes(term)
+    );
   }
 
   // GESTION DES PROFILS (ÉQUIPE)
@@ -43,6 +58,11 @@ export class AdminComponent {
 
   openProfileModal(user?: User) {
     if (user) {
+      // Security Guard: Prevent open edit if cannot manage
+      if (!this.authService.canManage(user) && user.id !== this.authService.currentUserValue?.id) {
+        alert("Action non autorisée : Vous n'avez pas les droits pour modifier ce profil.");
+        return;
+      }
       this.isNewProfile = false;
       this.selectedProfile = { ...user };
     } else {
@@ -65,6 +85,12 @@ export class AdminComponent {
       alert("Le nom d'utilisateur et le prénom sont obligatoires.");
       return;
     }
+
+    // Role Escalation Guard: Only SUPER_ADMIN can create/promote to SUPER_ADMIN
+    if (this.selectedProfile.role === UserRole.SUPER_ADMIN && this.authService.currentUserValue?.role !== UserRole.SUPER_ADMIN) {
+      alert("Action non autorisée : Seul un Super Administrateur peut assigner ce rôle.");
+      return;
+    }
     
     this.authService.addOrUpdateUser(this.selectedProfile as User);
     this.auditService.log(
@@ -77,6 +103,13 @@ export class AdminComponent {
 
   deleteProfile(user: User, event: Event) {
     event.stopPropagation();
+    
+    // Security Guard
+    if (!this.authService.canManage(user)) {
+       alert("Action non autorisée : Impossible de supprimer un profil de rang supérieur ou protégé.");
+       return;
+    }
+
     if(confirm(`Êtes-vous sûr de vouloir supprimer le profil de ${user.firstName} ?`)) {
       this.authService.deleteUser(user.id);
       this.auditService.log(
@@ -84,18 +117,6 @@ export class AdminComponent {
         AuditAction.EDIT_SETTINGS,
         `Profil de ${user.firstName} supprimé.`
       );
-    }
-  }
-
-  onLogoChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.clinicInfo.logo = e.target.result;
-        this.saveClinicInfo();
-      };
-      reader.readAsDataURL(file);
     }
   }
 }

@@ -132,4 +132,25 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.currentUserValue;
   }
+
+  /**
+   * Senior Hierarchy Logic: 
+   * - SUPER_ADMIN can manage everyone.
+   * - ADMIN can manage everyone EXCEPT SUPER_ADMIN.
+   * - Others cannot manage anyone.
+   */
+  canManage(targetUser: User): boolean {
+    const actor = this.currentUserValue;
+    if (!actor || !targetUser) return false;
+    
+    if (actor.role === UserRole.SUPER_ADMIN) return true;
+    
+    if (actor.role === UserRole.ADMIN) {
+      // ADMIN can manage other ADMINs, DOCTORs, SECRETARYs
+      // BUT NEVER target a SUPER_ADMIN
+      return targetUser.role !== UserRole.SUPER_ADMIN;
+    }
+    
+    return false;
+  }
 }

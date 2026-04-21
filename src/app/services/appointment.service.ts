@@ -42,6 +42,10 @@ export class AppointmentService {
     }
   }
 
+  getAppointmentsValue(): Appointment[] {
+    return this.appointmentsSubject.value;
+  }
+
   getAppointmentsByDate(date: string): Appointment[] {
     return this.appointmentsSubject.value.filter(a => a.date === date);
   }

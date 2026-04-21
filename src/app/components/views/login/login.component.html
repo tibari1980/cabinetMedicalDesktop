@@ -4,7 +4,7 @@
   <div class="relative w-full max-w-md animate-fade-in-up">
     <!-- Brand -->
     <div class="text-center mb-10">
-      <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-3xl shadow-xl mb-4 ambient-glow">
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-surface-container-lowest rounded-3xl shadow-xl mb-4 ambient-glow">
         <span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">medical_services</span>
       </div>
       <h1 class="text-4xl font-extrabold text-on-surface tracking-tight">MedConnect</h1>
@@ -12,7 +12,7 @@
     </div>
 
     <!-- Login Card -->
-    <div class="glass-panel p-10 rounded-[2.5rem] shadow-2xl border border-white/50 bg-white/70 backdrop-blur-xl">
+    <div class="glass-panel p-10 rounded-[2.5rem] shadow-2xl border border-white/50 bg-surface-container-lowest/70 backdrop-blur-xl">
       <h2 class="text-2xl font-bold text-on-surface mb-8 text-center">Connexion</h2>
       
       <form (submit)="onSubmit()" class="space-y-6">
@@ -21,7 +21,7 @@
           <div class="relative">
             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50">person</span>
             <input [(ngModel)]="username" name="username" type="text" required
-                   class="w-full bg-white/50 border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-4 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30"
+                   class="w-full bg-surface-container-lowest/50 border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-4 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30"
                    placeholder="Entrez votre nom d'utilisateur">
           </div>
         </div>
@@ -31,7 +31,7 @@
           <div class="relative">
             <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50">lock</span>
             <input [(ngModel)]="password" name="password" [type]="hidePassword ? 'password' : 'text'" required
-                   class="w-full bg-white/50 border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-12 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30"
+                   class="w-full bg-surface-container-lowest/50 border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-12 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30"
                    placeholder="••••••••">
             <button type="button" (click)="hidePassword = !hidePassword"
                     class="absolute border-none bg-none outline-none right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors focus:outline-none">
@@ -73,7 +73,7 @@
     </div>
 
     <div class="flex justify-center mt-6">
-      <button routerLink="/help" class="flex items-center gap-2 text-[10px] font-black uppercase text-primary tracking-[0.2em] bg-white/50 px-4 py-2 rounded-full hover:bg-white transition-all shadow-sm">
+      <button routerLink="/help" class="flex items-center gap-2 text-[10px] font-black uppercase text-primary tracking-[0.2em] bg-surface-container-lowest/50 px-4 py-2 rounded-full hover:bg-surface-container-lowest transition-all shadow-sm">
         <span class="material-symbols-outlined text-[14px]">help_center</span>
         Guide d'Utilisation
       </button>

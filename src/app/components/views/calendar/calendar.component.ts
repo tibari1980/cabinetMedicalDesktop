@@ -62,7 +62,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   generateTimeSlots() {
     this.timeSlots = [];
-    for (let h = this.clinicSettings.openingHour; h <= this.clinicSettings.closingHour; h++) {
+    // Only generate slots UNTIL closing hour (not including the last slot starting at closing hour)
+    for (let h = this.clinicSettings.openingHour; h < this.clinicSettings.closingHour; h++) {
       this.timeSlots.push(`${h.toString().padStart(2, '0')}:00`);
       this.timeSlots.push(`${h.toString().padStart(2, '0')}:30`);
     }
@@ -93,7 +94,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.newApt = {
       id: Math.random().toString(36).substr(2, 9),
       date: this.selectedDate.toISOString().split('T')[0],
-      time: slot || '09:00',
+      time: slot || `${this.clinicSettings.openingHour.toString().padStart(2, '0')}:00`,
       duration: 30,
       type: AppointmentType.CONSULTATION,
       status: AppointmentStatus.CONFIRMED
@@ -102,6 +103,35 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   submitAppointment() {
+    // Validation des Horaires d'Ouverture
+    if (this.newApt.time) {
+      const aptHour = parseInt(this.newApt.time.split(':')[0], 10);
+      if (aptHour < this.clinicSettings.openingHour || aptHour >= this.clinicSettings.closingHour) {
+        alert(`Attention: Les rendez-vous ne sont permis que pendant les horaires d\'ouverture du cabinet (${this.clinicSettings.openingHour}h00 - ${this.clinicSettings.closingHour}h00).`);
+        return;
+      }
+    }
+
+    // Protection Anti-Chevauchement (Logique Experte)
+    if (this.newApt.time && this.newApt.date) {
+      const sameDayApts = this.appointmentService.getAppointmentsValue()
+          .filter(a => a.date === this.newApt.date && a.status !== AppointmentStatus.CANCELLED);
+      
+      const [newH, newM] = this.newApt.time.split(':').map(Number);
+      const newTimeInMin = newH * 60 + newM;
+
+      for (const existing of sameDayApts) {
+        if (!existing.time) continue;
+        const [exH, exM] = existing.time.split(':').map(Number);
+        const exTimeInMin = exH * 60 + exM;
+
+        if (Math.abs(newTimeInMin - exTimeInMin) < 15) {
+          alert(`PROTECTION AGENDA : Le créneau ${this.newApt.time} est déjà réservé ou trop proche d'un autre rendez-vous (${existing.time}). Veuillez espacer d'au moins 15 minutes.`);
+          return;
+        }
+      }
+    }
+
     if (this.isNewPatient) {
       const patientId = Date.now();
       const patient: Patient = {

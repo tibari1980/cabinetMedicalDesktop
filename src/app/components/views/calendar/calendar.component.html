@@ -1,6 +1,6 @@
 <div class="space-y-6">
   <!-- Header with Date Navigation -->
-  <section class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-[2.5rem] shadow-sm border border-outline-variant/10 ambient-glow gap-4 no-print">
+  <section class="flex flex-col md:flex-row justify-between items-center bg-surface-container-lowest p-6 rounded-[2.5rem] shadow-sm border border-outline-variant/10 ambient-glow gap-4 no-print">
     <div class="flex items-center gap-6">
       <div class="flex items-center gap-2">
         <button (click)="changeDate(-1)" aria-label="Jour précédent" class="p-2 hover:bg-surface-container-high rounded-full transition-all text-on-surface-variant">
@@ -32,7 +32,7 @@
   </section>
 
   <!-- Calendar Grid -->
-  <div class="bg-white rounded-[2.5rem] shadow-sm border border-outline-variant/10 overflow-hidden ambient-glow relative">
+  <div class="bg-surface-container-lowest rounded-[2.5rem] shadow-sm border border-outline-variant/10 overflow-hidden ambient-glow relative">
     <div class="grid grid-cols-[100px_1fr] divide-x divide-outline-variant/5">
       
       <!-- Time Labels Column -->
@@ -53,22 +53,22 @@
 
           <!-- Appointment Cards -->
           <div *ngFor="let apt of getAppointmentsForSlot(slot); trackBy: trackByAppointment" 
-               class="absolute inset-y-1 left-4 right-4 bg-primary-container text-primary rounded-2xl p-4 shadow-sm border border-primary/10 flex items-center justify-between group/card hover:scale-[1.01] transition-all z-20 cursor-pointer">
+               class="absolute inset-y-1 left-4 right-4 bg-primary-container text-white rounded-2xl p-4 shadow-sm border border-primary/10 flex items-center justify-between group/card hover:scale-[1.01] transition-all z-20 cursor-pointer">
             <div class="flex items-center gap-4">
-              <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center font-bold shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-surface-container-lowest text-primary flex items-center justify-center font-bold shadow-sm">
                 {{ apt.patientName[0] }}
               </div>
               <div>
                 <p class="text-sm font-extrabold leading-tight">{{ apt.patientName }}</p>
                 <div class="flex items-center gap-2 mt-1">
-                  <span class="text-[9px] font-bold uppercase tracking-widest bg-white/50 px-2 py-0.5 rounded-md">{{ apt.type }}</span>
-                  <span class="text-[9px] font-bold opacity-60">• {{ apt.duration }} min</span>
+                  <span class="text-[9px] font-black uppercase tracking-widest bg-white/20 px-2 py-0.5 rounded-md">{{ apt.type }}</span>
+                  <span class="text-[9px] font-bold opacity-80">• {{ apt.duration }} min</span>
                 </div>
               </div>
             </div>
             <div class="text-right flex items-center gap-2">
               <span class="text-[9px] font-extrabold bg-tertiary-container text-tertiary px-3 py-1 rounded-full uppercase">{{ apt.status }}</span>
-              <div class="flex opacity-0 group-hover/card:opacity-100 transition-opacity bg-white/50 backdrop-blur-md rounded-xl p-1 gap-1">
+              <div class="flex opacity-0 group-hover/card:opacity-100 transition-opacity bg-surface-container-lowest/50 backdrop-blur-md rounded-xl p-1 gap-1">
                 <button (click)="updateAptStatus(apt, 'Terminé', $event)" aria-label="Marquer comme terminé" class="material-symbols-outlined text-sm p-1.5 hover:bg-success/20 text-success rounded-lg transition-colors">check_circle</button>
                 <button (click)="updateAptStatus(apt, 'Annulé', $event)" aria-label="Annuler ce rendez-vous" class="material-symbols-outlined text-sm p-1.5 hover:bg-error/20 text-error rounded-lg transition-colors">cancel</button>
               </div>
@@ -79,86 +79,120 @@
     </div>
   </div>
 
-  <!-- Appointment Creation Modal -->
-  <div *ngIf="showModal" class="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-surface/80 backdrop-blur-md animate-fade-in no-print">
-    <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl border border-outline-variant/10 overflow-hidden animate-scale-up">
-      <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-lowest">
-        <h3 class="text-xl font-bold text-on-surface">Prendre un Rendez-vous</h3>
-        <button (click)="showModal = false" aria-label="Fermer" class="text-on-surface-variant hover:text-error transition-colors">
-          <span class="material-symbols-outlined">close</span>
+  <!-- Appointment Creation Modal (Premium Glassmorphism Edition) -->
+  <div *ngIf="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 no-print">
+    <!-- Immersive Radial Overlay -->
+    <div class="absolute inset-0 bg-on-surface/30 backdrop-blur-[10px] animate-fade-in transition-all" (click)="showModal = false">
+      <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-tertiary/5"></div>
+    </div>
+    
+    <!-- Modal Glass Shell -->
+    <div class="bg-surface-container-lowest/90 backdrop-blur-2xl w-full max-w-xl rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden border border-white/20">
+      <!-- Decorative Glow Elements -->
+      <div class="absolute -top-12 -left-12 w-32 h-32 bg-primary/20 rounded-full blur-3xl opacity-30 select-none"></div>
+      <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-tertiary/20 rounded-full blur-3xl opacity-30 select-none"></div>
+
+      <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center relative z-10">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-2xl" translate="no">event_available</span>
+          </div>
+          <div>
+            <h3 class="text-2xl font-black text-on-surface tracking-tight">Prendre un Rendez-vous</h3>
+            <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">Planification Agenda</p>
+          </div>
+        </div>
+        <button (click)="showModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
+          <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform" translate="no">close</span>
         </button>
       </div>
 
-      <div class="p-8 space-y-6 max-h-[60vh] overflow-y-auto">
+      <div class="p-8 space-y-6 max-h-[65vh] overflow-y-auto relative z-10 custom-scrollbar">
         <!-- Patient Selection Toggle -->
-        <div class="flex items-center justify-between p-1 bg-surface-container-low rounded-2xl mb-2">
+        <div class="flex items-center justify-between p-1.5 bg-surface-container-low rounded-[1.25rem] mb-4">
           <button (click)="isNewPatient = false" 
-                  [class]="!isNewPatient ? 'bg-white shadow-sm text-primary' : 'text-on-surface-variant'"
-                  class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">Patient Existant</button>
+                  [class]="!isNewPatient ? 'bg-surface-container-lowest shadow-md text-primary font-bold' : 'text-on-surface-variant font-medium opacity-60'"
+                  class="flex-1 py-3 text-xs rounded-[0.875rem] transition-all transform active:scale-95">Patient Existant</button>
           <button (click)="isNewPatient = true" 
-                  [class]="isNewPatient ? 'bg-white shadow-sm text-primary' : 'text-on-surface-variant'"
-                  class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">Nouveau Patient</button>
+                  [class]="isNewPatient ? 'bg-surface-container-lowest shadow-md text-primary font-bold' : 'text-on-surface-variant font-medium opacity-60'"
+                  class="flex-1 py-3 text-xs rounded-[0.875rem] transition-all transform active:scale-95">Nouveau Patient</button>
         </div>
 
         <!-- Existing Patient Selection -->
-        <div class="space-y-1" *ngIf="!isNewPatient">
-          <label for="cal-sel-pat" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Rechercher un Patient</label>
-          <select id="cal-sel-pat" [(ngModel)]="newApt.patientId" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
-            <option *ngFor="let p of patients; trackBy: trackByPatient" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
-          </select>
+        <div class="space-y-4 animate-fade-in" *ngIf="!isNewPatient">
+          <div class="space-y-2">
+            <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Sélectionner un Patient</label>
+            <div class="relative">
+              <select id="cal-sel-pat" [(ngModel)]="newApt.patientId" 
+                      class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 focus:bg-surface-container-lowest appearance-none transition-all">
+                <option value="" disabled selected>Choisir dans la liste...</option>
+                <option *ngFor="let p of patients; trackBy: trackByPatient" [value]="p.id">{{ p.firstName }} {{ p.lastName }}</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">expand_more</span>
+            </div>
+          </div>
         </div>
 
-        <!-- New Patient Form -->
-        <div class="space-y-4 animate-fade-in" *ngIf="isNewPatient">
+        <!-- New Patient Detailed Form -->
+        <div class="space-y-5 animate-fade-in" *ngIf="isNewPatient">
           <div class="grid grid-cols-2 gap-4">
-            <div class="space-y-1">
-              <label for="cal-nom" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Nom *</label>
-              <input id="cal-nom" [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Nom">
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Nom *</label>
+              <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="Nom">
             </div>
-            <div class="space-y-1">
-              <label for="cal-pren" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Prénom *</label>
-              <input id="cal-pren" [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="Prénom">
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Prénom *</label>
+              <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="Prénom">
             </div>
           </div>
-          <div class="space-y-1">
-            <label for="cal-tel" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Numéro de Téléphone *</label>
-            <input id="cal-tel" [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" placeholder="+212 600-000000">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Téléphone *</label>
+              <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="+212 ...">
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Date Naissance *</label>
+              <input type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all">
+            </div>
           </div>
-          <div class="space-y-1">
-            <label for="cal-date" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Date de Naissance *</label>
-            <input id="cal-date" type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner">
-          </div>
-          <div class="space-y-1">
-            <label for="cal-addr" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">Adresse Postale *</label>
-            <textarea id="cal-addr" [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner rows-2" placeholder="Adresse complète"></textarea>
+          <div class="space-y-2">
+            <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">Adresse Complète</label>
+            <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" placeholder="Adresse du patient..."></textarea>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-outline-variant/5">
-          <div class="space-y-1">
-            <label for="cal-time" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Heure</label>
-            <input id="cal-time" type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
+        <!-- Appointment Specifics -->
+        <div class="space-y-5 pt-8 border-t border-outline-variant/10">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Heure du RDV</label>
+              <input type="time" [(ngModel)]="newApt.time" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm">
+            </div>
+            <div class="space-y-2">
+              <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Durée (Min)</label>
+              <div class="relative">
+                <input type="number" [(ngModel)]="newApt.duration" step="15" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm">
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-primary opacity-40">MIN</span>
+              </div>
+            </div>
           </div>
-          <div class="space-y-1">
-            <label for="cal-duree" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Durée (min)</label>
-            <input id="cal-duree" type="number" [(ngModel)]="newApt.duration" step="15" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
-          </div>
-        </div>
 
-        <div class="space-y-1">
-          <label for="cal-type" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">Type de Consultation</label>
-          <select id="cal-type" [(ngModel)]="newApt.type" class="w-full bg-surface-container-low border-none rounded-xl py-4 px-4 text-sm focus:ring-2 focus:ring-primary/10 outline-none">
-            <option value="Consultation Générale">Consultation Générale</option>
-            <option value="Suivi">Suivi</option>
-            <option value="Urgence">Urgence</option>
-            <option value="Examen / Analyse">Examen / Analyse</option>
-          </select>
+          <div class="space-y-2">
+            <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Type d'Acte</label>
+            <select id="cal-type" [(ngModel)]="newApt.type" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
+              <option value="Consultation Générale">Consultation Générale</option>
+              <option value="Suivi">Suivi</option>
+              <option value="Urgence">Urgence</option>
+              <option value="Examen / Analyse">Examen / Analyse</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div class="p-8 bg-surface-container-lowest border-t border-outline-variant/10 flex gap-4">
-        <button (click)="showModal = false" class="flex-1 py-4 bg-surface-container-high rounded-2xl font-bold text-sm text-on-surface-variant hover:brightness-95 transition-all">Annuler</button>
-        <button (click)="submitAppointment()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/10 transition-all">Enregistrer le RDV</button>
+      <!-- Final Actions -->
+      <div class="p-8 bg-surface-container-low/40 backdrop-blur-xl flex gap-4 relative z-10 border-t border-outline-variant/10">
+        <button (click)="showModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">Annuler</button>
+        <button (click)="submitAppointment()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">Valider le Rendez-vous</button>
       </div>
     </div>
   </div>

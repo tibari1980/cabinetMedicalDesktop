@@ -39,6 +39,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
     if (!term) {
       this.filteredPatients = this.patients;
       this.currentPage = 1;
+      this.recomputePagination();
       return;
     }
     this.filteredPatients = this.patients.filter(p =>
@@ -47,6 +48,7 @@ export class PatientsComponent implements OnInit, OnDestroy {
       p.email?.toLowerCase().includes(term)
     );
     this.currentPage = 1;
+    this.recomputePagination();
   }
 
   openNewPatientModal() {
@@ -82,20 +84,23 @@ export class PatientsComponent implements OnInit, OnDestroy {
   // Pagination logic
   currentPage = 1;
   itemsPerPage = 10;
+  computedPaginatedPatients: Patient[] = [];
+  computedTotalPages = 1;
 
-  get paginatedPatients() {
+  private recomputePagination() {
+    this.computedTotalPages = Math.ceil(this.filteredPatients.length / this.itemsPerPage) || 1;
+    if (this.currentPage > this.computedTotalPages) {
+      this.currentPage = this.computedTotalPages;
+    }
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredPatients.slice(startIndex, startIndex + this.itemsPerPage);
-  }
-
-  get totalPages() {
-    return Math.ceil(this.filteredPatients.length / this.itemsPerPage) || 1;
+    this.computedPaginatedPatients = this.filteredPatients.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   changePage(delta: number) {
     const newPage = this.currentPage + delta;
-    if (newPage >= 1 && newPage <= this.totalPages) {
+    if (newPage >= 1 && newPage <= this.computedTotalPages) {
       this.currentPage = newPage;
+      this.recomputePagination();
     }
   }
 

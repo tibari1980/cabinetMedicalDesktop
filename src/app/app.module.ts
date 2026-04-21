@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
+import { ErrorHandler } from '@angular/core';
+import { GlobalErrorHandler } from './core/handlers/global-error-handler';
 import { AppComponent } from './app.component';
 
 // Layout Components
@@ -21,6 +23,10 @@ import { MedicalRecordDetailComponent } from './components/views/patients/medica
 import { PrescriptionComponent } from './components/views/patients/prescription/prescription.component';
 import { HelpComponent } from './components/views/help/help.component';
 import { PerformanceComponent } from './components/views/performance/performance.component';
+import { BillingComponent } from './components/views/billing/billing.component';
+import { TraceabilityComponent } from './components/views/traceability/traceability.component';
+import { NotFoundComponent } from './components/views/not-found/not-found.component';
+import { SettingsComponent } from './components/views/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +42,11 @@ import { PerformanceComponent } from './components/views/performance/performance
     MedicalRecordDetailComponent,
     PrescriptionComponent,
     HelpComponent,
-    PerformanceComponent
+    PerformanceComponent,
+    BillingComponent,
+    TraceabilityComponent,
+    NotFoundComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +54,9 @@ import { PerformanceComponent } from './components/views/performance/performance
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    { provide: ErrorHandler, useClass: GlobalErrorHandler }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
