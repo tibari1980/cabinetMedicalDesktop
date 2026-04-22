@@ -39,12 +39,11 @@
             </div>
           </div>
           <div class="flex flex-1 max-w-md items-center gap-3">
-            <div class="relative flex-1 group">
-              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg transition-colors group-focus-within:text-primary notranslate">search</span>
-              <input [(ngModel)]="staffSearchTerm" (ngModelChange)="applyStaffFilter()"
-                     class="w-full bg-surface-container-low border-none rounded-xl py-2.5 pl-10 pr-4 text-xs font-semibold focus:ring-2 focus:ring-primary/10 transition-all outline-none shadow-inner-sm" 
-                     [placeholder]="'ADMIN.SEARCH_PLACEHOLDER' | translate" type="text"/>
-            </div>
+            <app-search-input 
+              [(value)]="staffSearchTerm" 
+              (valueChange)="applyStaffFilter()"
+              placeholder="ADMIN.SEARCH_PLACEHOLDER">
+            </app-search-input>
             <button (click)="openProfileModal()" class="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">
               <span class="material-symbols-outlined text-2xl">person_add</span>
             </button>
@@ -117,97 +116,97 @@
   </div>
 </div>
 
-<!-- PROFILE EDIT MODAL (Premium Glassmorphism Edition) -->
-<div *ngIf="showProfileModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-  <!-- Immersive Radial Overlay -->
-  <div class="absolute inset-0 bg-on-surface/30 backdrop-blur-[10px] animate-fade-in transition-all" (click)="showProfileModal = false">
-    <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-tertiary/5"></div>
-  </div>
-  
-  <!-- Modal Glass Shell -->
-  <div class="bg-surface-container-lowest/90 backdrop-blur-2xl w-full max-w-xl rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden border border-white/20">
-    <!-- Decorative Glow Elements -->
-    <div class="absolute -top-12 -left-12 w-32 h-32 bg-primary/20 rounded-full blur-3xl opacity-30 select-none"></div>
-    <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-tertiary/20 rounded-full blur-3xl opacity-30 select-none"></div>
+<app-modal-shell
+  [show]="showProfileModal"
+  [title]="(isNewProfile ? 'ADMIN.MODAL_TITLE_NEW' : 'ADMIN.MODAL_TITLE_EDIT')"
+  subtitle="ADMIN.MODAL_SUBTITLE"
+  icon="manage_accounts"
+  (close)="showProfileModal = false">
 
-    <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center relative z-10">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-          <span class="material-symbols-outlined text-2xl" translate="no">manage_accounts</span>
-        </div>
-        <div>
-          <h3 class="text-2xl font-black text-on-surface tracking-tight">{{ (isNewProfile ? 'ADMIN.MODAL_TITLE_NEW' : 'ADMIN.MODAL_TITLE_EDIT') | translate }}</h3>
-          <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">{{ 'ADMIN.MODAL_SUBTITLE' | translate }}</p>
-        </div>
+  <div modal-body class="space-y-6">
+    <div class="grid grid-cols-2 gap-5">
+      <div class="space-y-2">
+        <label for="adm-first-name" class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.FIRST_NAME' | translate }} *</label>
+        <input id="adm-first-name" [(ngModel)]="selectedProfile.firstName" appAutoFocus
+               [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.firstName}"
+               aria-required="true"
+               [attr.aria-invalid]="!!errors.firstName"
+               aria-describedby="error-adm-first-name"
+               class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold shadow-sm transition-all" placeholder="Jean">
+        <app-form-error id="error-adm-first-name" [error]="errors.firstName === 'REQUIRED'" translationKey="VALIDATION.REQUIRED"></app-form-error>
+        <app-form-error [error]="errors.firstName === 'MIN'" translationKey="VALIDATION.FIRST_NAME_MIN" [params]="{min: 2}"></app-form-error>
       </div>
-      <button (click)="showProfileModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
-        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform" translate="no">close</span>
-      </button>
+      <div class="space-y-2">
+        <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.LAST_NAME' | translate }} *</label>
+        <input [(ngModel)]="selectedProfile.lastName" 
+               [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.lastName}"
+               class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Dupont">
+        <app-form-error [error]="errors.lastName === 'REQUIRED'" translationKey="VALIDATION.REQUIRED"></app-form-error>
+        <app-form-error [error]="errors.lastName === 'MIN'" translationKey="VALIDATION.LAST_NAME_MIN" [params]="{min: 2}"></app-form-error>
+      </div>
     </div>
 
-    <div class="p-8 space-y-6 max-h-[65vh] overflow-y-auto relative z-10 custom-scrollbar">
-      <div class="grid grid-cols-2 gap-5">
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.FIRST_NAME' | translate }} *</label>
-          <input [(ngModel)]="selectedProfile.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" [placeholder]="'COMMON.FIRST_NAME' | translate">
+    <div class="grid grid-cols-2 gap-5">
+      <div class="space-y-2">
+        <label for="adm-username" class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.USERNAME' | translate }} *</label>
+        <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm"
+             [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.username || errors.usernameTaken}">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 text-sm" aria-hidden="true">alternate_email</span>
+          <input id="adm-username" [(ngModel)]="selectedProfile.username" 
+                 aria-required="true"
+                 [attr.aria-invalid]="!!errors.username || !!errors.usernameTaken"
+                 aria-describedby="error-adm-username"
+                 class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold transition-all" placeholder="jean.dupont">
         </div>
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.LAST_NAME' | translate }} *</label>
-          <input [(ngModel)]="selectedProfile.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" [placeholder]="'COMMON.LAST_NAME' | translate">
-        </div>
+        <app-form-error id="error-adm-username" [error]="errors.username === 'REQUIRED'" translationKey="VALIDATION.REQUIRED"></app-form-error>
+        <app-form-error [error]="errors.username === 'MIN'" translationKey="VALIDATION.MIN_LENGTH" [params]="{min: 4}"></app-form-error>
+        <app-form-error [error]="errors.usernameTaken" translationKey="VALIDATION.USERNAME_TAKEN"></app-form-error>
       </div>
-
-      <div class="grid grid-cols-2 gap-5">
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.USERNAME' | translate }} *</label>
-          <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30 text-sm" translate="no">alternate_email</span>
-            <input [(ngModel)]="selectedProfile.username" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all" placeholder="username">
-          </div>
-        </div>
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-error tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.PASSWORD' | translate }} *</label>
-          <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-error/30 text-sm" translate="no">key</span>
-            <input [(ngModel)]="selectedProfile.password" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-mono font-semibold outline-none focus:ring-2 focus:ring-error/10 transition-all" placeholder="••••••••">
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-5 pt-4 border-t border-outline-variant/10">
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.SYSTEM_ROLE' | translate }}</label>
-          <div class="relative">
-            <select [(ngModel)]="selectedProfile.role" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
-              <option [value]="UserRole.DOCTOR">{{ 'ADMIN.ROLE_DOCTOR' | translate }}</option>
-              <option [value]="UserRole.SECRETARY">{{ 'ADMIN.ROLE_SECRETARY' | translate }}</option>
-              <option [value]="UserRole.ADMIN">{{ 'ADMIN.ROLE_ADMIN' | translate }}</option>
-            </select>
-            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">badge</span>
-          </div>
-        </div>
-        <div class="space-y-2" *ngIf="selectedProfile.role === UserRole.DOCTOR">
-          <label class="text-[10px] uppercase font-black text-tertiary tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.MEDICAL_SPECIALTY' | translate }}</label>
-          <input [(ngModel)]="selectedProfile.specialty" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" [placeholder]="'ADMIN.SPECIALTY_PLACEHOLDER' | translate">
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-5">
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.PRO_EMAIL' | translate }}</label>
-          <input [(ngModel)]="selectedProfile.email" type="email" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="contact@clinique.ma">
-        </div>
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.DIRECT_PHONE' | translate }}</label>
-          <input [(ngModel)]="selectedProfile.phone" type="tel" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="+212 ...">
+      <div class="space-y-2">
+        <label class="text-[10px] uppercase font-black text-error tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.PASSWORD' | translate }} *</label>
+        <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-error/30 text-sm" aria-hidden="true">key</span>
+          <input [(ngModel)]="selectedProfile.password" type="password" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-mono font-semibold outline-none focus:ring-2 focus:ring-error/10 transition-all" placeholder="••••••••">
         </div>
       </div>
     </div>
 
-    <!-- Final Actions -->
-    <div class="p-8 bg-surface-container-low/40 backdrop-blur-xl flex gap-4 relative z-10 border-t border-outline-variant/10">
-      <button (click)="showProfileModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">{{ 'COMMON.CANCEL' | translate }}</button>
-      <button (click)="saveProfile()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">{{ 'ADMIN.SAVE_PROFILE' | translate }}</button>
+    <div class="grid grid-cols-2 gap-5 pt-4 border-t border-outline-variant/10">
+      <div class="space-y-2">
+        <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.SYSTEM_ROLE' | translate }}</label>
+        <div class="relative">
+          <select [(ngModel)]="selectedProfile.role" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
+            <option [value]="UserRole.DOCTOR">{{ 'ADMIN.ROLE_DOCTOR' | translate }}</option>
+            <option [value]="UserRole.SECRETARY">{{ 'ADMIN.ROLE_SECRETARY' | translate }}</option>
+            <option [value]="UserRole.ADMIN">{{ 'ADMIN.ROLE_ADMIN' | translate }}</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">badge</span>
+        </div>
+      </div>
+      <div class="space-y-2" *ngIf="selectedProfile.role === UserRole.DOCTOR">
+        <label class="text-[10px] uppercase font-black text-tertiary tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.MEDICAL_SPECIALTY' | translate }}</label>
+        <input [(ngModel)]="selectedProfile.specialty" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" [placeholder]="'ADMIN.SPECIALTY_PLACEHOLDER' | translate">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-5">
+      <div class="space-y-2">
+        <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.PRO_EMAIL' | translate }}</label>
+        <input [(ngModel)]="selectedProfile.email" type="email" 
+               [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.email || errors.emailTaken}"
+               class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="jean.dupont@email.com">
+        <app-form-error [error]="errors.email === 'REQUIRED'" translationKey="VALIDATION.REQUIRED"></app-form-error>
+        <app-form-error [error]="errors.emailTaken" translationKey="VALIDATION.EMAIL_TAKEN"></app-form-error>
+      </div>
+      <div class="space-y-2">
+        <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'ADMIN.DIRECT_PHONE' | translate }}</label>
+        <input [(ngModel)]="selectedProfile.phone" type="tel" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="06 12 34 56 78">
+      </div>
     </div>
   </div>
-</div>
+
+  <div modal-footer class="flex w-full gap-4">
+    <button (click)="showProfileModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">{{ 'COMMON.CANCEL' | translate }}</button>
+    <button (click)="saveProfile()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">{{ 'ADMIN.SAVE_PROFILE' | translate }}</button>
+  </div>
+</app-modal-shell>

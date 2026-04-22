@@ -1,0 +1,98 @@
+<div class="landing-container" (mousemove)="onMouseMove($event)" [@fadeUp]>
+  <!-- Immersive Background Layer -->
+  <div class="bg-orb p1"></div>
+  <div class="bg-orb p2"></div>
+  <div class="bg-orb p3"></div>
+  <div class="glass-mesh"></div>
+
+  <!-- Navbar -->
+  <nav class="landing-nav animate-item">
+    <div class="logo-area">
+      <div class="logo-box">
+        <span class="material-symbols-outlined">medical_services</span>
+      </div>
+      <span class="logo-text">MediFlow</span>
+    </div>
+    <div class="nav-links">
+      <button (click)="goToLogin()" class="btn-login-outline">
+        {{ 'COMMON.LOGIN' | translate }}
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <main class="hero-section">
+    <div class="hero-content">
+      <div class="badge animate-item">
+        <span class="pulse"></span>
+        {{ 'DASHBOARD.LIVE_ACTIVITY' | translate }}
+      </div>
+      
+      <h1 class="hero-title animate-item">
+        L'Excellence de la <br>
+        <span class="gradient-text">Gestion Médicale</span>
+      </h1>
+      
+      <p class="hero-subtitle animate-item">
+        La solution SaaS nouvelle génération pour les cabinets médicaux modernes. 
+        Épurée, intelligente et conçue pour votre efficacité.
+      </p>
+
+      <div class="hero-actions animate-item">
+        <button (click)="goToLogin()" class="btn-hero-primary shadow-glow">
+          <span>Accéder à mon Cabinet</span>
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+        <div class="offline-badge">
+          <span class="material-symbols-outlined">cloud_off</span>
+          100% Fonctionnel Sans Connexion
+        </div>
+      </div>
+    </div>
+
+    <!-- 3D Perspective Visual -->
+    <div class="hero-visual animate-item" [style.transform]="get3DTransform()">
+      <div class="card-3d">
+        <div class="card-inner">
+          <img src="/C:/Users/Pc/.gemini/antigravity/brain/27b83c5f-0b17-47d0-af73-b076daa0c1a6/mediflow_hero_image_1776856636949.png" 
+               alt="MediFlow App Preview" class="app-preview shadow-2xl">
+          
+          <!-- Floating UI Elements -->
+          <div class="floating-ui f1">
+             <span class="material-symbols-outlined">schedule</span>
+             <span>+12 RDV Aujourd'hui</span>
+          </div>
+          <div class="floating-ui f2">
+             <span class="material-symbols-outlined">payments</span>
+             <span>Facturation Automatisée</span>
+          </div>
+        </div>
+      </div>
+      <div class="visual-floor"></div>
+    </div>
+  </main>
+
+  <!-- Features Section -->
+  <section class="features-grid">
+    <div class="feature-card animate-item">
+      <span class="material-symbols-outlined icon">diversity_1</span>
+      <h3>Patients</h3>
+      <p>Dossiers médicaux complets avec historique intelligent.</p>
+    </div>
+    <div class="feature-card animate-item">
+      <span class="material-symbols-outlined icon">clinical_notes</span>
+      <h3>Facturation</h3>
+      <p>Générez vos factures PDF en un clic, même hors-ligne.</p>
+    </div>
+    <div class="feature-card animate-item">
+      <span class="material-symbols-outlined icon">analytics</span>
+      <h3>Analyses</h3>
+      <p>Suivez les performances de votre cabinet en temps réel.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer animate-item">
+    <p>&copy; 2026 MediFlow Pro - L'avenir de la médecine numérique.</p>
+  </footer>
+</div>

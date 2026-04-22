@@ -80,7 +80,7 @@
   </div>
 
   <!-- Appointment Creation Modal (Premium Glassmorphism Edition) -->
-  <div *ngIf="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 no-print">
+  <div *ngIf="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 lg:p-8 no-print">
     <!-- Immersive Radial Overlay -->
     <div class="absolute inset-0 bg-on-surface/30 backdrop-blur-[10px] animate-fade-in transition-all" (click)="showModal = false">
       <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-tertiary/5"></div>
@@ -107,7 +107,7 @@
         </button>
       </div>
 
-      <div class="p-8 space-y-6 max-h-[65vh] overflow-y-auto relative z-10 custom-scrollbar">
+      <div class="p-8 space-y-6 max-h-[80vh] overflow-y-auto relative z-10 custom-scrollbar">
         <!-- Patient Selection Toggle -->
         <div class="flex items-center justify-between p-1.5 bg-surface-container-low rounded-[1.25rem] mb-4">
           <button (click)="isNewPatient = false" 
@@ -138,17 +138,17 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.LAST_NAME' | translate }} *</label>
-              <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" [placeholder]="'COMMON.LAST_NAME' | translate">
+              <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="Dupont">
             </div>
             <div class="space-y-2">
               <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.FIRST_NAME' | translate }} *</label>
-              <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" [placeholder]="'COMMON.FIRST_NAME' | translate">
+              <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="Jean">
             </div>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div class="space-y-2">
               <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.PHONE' | translate }} *</label>
-              <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="+212 ...">
+              <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all" placeholder="06 12 34 56 78">
             </div>
             <div class="space-y-2">
               <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.BIRTH_DATE' | translate }} *</label>
@@ -157,7 +157,7 @@
           </div>
           <div class="space-y-2">
             <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'COMMON.ADDRESS' | translate }}</label>
-            <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" [placeholder]="'PATIENTS.MODAL_ADDRESS_PLACEHOLDER' | translate"></textarea>
+            <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" placeholder="10 Rue de la République..."></textarea>
           </div>
         </div>
 

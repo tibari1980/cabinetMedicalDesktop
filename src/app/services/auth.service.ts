@@ -4,30 +4,62 @@ import { User, UserRole } from '../models/user.model';
 import { Router } from '@angular/router';
 import { AuditService } from './audit.service';
 import { AuditAction } from '../models/audit.model';
+import { DatabaseService } from './database.service';
+import { EncryptionService } from './encryption.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User | null>;
-  public currentUser$: Observable<User | null>;
-
-  private usersSubject: BehaviorSubject<User[]>;
+  private usersSubject: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   public users$: Observable<User[]>;
+
+  private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
+  public currentUser$: Observable<User | null>;
 
   constructor(
     private router: Router,
-    private auditService: AuditService
+    private auditService: AuditService,
+    private encryptionService: EncryptionService,
+    private dbService: DatabaseService
   ) {
-    const savedUsers = localStorage.getItem('mf_users');
-    let initialUsers = savedUsers ? JSON.parse(savedUsers) : [];
-
-    this.usersSubject = new BehaviorSubject<User[]>(initialUsers);
     this.users$ = this.usersSubject.asObservable();
+    this.currentUser$ = this.currentUserSubject.asObservable();
+    this.initStaff();
+  }
+
+  private async initStaff() {
+    // FORCE DEMO MODE: Mark setup as complete
+    localStorage.setItem('mf_setup_complete', 'true');
+    
+    // 1. Try IndexedDB
+    let users: User[] = await this.dbService.getAll<User>('users');
+
+    // 2. Fallback to localStorage (Migration)
+    if (users.length === 0) {
+      const savedUsers = localStorage.getItem('mf_users');
+      if (savedUsers) {
+        users = JSON.parse(savedUsers);
+        // Migrer vers IndexedDB
+        for (const u of users) {
+          await this.dbService.put('users', u);
+        }
+        localStorage.removeItem('mf_users');
+      } else {
+        // Init with Demo Users
+        users = this.getDemoUsers();
+        for (const u of users) {
+          await this.dbService.put('users', u);
+        }
+      }
+    }
+
+    this.usersSubject.next(users);
 
     const savedUser = localStorage.getItem('mf_session');
-    this.currentUserSubject = new BehaviorSubject<User | null>(savedUser ? JSON.parse(savedUser) : null);
-    this.currentUser$ = this.currentUserSubject.asObservable();
+    if (savedUser) {
+      this.currentUserSubject.next(JSON.parse(savedUser));
+    }
   }
 
   public get currentUserValue(): User | null {
@@ -61,7 +93,13 @@ export class AuthService {
     return this.usersValue.filter(u => u.role === UserRole.DOCTOR);
   }
 
-  addOrUpdateUser(updatedUser: User) {
+  async addOrUpdateUser(updatedUser: User) {
+    if (!updatedUser.id) {
+      updatedUser.id = this.dbService.generateSecureId();
+    }
+
+    await this.dbService.put('users', updatedUser);
+    
     const currentUsers = this.usersValue;
     const index = currentUsers.findIndex(u => u.id === updatedUser.id);
     if (index > -1) {
@@ -69,7 +107,6 @@ export class AuthService {
     } else {
       currentUsers.push(updatedUser);
     }
-    localStorage.setItem('mf_users', JSON.stringify(currentUsers));
     this.usersSubject.next([...currentUsers]);
     
     // Si c'est l'utilisateur courant, on update sa session
@@ -79,9 +116,9 @@ export class AuthService {
     }
   }
 
-  deleteUser(userId: string) {
+  async deleteUser(userId: string) {
+    await this.dbService.delete('users', userId);
     const newUsers = this.usersValue.filter(u => u.id !== userId);
-    localStorage.setItem('mf_users', JSON.stringify(newUsers));
     this.usersSubject.next(newUsers);
   }
 
@@ -98,12 +135,12 @@ export class AuthService {
     return of(false);
   }
 
-  changePassword(userId: string, newPassword: string) {
+  async changePassword(userId: string, newPassword: string) {
     const currentUsers = this.usersValue;
     const index = currentUsers.findIndex(u => u.id === userId);
     if (index > -1) {
       currentUsers[index].password = newPassword;
-      localStorage.setItem('mf_users', JSON.stringify(currentUsers));
+      await this.dbService.put('users', currentUsers[index]);
       this.usersSubject.next([...currentUsers]);
       
       // Update session if it's the current user
@@ -153,5 +190,61 @@ export class AuthService {
     }
     
     return false;
+  }
+
+  private getDemoUsers(): User[] {
+    return [
+      {
+        id: 'user-default-superadmin',
+        username: 'superadmin',
+        firstName: 'Super',
+        lastName: 'Admin',
+        role: UserRole.SUPER_ADMIN,
+        password: 'demo123',
+        email: 'superadmin@mediflow.com'
+      },
+      {
+        id: 'user-default-admin',
+        username: 'admin.sophie',
+        firstName: 'Sophie',
+        lastName: 'Martin',
+        role: UserRole.ADMIN,
+        password: 'demo123',
+        email: 's.martin@mediflow.com'
+      },
+      {
+        id: 'user-default-doctor',
+        username: 'dr.miller',
+        firstName: 'James',
+        lastName: 'Miller',
+        role: UserRole.DOCTOR,
+        password: 'demo123',
+        specialty: 'Cardiologie',
+        email: 'j.miller@mediflow.com'
+      },
+      {
+        id: 'user-default-secretary',
+        username: 'amine.b',
+        firstName: 'Amine',
+        lastName: 'Bennani',
+        role: UserRole.SECRETARY,
+        password: 'demo123',
+        email: 'a.bennani@mediflow.com'
+      }
+    ];
+  }
+
+  isEmailUnique(email: string, excludeId?: string): boolean {
+    if (!email) return true;
+    return !this.usersValue.some(u => 
+      u.email?.toLowerCase() === email.toLowerCase() && u.id !== excludeId
+    );
+  }
+
+  isUsernameUnique(username: string, excludeId?: string): boolean {
+    if (!username) return true;
+    return !this.usersValue.some(u => 
+      u.username?.toLowerCase() === username.toLowerCase() && u.id !== excludeId
+    );
   }
 }

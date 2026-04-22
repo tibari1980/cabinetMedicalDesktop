@@ -4,6 +4,7 @@ import { AuditService } from '../../../services/audit.service';
 import { ClinicInfo } from '../../../models/clinic.model';
 import { AuditAction } from '../../../models/audit.model';
 import { AuthService } from '../../../services/auth.service';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-settings',
@@ -11,6 +12,7 @@ import { AuthService } from '../../../services/auth.service';
 })
 export class SettingsComponent {
   clinicInfo: ClinicInfo = { name: '', openingHour: 8, closingHour: 18 };
+  errors: any = {};
   
   countries = [
     { code: 'FR', name: 'France', currency: '€', languages: ['Français'] },
@@ -27,7 +29,8 @@ export class SettingsComponent {
   constructor(
     private clinicService: ClinicService,
     private auditService: AuditService,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificationService: NotificationService
   ) {
     this.clinicInfo = { ...this.clinicService.getClinicValue() };
     if (!this.clinicInfo.legalIds) {
@@ -47,13 +50,25 @@ export class SettingsComponent {
   }
 
   saveClinicInfo() {
+    this.errors = {};
+    if (!this.clinicInfo.name?.trim()) this.errors.name = 'REQUIRED';
+    
+    if (this.clinicInfo.openingHour >= this.clinicInfo.closingHour) {
+      this.errors.hours = 'HOURS_ERROR';
+    }
+
+    if (Object.keys(this.errors).length > 0) {
+      this.notificationService.error('VALIDATION.REQUIRED');
+      return;
+    }
+
     this.clinicService.updateInfo(this.clinicInfo);
     this.auditService.log(
       this.authService.currentUserValue, 
       AuditAction.EDIT_SETTINGS, 
       `Mise à jour des paramètres système : ${this.clinicInfo.name}`
     );
-    alert('Paramètres SaaS enregistrés avec succès !');
+    this.notificationService.success('NOTIFICATIONS.SAVED_SUCCESS');
     this.storageUsageMB = this.clinicService.getStorageUsageMB();
   }
 

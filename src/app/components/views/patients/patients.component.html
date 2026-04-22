@@ -12,12 +12,11 @@
 
   <div class="bg-surface-container-lowest/50 backdrop-blur-xl rounded-[2rem] shadow-sm border border-outline-variant/10 overflow-hidden">
     <div class="p-6 border-b border-outline-variant/5 flex items-center justify-between bg-surface-container-low/20">
-      <div class="relative w-full max-w-sm group">
-        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-lg transition-colors group-focus-within:text-primary">search</span>
-        <input [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()"
-               class="w-full bg-surface-container-lowest/80 border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/10 transition-all outline-none shadow-inner-sm" 
-               [placeholder]="'PATIENTS.SEARCH_PLACEHOLDER' | translate" type="text"/>
-      </div>
+      <app-search-input 
+        [(value)]="searchTerm" 
+        (valueChange)="applyFilter()"
+        placeholder="PATIENTS.SEARCH_PLACEHOLDER">
+      </app-search-input>
       <div class="flex gap-3">
         <button aria-label="Filtrer la liste" class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-outline-variant/10 hover:border-primary/20 hover:text-primary">
           <span class="material-symbols-outlined text-xl">filter_list</span>
@@ -63,10 +62,21 @@
               <span class="px-3 py-1 text-[9px] font-extrabold uppercase tracking-widest bg-tertiary/10 text-tertiary rounded-full">{{ 'PATIENTS.STATUS_ACTIVE' | translate }}</span>
             </td>
             <td class="px-8 py-6 text-right">
-              <button [routerLink]="['/patients', patient.id, 'record']" aria-label="Voir le dossier médical"
-                      class="text-on-surface-variant/30 hover:text-primary transition-all p-2 rounded-xl hover:bg-primary/5">
-                <span class="material-symbols-outlined">visibility</span>
-              </button>
+              <div class="flex items-center justify-end gap-1">
+                <button (click)="openEditPatientModal(patient)" aria-label="Modifier le dossier"
+                        class="text-on-surface-variant/30 hover:text-primary transition-all p-2 rounded-xl hover:bg-primary/5">
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button [routerLink]="['/patients', patient.id, 'record']" aria-label="Voir le dossier médical"
+                        class="text-on-surface-variant/30 hover:text-primary transition-all p-2 rounded-xl hover:bg-primary/5">
+                  <span class="material-symbols-outlined">visibility</span>
+                </button>
+                <button *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])" 
+                        (click)="deletePatient(patient.id, patient.firstName + ' ' + patient.lastName)" aria-label="Supprimer le patient"
+                        class="text-on-surface-variant/30 hover:text-error transition-all p-2 rounded-xl hover:bg-error/5">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -91,89 +101,98 @@
   </div>
 </div>
 
-<!-- Patient Creation Modal (Premium Glassmorphism Edition) -->
-<div *ngIf="showModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-  <!-- Immersive Radial Overlay -->
-  <div class="absolute inset-0 bg-on-surface/30 backdrop-blur-[10px] animate-fade-in transition-all" (click)="showModal = false">
-    <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-tertiary/5"></div>
-  </div>
-  
-  <!-- Modal Glass Shell -->
-  <div class="bg-surface-container-lowest/90 backdrop-blur-2xl w-full max-w-xl rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden border border-white/20">
-    <!-- Decorative Glow Elements -->
-    <div class="absolute -top-12 -left-12 w-32 h-32 bg-primary/20 rounded-full blur-3xl opacity-30 select-none"></div>
-    <div class="absolute -bottom-12 -right-12 w-32 h-32 bg-tertiary/20 rounded-full blur-3xl opacity-30 select-none"></div>
+<app-modal-shell 
+  [show]="showModal" 
+  [title]="isEditMode ? 'PATIENTS.MODAL_EDIT_TITLE' : 'PATIENTS.MODAL_TITLE'"
+  [subtitle]="isEditMode ? 'PATIENTS.MODAL_EDIT_SUBTITLE' : 'PATIENTS.MODAL_SUBTITLE'"
+  [icon]="isEditMode ? 'edit_note' : 'person_add'"
+  (close)="showModal = false">
 
-    <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center relative z-10">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-          <span class="material-symbols-outlined text-2xl">person_add</span>
-        </div>
-        <div>
-          <h3 class="text-2xl font-black text-on-surface tracking-tight">{{ 'PATIENTS.MODAL_TITLE' | translate }}</h3>
-          <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">{{ 'PATIENTS.MODAL_SUBTITLE' | translate }}</p>
-        </div>
-      </div>
-      <button (click)="showModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
-        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">close</span>
-      </button>
-    </div>
-
-    <div class="p-8 space-y-6 max-h-[65vh] overflow-y-auto relative z-10 custom-scrollbar">
-      <div class="grid grid-cols-2 gap-5">
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_LAST_NAME' | translate }} *</label>
-          <input [(ngModel)]="newPatient.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" [placeholder]="'PATIENTS.MODAL_LAST_NAME' | translate">
-        </div>
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_FIRST_NAME' | translate }} *</label>
-          <input [(ngModel)]="newPatient.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" [placeholder]="'PATIENTS.MODAL_FIRST_NAME' | translate">
-        </div>
-      </div>
-
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_PHONE' | translate }} *</label>
-          <div class="relative">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40">phone</span>
-            <input [(ngModel)]="newPatient.phone" class="w-full bg-surface-container-low border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="+212 ...">
-          </div>
-        </div>
-
-      <div class="grid grid-cols-2 gap-5">
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_BIRTH_DATE' | translate }} *</label>
-          <input type="date" [(ngModel)]="newPatient.birthDate" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm transition-all text-on-surface">
-        </div>
-        <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_GENDER' | translate }}</label>
-          <div class="relative">
-            <select [(ngModel)]="newPatient.gender" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
-              <option value="Masculin">{{ 'COMMON.GENDER_M' | translate }}</option>
-              <option value="Féminin">{{ 'COMMON.GENDER_F' | translate }}</option>
-            </select>
-            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">wc</span>
-          </div>
-        </div>
-      </div>
-
+  <div modal-body class="space-y-6">
+    <div class="grid grid-cols-2 gap-5">
       <div class="space-y-2">
-        <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_ADDRESS' | translate }} *</label>
-        <textarea [(ngModel)]="newPatient.address" class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" [placeholder]="'PATIENTS.MODAL_ADDRESS_PLACEHOLDER' | translate"></textarea>
+        <label for="pt-last-name" class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_LAST_NAME' | translate }} *</label>
+        <input id="pt-last-name" [(ngModel)]="newPatient.lastName" appAutoFocus
+               [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.lastName}"
+               aria-required="true"
+               [attr.aria-invalid]="!!errors.lastName"
+               aria-describedby="error-pt-last-name"
+               class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold shadow-sm transition-all" placeholder="Dupont">
+        <app-form-error id="error-pt-last-name" [error]="errors.lastName === 'REQUIRED'" translationKey="VALIDATION.REQUIRED"></app-form-error>
+        <app-form-error [error]="errors.lastName === 'MIN'" translationKey="VALIDATION.LAST_NAME_MIN" [params]="{min: 2}"></app-form-error>
       </div>
-
       <div class="space-y-2">
-        <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_EMAIL' | translate }}</label>
-        <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
-          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30">mail</span>
-          <input [(ngModel)]="newPatient.email" type="email" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:font-normal" [placeholder]="'PATIENTS.MODAL_EMAIL_PLACEHOLDER' | translate">
+        <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_FIRST_NAME' | translate }} *</label>
+        <input [(ngModel)]="newPatient.firstName" 
+               [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.firstName}"
+               class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Jean">
+        <app-form-error [error]="errors.firstName === 'REQUIRED'" translationKey="VALIDATION.REQUIRED"></app-form-error>
+        <app-form-error [error]="errors.firstName === 'MIN'" translationKey="VALIDATION.FIRST_NAME_MIN" [params]="{min: 2}"></app-form-error>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <label for="pt-phone" class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_PHONE' | translate }} *</label>
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40" aria-hidden="true">phone</span>
+        <input id="pt-phone" [(ngModel)]="newPatient.phone" 
+               aria-required="true"
+               [attr.aria-invalid]="!!errors.phone"
+               aria-describedby="error-pt-phone"
+               [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.phone}"
+               class="w-full bg-surface-container-low border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-semibold shadow-sm transition-all" placeholder="06 12 34 56 78">
+      </div>
+      <app-form-error id="error-pt-phone" [error]="errors.phone" translationKey="VALIDATION.REQUIRED"></app-form-error>
+    </div>
+
+    <div class="grid grid-cols-2 gap-5">
+      <div class="space-y-2">
+        <label for="pt-birthDate" class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_BIRTH_DATE' | translate }} *</label>
+        <input id="pt-birthDate" type="date" [(ngModel)]="newPatient.birthDate" 
+               aria-required="true"
+               [attr.aria-invalid]="!!errors.birthDate"
+               aria-describedby="error-pt-birthDate"
+               [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.birthDate}"
+               class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold shadow-sm transition-all">
+        <app-form-error id="error-pt-birthDate" [error]="errors.birthDate" [translationKey]="errors.birthDate === 'REQUIRED' ? 'VALIDATION.REQUIRED' : 'VALIDATION.FUTURE'"></app-form-error>
+      </div>
+      <div class="space-y-2">
+        <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_GENDER' | translate }}</label>
+        <div class="relative">
+          <select [(ngModel)]="newPatient.gender" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
+            <option value="Masculin">{{ 'COMMON.GENDER_M' | translate }}</option>
+            <option value="Féminin">{{ 'COMMON.GENDER_F' | translate }}</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">wc</span>
         </div>
       </div>
     </div>
 
-    <!-- Final Actions -->
-    <div class="p-8 bg-surface-container-low/40 backdrop-blur-xl flex gap-4 relative z-10 border-t border-outline-variant/10">
-      <button (click)="showModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">{{ 'COMMON.CANCEL' | translate }}</button>
-      <button (click)="submitNewPatient()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">{{ 'PATIENTS.MODAL_SUBMIT' | translate }}</button>
+    <div class="space-y-2">
+      <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_ADDRESS' | translate }} *</label>
+      <textarea [(ngModel)]="newPatient.address" 
+                [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.address}"
+                class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" placeholder="10 Rue de la République..."></textarea>
+      <app-form-error [error]="errors.address === 'REQUIRED'" translationKey="VALIDATION.REQUIRED"></app-form-error>
+      <app-form-error [error]="errors.address === 'MIN'" translationKey="VALIDATION.ADDRESS_MIN" [params]="{min: 10}"></app-form-error>
+    </div>
+
+    <div class="space-y-2">
+      <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_EMAIL' | translate }}</label>
+      <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm"
+           [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.emailFormat || errors.emailTaken}">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30">mail</span>
+        <input [(ngModel)]="newPatient.email" type="email" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:font-normal" placeholder="jean.dupont@email.com">
+      </div>
+      <app-form-error [error]="errors.emailFormat" translationKey="VALIDATION.INVALID_EMAIL"></app-form-error>
+      <app-form-error [error]="errors.emailTaken" translationKey="VALIDATION.EMAIL_TAKEN"></app-form-error>
     </div>
   </div>
-</div>
+
+  <div modal-footer class="flex w-full gap-4">
+    <button (click)="showModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">{{ 'COMMON.CANCEL' | translate }}</button>
+    <button (click)="submitNewPatient()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">
+      {{ (isEditMode ? 'COMMON.SAVE' : 'PATIENTS.MODAL_SUBMIT') | translate }}
+    </button>
+  </div>
+</app-modal-shell>

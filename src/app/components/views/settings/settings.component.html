@@ -58,16 +58,21 @@
 
         <div class="space-y-6 relative z-10">
           <div class="space-y-2">
-            <label class="text-[10px] uppercase font-black text-on-surface-variant/70 tracking-[0.2em] ml-1">{{ 'SETTINGS.STRUCTURE_NAME' | translate }}</label>
-            <input [(ngModel)]="clinicInfo.name" 
-                   class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-6 text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-sm" 
+            <label for="st-clinic-name" class="text-[10px] uppercase font-black text-on-surface-variant/70 tracking-[0.2em] ml-1">{{ 'SETTINGS.STRUCTURE_NAME' | translate }}</label>
+            <input id="st-clinic-name" [(ngModel)]="clinicInfo.name" 
+                   [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.name}"
+                   aria-required="true"
+                   [attr.aria-invalid]="!!errors.name"
+                   aria-describedby="error-st-name"
+                   class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-6 text-sm font-bold shadow-sm transition-all" 
                    [placeholder]="'SETTINGS.STRUCTURE_PLACEHOLDER' | translate">
+            <app-form-error id="error-st-name" [error]="errors.name" translationKey="VALIDATION.REQUIRED"></app-form-error>
           </div>
 
           <div class="space-y-2">
-            <label class="text-[10px] uppercase font-black text-on-surface-variant/70 tracking-[0.2em] ml-1">{{ 'SETTINGS.ADDRESS_LABEL' | translate }}</label>
-            <textarea [(ngModel)]="clinicInfo.address" rows="3"
-                      class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-6 text-sm font-bold focus:ring-2 focus:ring-primary/20 outline-none transition-all shadow-sm resize-none" 
+            <label for="st-address" class="text-[10px] uppercase font-black text-on-surface-variant/70 tracking-[0.2em] ml-1">{{ 'SETTINGS.ADDRESS_LABEL' | translate }}</label>
+            <textarea id="st-address" [(ngModel)]="clinicInfo.address" rows="3"
+                      class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-6 text-sm font-bold transition-all shadow-sm resize-none" 
                       [placeholder]="'SETTINGS.ADDRESS_PLACEHOLDER' | translate"></textarea>
           </div>
         </div>
@@ -108,9 +113,14 @@
             <div class="space-y-2">
               <label class="text-[10px] uppercase font-black text-on-surface-variant/70 tracking-[0.2em] ml-1">{{ 'SETTINGS.OPENING_HOURS' | translate }}</label>
               <div class="grid grid-cols-2 gap-3">
-                <input type="number" [(ngModel)]="clinicInfo.openingHour" class="bg-surface-container-low border-none rounded-2xl py-4 px-4 text-center font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm">
-                <input type="number" [(ngModel)]="clinicInfo.closingHour" class="bg-surface-container-low border-none rounded-2xl py-4 px-4 text-center font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm">
+                <input type="number" [(ngModel)]="clinicInfo.openingHour" 
+                       [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.hours}"
+                       class="bg-surface-container-low border-none rounded-2xl py-4 px-4 text-center font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm">
+                <input type="number" [(ngModel)]="clinicInfo.closingHour" 
+                       [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.hours}"
+                       class="bg-surface-container-low border-none rounded-2xl py-4 px-4 text-center font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm">
               </div>
+              <app-form-error [error]="errors.hours" translationKey="VALIDATION.HOURS_ERROR"></app-form-error>
               <p class="text-[9px] text-on-surface-variant opacity-60 font-medium text-center">{{ 'SETTINGS.HOUR_FORMAT' | translate }}</p>
             </div>
 

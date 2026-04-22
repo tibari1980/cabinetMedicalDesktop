@@ -4,6 +4,8 @@ import { SeedService } from '../../../services/seed.service';
 import { AuditAction } from '../../../models/audit.model';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole, User } from '../../../models/user.model';
+import { NotificationService } from '../../../services/notification.service';
+import { DialogService } from '../../../services/dialog.service';
 
 @Component({
   selector: 'app-admin',
@@ -21,7 +23,9 @@ export class AdminComponent {
   constructor(
     private auditService: AuditService,
     public authService: AuthService,
-    private seedService: SeedService
+    private seedService: SeedService,
+    private notificationService: NotificationService,
+    private dialogService: DialogService
   ) {
     this.authService.users$.subscribe(users => {
       this.staff = users;
@@ -57,12 +61,13 @@ export class AdminComponent {
   showProfileModal = false;
   selectedProfile: Partial<User> = {};
   isNewProfile = false;
+  errors: any = {};
 
   openProfileModal(user?: User) {
     if (user) {
       // Security Guard: Prevent open edit if cannot manage
       if (!this.authService.canManage(user) && user.id !== this.authService.currentUserValue?.id) {
-        alert("Action non autorisée : Vous n'avez pas les droits pour modifier ce profil.");
+        this.notificationService.error("NOTIFICATIONS.UNAUTHORIZED");
         return;
       }
       this.isNewProfile = false;
@@ -82,37 +87,80 @@ export class AdminComponent {
     this.showProfileModal = true;
   }
 
-  saveProfile() {
-    if (!this.selectedProfile.firstName || !this.selectedProfile.username) {
-      alert("Le nom d'utilisateur et le prénom sont obligatoires.");
+  async saveProfile() {
+    this.errors = {};
+    const actor = this.authService.currentUserValue;
+
+    // Field Validations
+    if (!this.selectedProfile.firstName?.trim()) {
+      this.errors.firstName = 'REQUIRED';
+    } else if (this.selectedProfile.firstName.trim().length < 2) {
+      this.errors.firstName = 'MIN';
+    }
+
+    if (!this.selectedProfile.lastName?.trim()) {
+      this.errors.lastName = 'REQUIRED';
+    } else if (this.selectedProfile.lastName.trim().length < 2) {
+      this.errors.lastName = 'MIN';
+    }
+
+    if (!this.selectedProfile.username?.trim()) {
+      this.errors.username = 'REQUIRED';
+    } else if (this.selectedProfile.username.trim().length < 4) {
+      this.errors.username = 'MIN';
+    }
+
+    if (!this.selectedProfile.email?.trim()) {
+      this.errors.email = 'REQUIRED';
+    }
+
+    // Uniqueness Checks
+    if (this.selectedProfile.username && !this.authService.isUsernameUnique(this.selectedProfile.username, this.isNewProfile ? undefined : this.selectedProfile.id)) {
+      this.errors.usernameTaken = true;
+    }
+    if (this.selectedProfile.email && !this.authService.isEmailUnique(this.selectedProfile.email, this.isNewProfile ? undefined : this.selectedProfile.id)) {
+      this.errors.emailTaken = true;
+    }
+
+    // Role Escalation Guard
+    if (this.selectedProfile.role === UserRole.SUPER_ADMIN && actor?.role !== UserRole.SUPER_ADMIN) {
+      this.notificationService.error("NOTIFICATIONS.UNAUTHORIZED");
       return;
     }
 
-    // Role Escalation Guard: Only SUPER_ADMIN can create/promote to SUPER_ADMIN
-    if (this.selectedProfile.role === UserRole.SUPER_ADMIN && this.authService.currentUserValue?.role !== UserRole.SUPER_ADMIN) {
-      alert("Action non autorisée : Seul un Super Administrateur peut assigner ce rôle.");
+    if (Object.keys(this.errors).length > 0) {
+      this.notificationService.error('VALIDATION.REQUIRED');
       return;
     }
     
-    this.authService.addOrUpdateUser(this.selectedProfile as User);
+    await this.authService.addOrUpdateUser(this.selectedProfile as User);
     this.auditService.log(
-      this.authService.currentUserValue,
-      AuditAction.EDIT_SETTINGS,
+      actor,
+      this.isNewProfile ? AuditAction.EDIT_SETTINGS : AuditAction.EDIT_SETTINGS,
       `Profil de ${this.selectedProfile.firstName} (Rôle: ${this.selectedProfile.role}) enregistré.`
     );
     this.showProfileModal = false;
+    this.notificationService.success("NOTIFICATIONS.PROFILE_SAVED");
   }
 
-  deleteProfile(user: User, event: Event) {
+  async deleteProfile(user: User, event: Event) {
     event.stopPropagation();
     
     // Security Guard
     if (!this.authService.canManage(user)) {
-       alert("Action non autorisée : Impossible de supprimer un profil de rang supérieur ou protégé.");
+       this.notificationService.warning("NOTIFICATIONS.UNAUTHORIZED");
        return;
     }
 
-    if(confirm(`Êtes-vous sûr de vouloir supprimer le profil de ${user.firstName} ?`)) {
+    const confirmed = await this.dialogService.confirm({
+      title: 'COMMON.DELETE',
+      message: 'NOTIFICATIONS.DELETE_CONFIRM',
+      type: 'danger',
+      confirmLabel: 'COMMON.DELETE',
+      params: { name: `${user.firstName} ${user.lastName}` }
+    });
+
+    if (confirmed) {
       this.authService.deleteUser(user.id);
       this.auditService.log(
         this.authService.currentUserValue,
@@ -124,11 +172,18 @@ export class AdminComponent {
 
   isSeeding = false;
   async runStressTest() {
-    if (confirm("Générer 1000 patients de test ? Cela peut prendre quelques secondes.")) {
+    const confirmed = await this.dialogService.confirm({
+      title: 'PERF.TITLE',
+      message: 'NOTIFICATIONS.GENERATE_PATIENTS_CONFIRM',
+      type: 'warning',
+      confirmLabel: 'COMMON.VALIDATE'
+    });
+
+    if (confirmed) {
       this.isSeeding = true;
       await this.seedService.seedPatients(1000);
       this.isSeeding = false;
-      alert("1000 patients générés avec succès !");
+      this.notificationService.success("NOTIFICATIONS.GENERATE_PATIENTS_SUCCESS");
     }
   }
 }

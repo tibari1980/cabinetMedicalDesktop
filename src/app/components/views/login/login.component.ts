@@ -11,7 +11,8 @@ export class LoginComponent implements OnInit {
   password = '';
   hidePassword = true;
   error = '';
-  returnUrl = '/';
+  errors: any = {};
+  returnUrl = '/dashboard';
 
   constructor(
     private route: ActivatedRoute,
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
     // If already logged in, redirect
     if (this.authService.isLoggedIn()) {
       this.router.navigate([this.returnUrl]);
@@ -28,11 +29,19 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.errors = {};
+    if (!this.username?.trim()) this.errors.username = true;
+    if (!this.password?.trim()) this.errors.password = true;
+
+    if (Object.keys(this.errors).length > 0) {
+      return;
+    }
+
     this.authService.login(this.username, this.password).subscribe(success => {
       if (success) {
         this.router.navigate([this.returnUrl]);
       } else {
-        this.error = 'Identifiant incorrect';
+        this.error = 'VALIDATION.INVALID_CREDENTIALS';
       }
     });
   }

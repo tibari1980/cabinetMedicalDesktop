@@ -71,7 +71,7 @@ export class BillingService {
       amountModifier: amountModifier,
       taxRate: taxRate,
       totalTTC: totalTTC,
-      status: 'PAID',
+      status: 'PENDING',
       description: `Consultation médicale du ${apt.date}`
     };
 
@@ -90,6 +90,26 @@ export class BillingService {
     );
 
     return newInvoice;
+  }
+
+  async updateInvoiceStatus(id: string, status: Invoice['status']) {
+    const invoices = this.getInvoices();
+    const index = invoices.findIndex(i => i.id === id);
+    if (index > -1) {
+      invoices[index].status = status;
+      await this.dbService.put('invoices', invoices[index]);
+      this.invoicesSubject.next([...invoices]);
+
+      if (status === 'PAID') {
+        this.auditService.log(
+          this.authService.currentUserValue,
+          AuditAction.COLLECT_PAYMENT,
+          `Paiement encaissé (Facture ${id})`,
+          AuditCategory.BILLING,
+          'INFO'
+        );
+      }
+    }
   }
 
   async deleteInvoice(id: string) {

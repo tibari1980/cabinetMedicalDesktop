@@ -6,6 +6,7 @@ import { LanguageService } from '../../../services/language.service';
 import { ThemeService } from '../../../services/theme.service';
 import { SearchService, SearchResult } from '../../../services/search.service';
 import { User, UserRole } from '../../../models/user.model';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-navbar',
@@ -38,7 +39,8 @@ export class NavbarComponent {
     public languageService: LanguageService,
     private searchService: SearchService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private notificationService: NotificationService
   ) {
     this.results$ = new BehaviorSubject<SearchResult[]>([]).asObservable();
   }
@@ -67,7 +69,7 @@ export class NavbarComponent {
   }
 
   showNotifications() {
-    alert("Aucune nouvelle notification pour le moment.");
+    this.notificationService.info("Aucune nouvelle notification pour le moment.", "Notifications");
   }
 
   openChangePassword() {
@@ -81,18 +83,18 @@ export class NavbarComponent {
 
   saveProfile() {
     if (!this.editUser.firstName || !this.editUser.lastName) {
-      alert("Le nom et le prénom sont obligatoires.");
+      this.notificationService.error("Le nom et le prénom sont obligatoires.");
       return;
     }
 
     // Si un mot de passe a été saisi, on vérifie la longueur (optionnel si non modifié)
     if (this.editUser.password && this.editUser.password.length < 4) {
-      alert("Le mot de passe doit contenir au moins 4 caractères.");
+      this.notificationService.error("Le mot de passe doit contenir au moins 4 caractères.");
       return;
     }
 
     this.authService.addOrUpdateUser(this.editUser as User);
-    alert("Profil mis à jour avec succès !");
+    this.notificationService.success("Profil mis à jour avec succès !");
     this.showChangePasswordModal = false;
   }
 }

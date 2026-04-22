@@ -11,7 +11,7 @@
     <div class="relative group w-full max-w-xl z-20">
       <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary transition-colors">search</span>
       <input [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
-             class="w-full bg-surface-container-low border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/10 transition-all outline-none" 
+             class="w-full bg-surface-container-low border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium transition-all" 
              [placeholder]="'NAVBAR.SEARCH_PLACEHOLDER' | translate" type="text"/>
       
       <!-- Premium Search Results Dropdown -->
@@ -56,6 +56,16 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Mode Local Sécurisé Indicator -->
+    <div class="hidden lg:flex items-center gap-2 px-4 py-2 bg-success/5 border border-success/10 rounded-xl whitespace-nowrap">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+      </span>
+      <span class="text-[10px] font-black uppercase tracking-widest text-success opacity-80 cursor-default" title="Vos données sont stockées en toute sécurité sur cet appareil, même sans connexion internet.">Local Sécurisé</span>
+      <span class="material-symbols-outlined text-success opacity-40 text-sm">shield</span>
     </div>
   </div>
   

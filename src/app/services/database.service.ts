@@ -5,8 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class DatabaseService {
   private dbName = 'MediFlowDB';
-  private dbVersion = 1;
-  private db: IDBDatabase | null = null;
+  private dbVersion = 3;
+  private db: IDBDatabase| null = null;
 
   constructor() {}
 
@@ -40,6 +40,11 @@ export class DatabaseService {
         // Create store for medical records
         if (!db.objectStoreNames.contains('medical_records')) {
           db.createObjectStore('medical_records', { keyPath: 'patientId' });
+        }
+
+        // Create store for staff users
+        if (!db.objectStoreNames.contains('users')) {
+          db.createObjectStore('users', { keyPath: 'id' });
         }
       };
 

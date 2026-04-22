@@ -43,9 +43,15 @@
   --color-surface-container-highest: #e1e3e4;
   --color-outline-variant: #c2c6d4;
   --color-tertiary: #004e1c;
+  --color-success: #004e1c;
+  --color-warning: #b26b00;
   --color-error: #ba1a1a;
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
+  
+  /* RGB for alpha transparency */
+  --color-primary-rgb: 0, 64, 139;
+  --color-primary-container-rgb: 0, 87, 184;
 }
 
 :root.dark {
@@ -62,9 +68,14 @@
   --color-surface-container-highest: #32353a;
   --color-outline-variant: #424752;
   --color-tertiary: #88d79b;
+  --color-success: #88d79b;
+  --color-warning: #ffb84d;
   --color-error: #ffb4ab;
   --color-error-container: #93000a;
   --color-on-error-container: #ffdad6;
+
+  /* RGB for dark mode */
+  --color-primary-rgb: 163, 201, 254;
 }
 
 /* Base tailwind elements to switch properly */
@@ -81,4 +92,49 @@
 .dark input::placeholder, .dark textarea::placeholder {
   color: var(--color-on-surface-variant);
   opacity: 0.5;
+}
+
+/* Global Animations (Premium FX) */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+.animate-scale-up { animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+
+
+/* Accessible Focus Indicators (Premium A11y) */
+*:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Ensure caret visibility */
+input, textarea {
+  caret-color: var(--color-primary);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-outline-variant);
+  border-radius: 10px;
+  opacity: 0.3;
 }

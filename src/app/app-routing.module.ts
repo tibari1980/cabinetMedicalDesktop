@@ -20,8 +20,10 @@ import { TraceabilityComponent } from './components/views/traceability/traceabil
 import { NotFoundComponent } from './components/views/not-found/not-found.component';
 
 import { SettingsComponent } from './components/views/settings/settings.component';
+import { LandingComponent } from './components/views/landing/landing.component';
 
 const routes: Routes = [
+  { path: '', component: LandingComponent, pathMatch: 'full' },
   { path: 'setup', component: SetupWizardComponent },
   { path: 'login', component: LoginComponent, canActivate: [SetupGuard] },
   { path: 'help', component: HelpComponent },
@@ -30,7 +32,6 @@ const routes: Routes = [
     component: AppLayoutComponent,
     canActivate: [SetupGuard, AuthGuard],
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { 
         path: 'patients', 

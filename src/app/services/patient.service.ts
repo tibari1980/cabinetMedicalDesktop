@@ -138,5 +138,30 @@ export class PatientService {
       })
     );
   }
+
+  isEmailUnique(email: string, excludeId?: string | number): boolean {
+    if (!email) return true;
+    const patients = this.getPatientsValue();
+    return !patients.some(p => 
+      p.email?.toLowerCase() === email.toLowerCase() && p.id.toString() !== excludeId?.toString()
+    );
+  }
+  
+  async deletePatient(id: string | number) {
+    const patientToDelete = this.getPatientsValue().find(p => p.id.toString() === id.toString());
+    
+    await this.dbService.delete('patients', id);
+    
+    const current = this.patientsSubject.value;
+    this.patientsSubject.next(current.filter(p => p.id.toString() !== id.toString()));
+    
+    if (patientToDelete) {
+      this.auditService.log(
+        this.authService.currentUserValue,
+        AuditAction.DELETE_PATIENT,
+        `Suppression de la fiche patient : ${patientToDelete.firstName} ${patientToDelete.lastName}`
+      );
+    }
+  }
 }
 

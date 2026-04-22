@@ -12,6 +12,8 @@ import { BillingService } from '../../../services/billing.service';
 import { AuditService } from '../../../services/audit.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
+import { NotificationService } from '../../../services/notification.service';
+import { DialogService } from '../../../services/dialog.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -48,7 +50,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private auditService: AuditService,
     private router: Router,
     public authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private notificationService: NotificationService,
+    private dialogService: DialogService
   ) {}
 
   onPatientSearchTermChange(term: string) {
@@ -128,6 +132,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   newApt: Partial<Appointment> = {};
   newPatient: Partial<Patient> = { gender: 'Masculin' };
   appointmentTypes = Object.values(AppointmentType);
+  errors: any = {};
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -158,6 +163,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.showModal = true;
     this.bookingStatus = 'idle';
     this.patientSearchTerm = '';
+    this.errors = {};
   }
 
 
@@ -174,7 +180,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const aptHour = parseInt(this.newApt.time.split(':')[0], 10);
       const clinic = this.clinic;
       if (aptHour < clinic.openingHour || aptHour >= clinic.closingHour) {
-        alert(`Attention: Les rendez-vous ne sont permis que pendant les horaires d\'ouverture du cabinet (${clinic.openingHour}h00 - ${clinic.closingHour}h00).`);
+        this.notificationService.error('NOTIFICATIONS.OUT_OF_HOURS_ERROR', 'SETTINGS.OPENING_HOURS', { open: clinic.openingHour, close: clinic.closingHour });
         return;
       }
 
@@ -189,27 +195,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const exTimeInMin = exH * 60 + exM;
         
         if (Math.abs(newTimeInMin - exTimeInMin) < 15) {
-          alert(`PROTECTION AGENDA : Le créneau ${this.newApt.time} est trop proche du rendez-vous déjà prévu à ${existing.time}. Veuillez espacer d'au moins 15 minutes.`);
+          this.notificationService.warning('NOTIFICATIONS.COLLISION_ERROR', 'CALENDAR.MODAL_TITLE');
           return;
         }
       }
     }
 
     if (this.isNewPatient) {
-      if (!this.newPatient.firstName || !this.newPatient.lastName || !this.newPatient.phone) {
-        alert('Veuillez remplir le nom, prénom et téléphone du patient.');
+      this.errors = {};
+      if (!this.newPatient.firstName?.trim()) this.errors.firstName = true;
+      if (!this.newPatient.lastName?.trim()) this.errors.lastName = true;
+      if (!this.newPatient.phone?.trim()) this.errors.phone = true;
+      
+      if (this.newPatient.email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(this.newPatient.email)) {
+          this.errors.emailFormat = true;
+        } else if (!this.patientService.isEmailUnique(this.newPatient.email)) {
+          this.errors.emailTaken = true;
+        }
+      }
+
+      if (Object.keys(this.errors).length > 0) {
+        this.notificationService.error('VALIDATION.REQUIRED');
         return;
       }
+
       const patientId = Date.now();
       const patient: Patient = {
         id: patientId,
-        firstName: this.newPatient.firstName,
-        lastName: this.newPatient.lastName,
-        phone: this.newPatient.phone,
+        firstName: (this.newPatient.firstName || '').trim(),
+        lastName: (this.newPatient.lastName || '').trim(),
+        phone: (this.newPatient.phone || '').trim(),
         birthDate: this.newPatient.birthDate || '',
-        address: this.newPatient.address || '',
+        address: (this.newPatient.address || '').trim(),
         gender: this.newPatient.gender || 'Masculin',
-        email: '',
+        email: (this.newPatient.email || '').trim(),
         lastVisit: new Date().toISOString()
       };
 
@@ -219,7 +240,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.newApt.patientName = `${patient.firstName} ${patient.lastName}`;
     } else {
       if (!this.newApt.patientId) {
-        alert('Veuillez sélectionner un patient.');
+        this.notificationService.error('NOTIFICATIONS.SELECT_PATIENT_ERROR');
         return;
       }
       const patient = this.patients.find(p => p.id.toString() === this.newApt.patientId?.toString());
@@ -241,20 +262,40 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }, 600);
   }
 
-  updateAptStatus(apt: Appointment, status: string) {
-    // Rend le prix obligatoire à la "Fin" de consultation
-    if (status === 'Terminé' && (!apt.fee || apt.fee <= 0)) {
-       const input = prompt(`Fin de consultation. Veuillez saisir le montant total à régler par ${apt.patientName} (en ${this.clinic.currency || 'DH'}) :`);
-       if (input === null || input.trim() === '') {
-         alert("Action annulée : Le montant de la consultation est obligatoire !");
-         return;
-       }
-       const fee = parseFloat(input);
-       if (isNaN(fee) || fee <= 0) {
-         alert("Action annulée : Le montant saisi est invalide.");
-         return;
-       }
-       apt.fee = fee;
+  async updateAptStatus(apt: Appointment, status: string) {
+    if (status === 'Annulé') {
+      const confirmed = await this.dialogService.confirm({
+        title: 'CALENDAR.STATUS_CANCELLED',
+        message: 'NOTIFICATIONS.CONFIRM_CANCEL_APT',
+        type: 'danger',
+        confirmLabel: 'COMMON.DELETE',
+        params: { name: apt.patientName }
+      });
+      if (!confirmed) return;
+    }
+
+    if (status === 'Terminé') {
+      const result = await this.dialogService.confirm({
+        title: 'CALENDAR.STATUS_DONE',
+        message: 'NOTIFICATIONS.CONFIRM_FINISH_APT',
+        type: 'success',
+        confirmLabel: 'COMMON.VALIDATE',
+        params: { name: apt.patientName },
+        showInput: true,
+        inputValue: apt.fee || 300,
+        inputPlaceholder: '300'
+      });
+      
+      if (!result.confirmed) return;
+      
+      if (result.value) {
+        apt.fee = Number(result.value);
+      }
+
+      // Automatisme Premium : Proposer la facturation immédiatement après la clôture
+      setTimeout(() => {
+        this.generateInvoice(apt);
+      }, 500);
     }
 
     apt.status = status as AppointmentStatus;
@@ -264,30 +305,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
   generateInvoice(apt: Appointment) {
     // Vérification de sécurité experte : Personne n'a le droit de facturer avant la clôture officielle
     if (apt.status !== 'Terminé') {
-        alert("Protection Métier : La facture ne peut être générée que si la consultation est clôturée (Terminée).");
+        this.notificationService.warning("NOTIFICATIONS.UNAUTHORIZED", 'BILLING.DOC_TITLE');
         return;
     }
 
     // Si la facture est demandée mais que le prix n'a pas encore été renseigné
     if (!apt.fee || apt.fee <= 0) {
-       const input = prompt(`Veuillez définir le montant de la prestation pour générer la facture de ${apt.patientName} (en ${this.clinic.currency || 'DH'}) :`);
-       if (input === null || input.trim() === '') {
-         alert("La facturation a été annulée car le prix est obligatoire.");
-         return;
-       }
-       const fee = parseFloat(input);
-       if (isNaN(fee) || fee <= 0) {
-           alert("Montant saisi invalide.");
-           return;
-       }
-       apt.fee = fee;
+       apt.fee = 300;
        this.appointmentService.updateAppointment(apt);
     }
 
-    if(confirm(`Voulez-vous générer une facture pour ${apt.patientName} d'un montant de ${apt.fee} ${this.clinic.currency || 'DH'} ?`)) {
-      this.billingService.generateInvoiceFromAppointment(apt);
-      this.router.navigate(['/billing']);
-    }
+    this.dialogService.confirm({
+      title: 'BILLING.DOC_TITLE',
+      message: 'NOTIFICATIONS.GENERATE_INVOICE_CONFIRM',
+      type: 'primary',
+      confirmLabel: 'COMMON.VALIDATE',
+      params: { 
+        name: apt.patientName, 
+        amount: apt.fee, 
+        currency: this.clinic.currency || 'DH' 
+      }
+    }).then(confirmed => {
+      if (confirmed) {
+        this.billingService.generateInvoiceFromAppointment(apt);
+        this.router.navigate(['/billing']);
+      }
+    });
   }
 
   trackByApt(index: number, apt: Appointment): string {

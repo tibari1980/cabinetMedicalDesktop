@@ -7,6 +7,7 @@ import { Patient } from '../../../models/patient.model';
 import { ClinicInfo } from '../../../models/clinic.model';
 import { MedicalRecordService } from '../../../services/medical-record.service';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-calendar',
@@ -38,7 +39,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
     private appointmentService: AppointmentService,
     private clinicService: ClinicService,
     private patientService: PatientService,
-    private medicalRecordService: MedicalRecordService
+    private medicalRecordService: MedicalRecordService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -107,7 +109,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     if (this.newApt.time) {
       const aptHour = parseInt(this.newApt.time.split(':')[0], 10);
       if (aptHour < this.clinicSettings.openingHour || aptHour >= this.clinicSettings.closingHour) {
-        alert(`Attention: Les rendez-vous ne sont permis que pendant les horaires d\'ouverture du cabinet (${this.clinicSettings.openingHour}h00 - ${this.clinicSettings.closingHour}h00).`);
+        this.notificationService.error('NOTIFICATIONS.OUT_OF_HOURS_ERROR', 'SETTINGS.OPENING_HOURS', { open: this.clinicSettings.openingHour, close: this.clinicSettings.closingHour });
         return;
       }
     }
@@ -126,7 +128,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
         const exTimeInMin = exH * 60 + exM;
 
         if (Math.abs(newTimeInMin - exTimeInMin) < 15) {
-          alert(`PROTECTION AGENDA : Le créneau ${this.newApt.time} est déjà réservé ou trop proche d'un autre rendez-vous (${existing.time}). Veuillez espacer d'au moins 15 minutes.`);
+          this.notificationService.warning('NOTIFICATIONS.COLLISION_ERROR', 'CALENDAR.MODAL_TITLE');
           return;
         }
       }
@@ -153,7 +155,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       this.newApt.patientName = `${patient.firstName} ${patient.lastName}`;
     } else {
       const patient = this.patients.find(p => p.id.toString() === this.newApt.patientId?.toString());
-      this.newApt.patientName = patient ? `${patient.firstName} ${patient.lastName}` : 'Patient Inconnu';
+      this.newApt.patientName = patient ? `${patient.firstName} ${patient.lastName}` : 'PATIENTS.PATIENT_UNKNOWN';
     }
 
     if (this.newApt.patientId) {

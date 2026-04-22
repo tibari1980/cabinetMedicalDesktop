@@ -18,31 +18,35 @@
       <form (submit)="onSubmit()" class="space-y-6">
         <div class="space-y-2">
           <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">{{ 'AUTH.USERNAME_LABEL' | translate }}</label>
-          <div class="relative">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50">person</span>
-            <input [(ngModel)]="username" name="username" type="text" required
-                   class="w-full bg-surface-container-lowest/50 border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-4 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30"
+          <div [ngClass]="{'border-error/50 ring-2 ring-error/10 bg-error/5': errors.username}"
+               class="relative bg-surface-container-lowest/50 border border-outline-variant/20 rounded-2xl overflow-hidden shadow-sm transition-all group/field">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 focus-within:text-primary transition-colors">person</span>
+            <input [(ngModel)]="username" name="username" type="text"
+                   class="w-full bg-transparent border-none py-4 pl-12 pr-4 text-sm focus:ring-0 outline-none transition-all placeholder:text-on-surface-variant/30 text-on-surface font-bold"
                    [placeholder]="'AUTH.USERNAME_PLACEHOLDER' | translate">
           </div>
+          <p *ngIf="errors.username" class="text-[10px] font-bold text-error mt-1 pl-1 animate-fade-in">{{ 'VALIDATION.REQUIRED' | translate }}</p>
         </div>
 
         <div class="space-y-2">
           <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">{{ 'AUTH.PASSWORD_LABEL' | translate }}</label>
-          <div class="relative">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50">lock</span>
-            <input [(ngModel)]="password" name="password" [type]="hidePassword ? 'password' : 'text'" required
-                   class="w-full bg-surface-container-lowest/50 border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-12 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-on-surface-variant/30"
+          <div [ngClass]="{'border-error/50 ring-2 ring-error/10 bg-error/5': errors.password}"
+               class="relative bg-surface-container-lowest/50 border border-outline-variant/20 rounded-2xl overflow-hidden shadow-sm transition-all group/field">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 focus-within:text-primary transition-colors">lock</span>
+            <input [(ngModel)]="password" name="password" [type]="hidePassword ? 'password' : 'text'"
+                   class="w-full bg-transparent border-none py-4 pl-12 pr-12 text-sm focus:ring-0 outline-none transition-all placeholder:text-on-surface-variant/30 text-on-surface font-bold"
                    placeholder="••••••••">
             <button type="button" (click)="hidePassword = !hidePassword"
                     class="absolute border-none bg-none outline-none right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors focus:outline-none">
               <span class="material-symbols-outlined text-[20px]">{{ hidePassword ? 'visibility_off' : 'visibility' }}</span>
             </button>
           </div>
+          <p *ngIf="errors.password" class="text-[10px] font-bold text-error mt-1 pl-1 animate-fade-in">{{ 'VALIDATION.REQUIRED' | translate }}</p>
         </div>
 
-        <div *ngIf="error" class="bg-error/10 text-error text-xs font-bold p-3 rounded-xl flex items-center gap-2">
+        <div *ngIf="error" class="bg-error/10 text-error text-xs font-bold p-4 rounded-xl flex items-center gap-3 animate-shake border border-error/10">
           <span class="material-symbols-outlined text-sm">error</span>
-          {{ error }}
+          {{ error | translate }}
         </div>
 
         <button type="submit" 

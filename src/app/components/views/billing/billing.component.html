@@ -42,7 +42,7 @@
     <!-- Table -->
     <div class="overflow-x-auto" *ngIf="filteredInvoices.length > 0">
       <table class="w-full text-left">
-        <thead class="bg-surface-container-low/50 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/70 border-b border-outline-variant/5">
+        <thead class="bg-surface-container-low/50 text-[10px] font-bold uppercase tracking-widest text-on-surface border-b border-outline-variant/10">
           <tr>
             <th class="px-8 py-5">{{ 'BILLING.INV_NUMBER' | translate }}</th>
             <th class="px-8 py-5">{{ 'COMMON.DATE' | translate }}</th>
@@ -55,18 +55,29 @@
         <tbody class="divide-y divide-outline-variant/5">
           <tr *ngFor="let inv of filteredInvoices" class="hover:bg-primary/5 transition-all group text-sm animate-fade-in-up">
             <td class="px-8 py-5 font-bold text-on-surface tracking-tight">{{ inv.id }}</td>
-            <td class="px-8 py-5 text-on-surface-variant/60">{{ inv.date | date:'dd MMM yyyy • HH:mm' }}</td>
-            <td class="px-8 py-5 font-black text-on-surface/80 uppercase tracking-tighter">{{ inv.patientName }}</td>
+            <td class="px-8 py-5 text-on-surface font-medium">{{ inv.date | date:'dd MMM yyyy • HH:mm' }}</td>
+            <td class="px-8 py-5 font-black text-on-surface uppercase tracking-tighter">{{ inv.patientName }}</td>
             <td class="px-8 py-5 font-bold text-primary">{{ inv.totalTTC | number:'1.2-2' }} {{ clinic.currency || 'DH' }}</td>
             <td class="px-8 py-5">
-              <span class="mx-auto px-4 py-1.5 bg-tertiary/10 text-tertiary text-[10px] font-black uppercase tracking-widest rounded-full flex items-center gap-1.5 w-max border border-tertiary/10">
+              <span *ngIf="inv.status === 'PAID'" class="mx-auto px-4 py-1.5 bg-success/10 text-success text-[10px] font-black uppercase tracking-widest rounded-full flex items-center gap-1.5 w-max border border-success/10">
                 <span class="material-symbols-outlined text-[14px]">verified</span>
                 {{ 'BILLING.STATUS_PAID' | translate }}
+              </span>
+              <span *ngIf="inv.status === 'PENDING'" class="mx-auto px-4 py-1.5 bg-warning/10 text-warning text-[10px] font-black uppercase tracking-widest rounded-full flex items-center gap-1.5 w-max border border-warning/10">
+                <span class="material-symbols-outlined text-[14px]">schedule</span>
+                {{ 'BILLING.STATUS_PENDING' | translate }}
               </span>
             </td>
             <td class="px-8 py-5 text-right">
               <div class="flex items-center justify-end gap-3">
-                <button (click)="viewInvoice(inv)" class="w-10 h-10 flex items-center justify-center bg-surface-container-highest hover:bg-primary/10 text-primary rounded-2xl transition-all shadow-sm" title="Imprimer">
+                <button (click)="downloadPDF(inv)" class="w-10 h-10 flex items-center justify-center bg-surface-container-highest hover:bg-primary/10 text-primary rounded-2xl transition-all shadow-sm" [title]="'BILLING.DOWNLOAD_PDF' | translate">
+                  <span class="material-symbols-outlined text-lg">download_for_offline</span>
+                </button>
+                <button *ngIf="inv.status === 'PENDING' && authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.SECRETARY])" 
+                        (click)="markAsPaid(inv)" class="w-10 h-10 flex items-center justify-center bg-surface-container-highest hover:bg-success/10 text-success rounded-2xl transition-all shadow-sm" [title]="'BILLING.MARK_AS_PAID' | translate">
+                  <span class="material-symbols-outlined text-lg">payments</span>
+                </button>
+                <button (click)="viewInvoice(inv)" class="w-10 h-10 flex items-center justify-center bg-surface-container-highest hover:bg-primary/10 text-primary rounded-2xl transition-all shadow-sm" [title]="'COMMON.PRINT' | translate">
                   <span class="material-symbols-outlined text-lg">print</span>
                 </button>
                 <button (click)="deleteInvoice(inv.id)" class="w-10 h-10 flex items-center justify-center bg-surface-container-highest hover:bg-error/10 text-error rounded-2xl transition-all shadow-sm" title="Supprimer">
@@ -92,8 +103,12 @@
     <button (click)="closeInvoice()" class="bg-surface-container-lowest w-12 h-12 rounded-full shadow-xl text-on-surface-variant hover:text-error transition-all hover:scale-105 flex items-center justify-center">
       <span class="material-symbols-outlined">close</span>
     </button>
-    <button (click)="printInvoice()" class="bg-primary w-12 h-12 rounded-full shadow-xl text-white hover:brightness-110 transition-all hover:scale-105 flex items-center justify-center">
+    <button (click)="printInvoice()" class="bg-primary w-12 h-12 rounded-full shadow-xl text-white hover:brightness-110 transition-all hover:scale-105 flex items-center justify-center" [title]="'COMMON.PRINT' | translate">
       <span class="material-symbols-outlined">print</span>
+    </button>
+    <button *ngIf="selectedInvoice.status === 'PENDING' && authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.SECRETARY])" 
+            (click)="markAsPaid(selectedInvoice)" class="bg-success w-12 h-12 rounded-full shadow-xl text-white hover:brightness-110 transition-all hover:scale-105 flex items-center justify-center" [title]="'BILLING.MARK_AS_PAID' | translate">
+      <span class="material-symbols-outlined">payments</span>
     </button>
   </div>
 

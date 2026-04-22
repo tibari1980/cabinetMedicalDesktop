@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AutoFocusDirective } from './directives/auto-focus.directive';
 import { AppRoutingModule } from './app-routing.module';
 import { ErrorHandler } from '@angular/core';
 import { GlobalErrorHandler } from './core/handlers/global-error-handler';
@@ -36,6 +38,12 @@ import { TraceabilityComponent } from './components/views/traceability/traceabil
 import { NotFoundComponent } from './components/views/not-found/not-found.component';
 import { SettingsComponent } from './components/views/settings/settings.component';
 import { SetupWizardComponent } from './components/views/setup-wizard/setup-wizard.component';
+import { LandingComponent } from './components/views/landing/landing.component';
+import { NotificationComponent } from './components/shared/notification/notification.component';
+import { ConfirmDialogComponent } from './components/shared/confirm-dialog/confirm-dialog.component';
+import { ModalShellComponent } from './components/shared/modal-shell/modal-shell.component';
+import { FormErrorComponent } from './components/shared/form-error/form-error.component';
+import { SearchInputComponent } from './components/shared/search-input/search-input.component';
 
 @NgModule({
   declarations: [
@@ -56,13 +64,21 @@ import { SetupWizardComponent } from './components/views/setup-wizard/setup-wiza
     TraceabilityComponent,
     NotFoundComponent,
     SettingsComponent,
-    SetupWizardComponent
+    SetupWizardComponent,
+    LandingComponent,
+    NotificationComponent,
+    ConfirmDialogComponent,
+    ModalShellComponent,
+    FormErrorComponent,
+    SearchInputComponent,
+    AutoFocusDirective
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

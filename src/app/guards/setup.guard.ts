@@ -6,6 +6,8 @@ export class SetupGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
+    // TEMPORARY BYPASS FOR DEVELOPMENT - Direct access to login
+    /*
     const setupComplete = localStorage.getItem('mf_setup_complete');
     const users = localStorage.getItem('mf_users');
 
@@ -14,6 +16,7 @@ export class SetupGuard implements CanActivate {
       this.router.navigate(['/setup']);
       return false;
     }
+    */
     return true;
   }
 }

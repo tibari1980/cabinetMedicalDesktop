@@ -3,6 +3,9 @@ import { BillingService } from '../../../services/billing.service';
 import { Invoice } from '../../../models/invoice.model';
 import { ClinicService } from '../../../services/clinic.service';
 import { ClinicInfo } from '../../../models/clinic.model';
+import { NotificationService } from '../../../services/notification.service';
+import { AuthService } from '../../../services/auth.service';
+import { UserRole } from '../../../models/user.model';
 
 @Component({
   selector: 'app-billing',
@@ -17,8 +20,12 @@ export class BillingComponent implements OnInit {
 
   constructor(
     private billingService: BillingService,
-    private clinicService: ClinicService
+    private clinicService: ClinicService,
+    private notificationService: NotificationService,
+    public authService: AuthService
   ) {}
+
+  public UserRole = UserRole;
 
   ngOnInit() {
     this.clinic = this.clinicService.getClinicValue();
@@ -51,14 +58,44 @@ export class BillingComponent implements OnInit {
   }
 
   printInvoice() {
-    window.print();
+    if (this.selectedInvoice) {
+      const originalTitle = document.title;
+      document.title = `${this.selectedInvoice.id}_${this.selectedInvoice.patientName.replace(/\s+/g, '_')}`;
+      window.print();
+      document.title = originalTitle;
+    } else {
+      window.print();
+    }
+  }
+
+  downloadPDF(inv: Invoice) {
+    this.selectedInvoice = inv;
+    // Petit delai pour laisser le template s'afficher avant de lancer l'impression
+    setTimeout(() => {
+      this.printInvoice();
+    }, 100);
+  }
+
+  async markAsPaid(inv: Invoice) {
+    this.notificationService.confirm(
+      'NOTIFICATIONS.PAYMENT_SUCCESS', // On réutilise le message pour la confirmation d'encaissement ? Peut être mieux un message de confirmation
+      () => {
+        this.billingService.updateInvoiceStatus(inv.id, 'PAID');
+        this.notificationService.success('NOTIFICATIONS.PAYMENT_SUCCESS', 'BILLING.DOC_TITLE');
+      },
+      { title: 'BILLING.MARK_AS_PAID', params: { name: inv.id } }
+    );
   }
 
   deleteInvoice(id: string) {
-    if(confirm('Êtes-vous sûr de vouloir supprimer cette facture (Action IRRÉVERSIBLE) ?')) {
-      this.billingService.deleteInvoice(id);
-      this.selectedInvoice = null;
-    }
+    this.notificationService.confirm(
+      'NOTIFICATIONS.DELETE_CONFIRM',
+      () => {
+        this.billingService.deleteInvoice(id);
+        this.selectedInvoice = null;
+      },
+      { title: 'BILLING.HISTORY', params: { name: id } }
+    );
   }
 
   get tvaAmount(): number {

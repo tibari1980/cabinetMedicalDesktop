@@ -19,6 +19,8 @@ module.exports = {
         "surface-container-highest": "var(--color-surface-container-highest)",
         "outline-variant": "var(--color-outline-variant)",
         "tertiary": "var(--color-tertiary)",
+        "success": "var(--color-success)",
+        "warning": "var(--color-warning)",
         "error": "var(--color-error)",
         "error-container": "var(--color-error-container)",
         "on-error-container": "var(--color-on-error-container)"

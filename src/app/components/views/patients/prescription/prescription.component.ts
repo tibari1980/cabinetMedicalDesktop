@@ -4,6 +4,7 @@ import { PatientService } from '../../../../services/patient.service';
 import { PrescriptionService } from '../../../../services/prescription.service';
 import { ClinicService } from '../../../../services/clinic.service';
 import { AuthService } from '../../../../services/auth.service';
+import { NotificationService } from '../../../../services/notification.service';
 import { Patient } from '../../../../models/patient.model';
 import { Prescription, PrescriptionItem } from '../../../../models/prescription.model';
 import { ClinicInfo } from '../../../../models/clinic.model';
@@ -40,7 +41,8 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
     private patientService: PatientService,
     private prescriptionService: PrescriptionService,
     private clinicService: ClinicService,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -114,7 +116,7 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
       this.prescriptionService.addPrescription(this.prescription);
       window.print();
     } else {
-      alert('Veuillez ajouter au moins un médicament.');
+      this.notificationService.warning('NOTIFICATIONS.REQUIRED_MEDICATION');
     }
   }
 

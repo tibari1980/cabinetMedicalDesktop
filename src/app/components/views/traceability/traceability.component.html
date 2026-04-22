@@ -12,7 +12,7 @@
         </div>
         <div>
           <h2 class="text-3xl font-black text-on-surface tracking-tight">{{ 'TRACE.TITLE' | translate }}</h2>
-          <p class="text-sm text-on-surface-variant font-medium opacity-70">{{ 'TRACE.SUBTITLE' | translate }}</p>
+          <p class="text-sm text-on-surface font-bold">{{ 'TRACE.SUBTITLE' | translate }}</p>
         </div>
       </div>
     </div>
@@ -90,11 +90,11 @@
       <table class="w-full border-collapse">
         <thead class="sticky top-0 bg-surface-container-low/95 backdrop-blur-md z-10">
           <tr>
-            <th class="text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/60">{{ 'TRACE.TIMESTAMP' | translate }}</th>
-            <th class="text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/60">{{ 'TRACE.USER' | translate }}</th>
-            <th class="text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/60">{{ 'TRACE.ACTION' | translate }}</th>
-            <th class="text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/60">{{ 'TRACE.CATEGORY' | translate }}</th>
-            <th class="text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/60">{{ 'TRACE.DETAILS' | translate }}</th>
+            <th class="text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface">{{ 'TRACE.TIMESTAMP' | translate }}</th>
+            <th class="text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface">{{ 'TRACE.USER' | translate }}</th>
+            <th class="text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface">{{ 'TRACE.ACTION' | translate }}</th>
+            <th class="text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface">{{ 'TRACE.CATEGORY' | translate }}</th>
+            <th class="text-left px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-on-surface">{{ 'TRACE.DETAILS' | translate }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-outline-variant/10">
@@ -102,7 +102,7 @@
             <td class="px-8 py-5 whitespace-nowrap">
               <div class="flex flex-col">
                 <span class="text-sm font-bold text-on-surface">{{ log.timestamp | date:'dd MMM yyyy' }}</span>
-                <span class="text-[10px] font-medium text-on-surface-variant opacity-60">{{ log.timestamp | date:'HH:mm:ss' }}</span>
+                <span class="text-[10px] font-black text-on-surface">{{ log.timestamp | date:'HH:mm:ss' }}</span>
               </div>
             </td>
             <td class="px-8 py-5 whitespace-nowrap">
@@ -112,7 +112,7 @@
                 </div>
                 <div class="flex flex-col">
                   <span class="text-sm font-bold text-on-surface">{{ log.userName }}</span>
-                  <span class="text-[10px] uppercase font-black tracking-widest text-on-surface-variant opacity-50">{{ log.userRole }}</span>
+                  <span class="text-[10px] uppercase font-black tracking-widest text-primary">{{ log.userRole }}</span>
                 </div>
               </div>
             </td>
@@ -137,7 +137,7 @@
           <!-- Empty State -->
           <tr *ngIf="(filteredLogs$ | async)?.length === 0">
             <td colspan="5" class="px-8 py-20 text-center">
-              <div class="flex flex-col items-center gap-4 opacity-30">
+              <div class="flex flex-col items-center gap-4 text-on-surface">
                 <span class="material-symbols-outlined text-6xl notranslate">history_toggle_off</span>
                 <p class="text-lg font-bold">{{ 'TRACE.NO_EVENTS' | translate }}</p>
               </div>
