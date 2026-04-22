@@ -61,9 +61,14 @@
     </div>
   </section>
 
-  <!-- PRINT SECTION: THE ACTUAL DOCUMENT (Visible only when printing) -->
-  <div class="print-only prescription-paper bg-surface-container-lowest mx-auto p-4 md:p-10 font-serif text-slate-900 border border-slate-100 shadow-2xl rounded-sm"
+  <div class="print-only prescription-paper bg-surface-container-lowest mx-auto p-4 md:p-10 font-serif text-slate-900 border border-slate-100 shadow-2xl rounded-sm relative overflow-hidden"
        [class.format-a4]="paperFormat === 'A4'" [class.format-a5]="paperFormat === 'A5'">
+    
+    <!-- DUPLICATA WATERMARK -->
+    <div *ngIf="isDuplicate" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.04] rotate-[-35deg] z-0">
+      <span class="text-[120px] font-black border-[15px] border-slate-900 px-12 rounded-[60px] tracking-[15px] select-none">DUPLICATA</span>
+    </div>
+
     <!-- Header -->
     <header *ngIf="clinic" class="flex justify-between items-start border-b-2 border-primary pb-8 mb-10">
       <div class="space-y-1">
@@ -80,10 +85,15 @@
       </div>
       <div class="text-right space-y-1">
         <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ 'PRESCRIPTION.DATE_LABEL' | translate }} {{ prescription.date | date:'dd / MM / yyyy' }}</p>
-        <div class="mt-8">
+        <div class="mt-8 relative">
           <p class="text-xs font-bold text-slate-400">Patient:</p>
           <p class="text-lg font-black text-slate-800">{{ patient.lastName | uppercase }} {{ patient.firstName }}</p>
           <p class="text-[10px] text-slate-500 italic">{{ patient.birthDate | date:'dd/MM/yyyy' }} ({{ 'COMMON.GENDER_' + (patient.gender === 'Masculin' ? 'M' : 'F') | translate }})</p>
+          
+          <!-- Duplicata Badge -->
+          <div *ngIf="isDuplicate" class="absolute -right-8 -top-4 bg-slate-100 text-slate-400 px-4 py-1.5 rounded-xl border-2 border-slate-200 text-[10px] font-black uppercase tracking-[0.2em] rotate-12 shadow-sm">
+            DUPLICATA
+          </div>
         </div>
       </div>
     </header>
@@ -94,15 +104,15 @@
         <h2 class="text-2xl font-serif italic border-b border-primary/20 inline-block px-8 pb-1 mb-4">{{ 'PRESCRIPTION.DOC_TITLE' | translate }}</h2>
       </div>
 
-      <div class="space-y-8 pl-4">
+      <div class="prescription-items-container space-y-12 pl-4">
         <div *ngFor="let item of prescription.items" class="relative">
-          <div class="flex items-baseline gap-4 mb-1">
-            <span class="text-lg font-black text-primary">Rp/</span>
-            <p class="text-lg font-black text-slate-800">{{ item.medicationName }}</p>
+          <div class="flex items-baseline gap-4 mb-2">
+            <span class="text-2xl font-black text-primary italic">Rp/</span>
+            <p class="text-xl font-black text-slate-800 tracking-tight">{{ item.medicationName }}</p>
           </div>
-          <div class="pl-12 space-y-1">
-            <p class="text-sm font-bold text-slate-600 italic">{{ item.dosage }}</p>
-            <p class="text-xs text-slate-400 font-medium">——— {{ item.duration }}</p>
+          <div class="pl-14 space-y-2">
+            <p class="text-base font-bold text-slate-600 italic leading-relaxed">{{ item.dosage }}</p>
+            <p class="text-sm text-slate-400 font-bold tracking-widest">——— {{ item.duration }}</p>
           </div>
         </div>
       </div>
@@ -131,32 +141,55 @@
     .no-print { display: none !important; }
     .print-only { display: block !important; }
     
-    body { 
-      background: white !important; 
-      margin: 0 !important; 
+    @page {
+      margin: 0;
+      size: auto;
+    }
+
+    body, html {
+      height: 100%;
+      margin: 0 !important;
       padding: 0 !important;
-      -webkit-print-color-adjust: exact;
+      overflow: hidden !important;
+      background: white !important;
     }
 
     .prescription-paper {
+      background: white !important;
+      color: black !important;
       box-shadow: none !important;
       border: none !important;
-      padding: 10mm !important;
+      padding: 20mm !important; /* Plus d'aération sur les bords */
       margin: 0 auto;
+      visibility: visible !important;
+      max-height: 297mm; /* Force une seule page A4 */
+      overflow: hidden;
+    }
+
+    .prescription-paper * {
+      visibility: visible !important;
+      color: black !important;
     }
 
     .format-a5 {
       width: 148mm;
-      min-height: 210mm;
+      height: 210mm;
     }
 
     .format-a4 {
       width: 210mm;
-      min-height: 297mm;
+      height: 297mm;
     }
 
-    header { border-bottom: 2px solid #0D9488 !important; } /* Use Teal color code */
-    .text-primary { color: #0D9488 !important; }
+    /* Aération des lignes de prescription */
+    .prescription-items-container {
+      margin-top: 4rem;
+      margin-bottom: 4rem;
+    }
+
+    header { border-bottom: 3px solid #00408b !important; padding-bottom: 2rem !important; } 
+    .text-primary { color: #00408b !important; }
+    .text-slate-800, .text-slate-600, .text-slate-400 { color: black !important; }
   }
 
   /* Screen visibility for preview */

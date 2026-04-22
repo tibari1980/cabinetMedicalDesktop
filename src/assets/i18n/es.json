@@ -329,7 +329,11 @@
     "MANAGE_QUEUE": "Gestionar la cola de espera",
     "NO_PENDING": "Ningún paciente en espera por el momento.",
     "EMPTY_QUEUE": "Cola vacía",
-    "LIVE_ACTIVITY": "Flujo de Actividad en Directo"
+    "LIVE_ACTIVITY": "Flujo de Actividad en Directo",
+    "SUCCESS_TITLE": "¡Cita Confirmada!",
+    "SUCCESS_SUBTITLE": "La agenda ha sido actualizada con éxito.",
+    "PRINT_TICKET": "Imprimir Ticket",
+    "DOWNLOAD_PDF": "Descargar PDF"
   },
   "AUDIT": {
     "LOGIN": "Conexión",

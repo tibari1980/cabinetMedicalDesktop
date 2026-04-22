@@ -130,7 +130,11 @@ export class PatientsComponent implements OnInit, OnDestroy {
     }
 
     if (Object.keys(this.errors).length > 0) {
-      this.notificationService.error('COMMON.ERROR');
+      if (this.errors.emailTaken) {
+        this.notificationService.error('VALIDATION.EMAIL_TAKEN');
+      } else {
+        this.notificationService.error('COMMON.ERROR');
+      }
       this.cdr.markForCheck();
       return;
     }

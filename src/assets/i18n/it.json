@@ -329,7 +329,11 @@
     "MANAGE_QUEUE": "Gestisci la coda",
     "NO_PENDING": "Nessun paziente in attesa al momento.",
     "EMPTY_QUEUE": "Coda vuota",
-    "LIVE_ACTIVITY": "Feed Attività in Diretta"
+    "LIVE_ACTIVITY": "Feed Attività in Diretta",
+    "SUCCESS_TITLE": "Appuntamento Confermato!",
+    "SUCCESS_SUBTITLE": "L'agenda è stata aggiornata con successo.",
+    "PRINT_TICKET": "Stampa Ticket",
+    "DOWNLOAD_PDF": "Scarica PDF"
   },
   "AUDIT": {
     "LOGIN": "Accesso",

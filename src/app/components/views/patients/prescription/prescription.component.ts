@@ -26,6 +26,8 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
     items: []
   };
 
+  isDuplicate: boolean = false;
+
   newItem: PrescriptionItem = { id: '', medicationName: '', dosage: '', duration: '' };
   paperFormat: 'A4' | 'A5' = 'A5';
   
@@ -76,8 +78,18 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Start with one empty item
-    this.addItem();
+    // Start with one empty item if not a duplicate
+    const duplicateId = this.route.snapshot.queryParamMap.get('duplicateId');
+    if (duplicateId) {
+      const existing = this.prescriptionService.getPrescriptionById(duplicateId);
+      if (existing) {
+        this.prescription = JSON.parse(JSON.stringify(existing));
+        this.isDuplicate = true;
+        this.selectedDoctorId = this.doctors.find(d => `${d.firstName} ${d.lastName}` === this.prescription.doctorName)?.id || this.selectedDoctorId;
+      }
+    } else {
+      this.addItem();
+    }
   }
 
   onDoctorChange() {

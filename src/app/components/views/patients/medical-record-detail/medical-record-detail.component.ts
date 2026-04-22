@@ -5,7 +5,12 @@ import { MedicalRecordService } from '../../../../services/medical-record.servic
 import { AuthService } from '../../../../services/auth.service';
 import { Patient } from '../../../../models/patient.model';
 import { MedicalRecord, Consultation, ConsultationStatus, VitalSigns } from '../../../../models/medical-record.model';
+import { UserRole } from '../../../../models/user.model';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../../../services/notification.service';
+import { DialogService } from '../../../../services/dialog.service';
+import { PrescriptionService } from '../../../../services/prescription.service';
+import { Prescription } from '../../../../models/prescription.model';
 
 @Component({
   selector: 'app-medical-record-detail',
@@ -14,6 +19,7 @@ import { Subscription } from 'rxjs';
 export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
   patient!: Patient;
   record!: MedicalRecord;
+  prescriptions: Prescription[] = [];
   activeConsultation: Consultation | null = null;
   private sub!: Subscription;
 
@@ -51,13 +57,62 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
     }
   ];
   
+  get latestVitals(): VitalSigns | null {
+    if (this.record?.consultations?.length > 0) {
+      // Les consultations sont déjà triées par date décroissante (unshift dans le service)
+      const firstValid = this.record.consultations.find(c => 
+        (c.objective.vitalSigns?.weight ?? 0) > 0 || 
+        (c.objective.vitalSigns?.bloodPressureSys ?? 0) > 0
+      );
+      return firstValid ? firstValid.objective.vitalSigns : this.record.consultations[0].objective.vitalSigns;
+    }
+    return null;
+  }
+  
+  UserRole = UserRole;
+  
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private patientService: PatientService,
     private recordService: MedicalRecordService,
+    private notificationService: NotificationService,
+    private dialogService: DialogService,
+    private prescriptionService: PrescriptionService,
     public authService: AuthService
   ) {}
+
+  async addAllergy() {
+    const allergy = prompt('Entrez le nom de l\'allergie :');
+    if (allergy?.trim()) {
+      await this.recordService.addAllergy(this.patient.id.toString(), allergy.trim());
+      this.loadRecord(this.patient.id.toString());
+      this.notificationService.success('NOTIFICATIONS.SAVED_SUCCESS');
+    }
+  }
+
+  async removeAllergy(allergy: string) {
+    if (confirm(`Supprimer l'allergie "${allergy}" ?`)) {
+      await this.recordService.removeAllergy(this.patient.id.toString(), allergy);
+      this.loadRecord(this.patient.id.toString());
+    }
+  }
+
+  async addChronicDisease() {
+    const disease = prompt('Entrez la pathologie :');
+    if (disease?.trim()) {
+      await this.recordService.addChronicDisease(this.patient.id.toString(), disease.trim());
+      this.loadRecord(this.patient.id.toString());
+      this.notificationService.success('NOTIFICATIONS.SAVED_SUCCESS');
+    }
+  }
+
+  async removeChronicDisease(disease: string) {
+    if (confirm(`Supprimer la pathologie "${disease}" ?`)) {
+      await this.recordService.removeChronicDisease(this.patient.id.toString(), disease);
+      this.loadRecord(this.patient.id.toString());
+    }
+  }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -66,6 +121,11 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
         if (p) {
           this.patient = p;
           this.loadRecord(id);
+          
+          // Auto-start consultation if requested via query param
+          if (this.route.snapshot.queryParamMap.get('startConsultation') === 'true') {
+            this.startNewConsultation();
+          }
         } else {
           this.router.navigate(['/patients']);
         }
@@ -85,6 +145,7 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
     }
     if (rec) {
       this.record = rec;
+      this.prescriptions = this.prescriptionService.getPrescriptionsByPatientId(patientId);
     }
   }
 
@@ -129,24 +190,91 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveConsultation(validate: boolean = false) {
-    if (this.activeConsultation) {
-      if (validate) {
-        this.activeConsultation.status = ConsultationStatus.VALIDATED;
+  async saveConsultation(lock: boolean) {
+    if (!this.activeConsultation) return;
+
+    const v = this.activeConsultation.objective.vitalSigns;
+    const s = this.activeConsultation.subjective;
+    const o = this.activeConsultation.objective;
+    const a = this.activeConsultation.assessment;
+    const p = this.activeConsultation.plan;
+    
+    // 1. Critical Field Validations (Mandatory if locking)
+    if (lock) {
+      if (!s.chiefComplaint?.trim()) {
+        this.notificationService.error('VALIDATION.REQUIRED_CHIEF_COMPLAINT');
+        return;
       }
-      
-      const isExisting = this.record.consultations.some(c => c.id === this.activeConsultation!.id);
-      if (isExisting) {
-        this.recordService.updateConsultation(this.patient.id.toString(), this.activeConsultation);
-      } else {
-        this.recordService.addConsultation(this.patient.id.toString(), this.activeConsultation);
+      if (!o.physicalExam?.trim()) {
+        this.notificationService.error('VALIDATION.REQUIRED_PHYSICAL_EXAM');
+        return;
       }
-      
-      if (validate) {
-        this.activeConsultation = null;
+      if (!a.diagnosis?.trim()) {
+        this.notificationService.error('VALIDATION.REQUIRED_DIAGNOSIS');
+        return;
       }
-      this.loadRecord(this.patient.id.toString());
+      if (!p.treatment?.trim()) {
+        this.notificationService.error('VALIDATION.REQUIRED_TREATMENT');
+        return;
+      }
     }
+
+    // 2. Clinical Range Validations (Always checked if values provided)
+    if (v.temperature && (v.temperature > 45 || v.temperature < 30)) {
+      this.notificationService.error('VALIDATION.TEMP_OUT_OF_RANGE');
+      return;
+    }
+
+    if (v.bloodPressureSys && (v.bloodPressureSys > 250 || v.bloodPressureSys < 40)) {
+      this.notificationService.error('VALIDATION.BP_SYS_OUT_OF_RANGE');
+      return;
+    }
+
+    if (v.bloodPressureDia && (v.bloodPressureDia > 150 || v.bloodPressureDia < 40)) {
+      this.notificationService.error('VALIDATION.BP_DIA_OUT_OF_RANGE');
+      return;
+    }
+
+    if (v.bloodPressureSys && v.bloodPressureDia && v.bloodPressureSys <= v.bloodPressureDia) {
+      this.notificationService.error('VALIDATION.BP_SYS_DIA_ERROR');
+      return;
+    }
+
+    if (v.weight && (v.weight < 0 || v.weight > 600)) {
+      this.notificationService.error('VALIDATION.WEIGHT_OUT_OF_RANGE');
+      return;
+    }
+
+    if (v.height && (v.height < 0 || v.height > 250)) {
+      this.notificationService.error('VALIDATION.HEIGHT_OUT_OF_RANGE');
+      return;
+    }
+
+    // 3. Locking confirmation
+    if (lock) {
+      const result = await this.dialogService.confirm({
+        title: 'VALIDATION.CONFIRMATION',
+        message: 'Une fois validée, la consultation sera verrouillée et ne pourra plus être modifiée. Confirmer ?'
+      });
+      if (!result.confirmed) return;
+      this.activeConsultation.status = ConsultationStatus.VALIDATED;
+    } else {
+      this.activeConsultation.status = ConsultationStatus.DRAFT;
+    }
+
+    // 4. Persistence
+    const isExisting = this.record.consultations.some(c => c.id === this.activeConsultation!.id);
+    if (isExisting) {
+      await this.recordService.updateConsultation(this.patient.id.toString(), this.activeConsultation);
+    } else {
+      await this.recordService.addConsultation(this.patient.id.toString(), this.activeConsultation);
+    }
+    
+    if (lock) {
+      this.activeConsultation = null;
+    }
+    this.loadRecord(this.patient.id.toString());
+    this.notificationService.success('NOTIFICATIONS.SAVED_SUCCESS');
   }
 
   cancelConsultation() {
@@ -175,4 +303,3 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
     return consultation.id.toString();
   }
 }
-

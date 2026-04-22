@@ -329,7 +329,11 @@
     "MANAGE_QUEUE": "إدارة طابور الانتظار",
     "NO_PENDING": "لا يوجد مرضى في الانتظار حالياً.",
     "EMPTY_QUEUE": "الطابور فارغ",
-    "LIVE_ACTIVITY": "تدفق النشاط المباشر"
+    "LIVE_ACTIVITY": "تدفق النشاط المباشر",
+    "SUCCESS_TITLE": "تم تأكيد الموعد!",
+    "SUCCESS_SUBTITLE": "تم تحديث الأجندة بنجاح.",
+    "PRINT_TICKET": "طباعة التذكرة",
+    "DOWNLOAD_PDF": "تحميل PDF"
   },
   "AUDIT": {
     "LOGIN": "تسجيل الدخول",

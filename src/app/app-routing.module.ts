@@ -46,7 +46,7 @@ const routes: Routes = [
       { 
         path: 'patients/:id/prescription', 
         component: PrescriptionComponent,
-        data: { roles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR] }
+        data: { roles: [UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.SECRETARY] }
       },
       { 
         path: 'admin', 

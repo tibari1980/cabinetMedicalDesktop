@@ -24,6 +24,10 @@ export class PrescriptionService {
     return this.prescriptionsSubject.value.filter(p => p.patientId.toString() === patientId.toString());
   }
 
+  getPrescriptionById(id: string): Prescription | undefined {
+    return this.prescriptionsSubject.value.find(p => p.id === id);
+  }
+
   addPrescription(prescription: Prescription) {
     const current = this.prescriptionsSubject.value;
     const updated = [prescription, ...current]; // Newest first

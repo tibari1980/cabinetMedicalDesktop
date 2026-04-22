@@ -67,6 +67,12 @@
                         class="text-on-surface-variant/30 hover:text-primary transition-all p-2 rounded-xl hover:bg-primary/5">
                   <span class="material-symbols-outlined">edit</span>
                 </button>
+                <button *ngIf="authService.hasRole([UserRole.DOCTOR, UserRole.SUPER_ADMIN])"
+                        [routerLink]="['/patients', patient.id, 'record']" [queryParams]="{ startConsultation: 'true' }"
+                        aria-label="Nouvelle Consultation"
+                        class="text-on-surface-variant/30 hover:text-primary transition-all p-2 rounded-xl hover:bg-primary/5">
+                  <span class="material-symbols-outlined">medical_services</span>
+                </button>
                 <button [routerLink]="['/patients', patient.id, 'record']" aria-label="Voir le dossier médical"
                         class="text-on-surface-variant/30 hover:text-primary transition-all p-2 rounded-xl hover:bg-primary/5">
                   <span class="material-symbols-outlined">visibility</span>
@@ -117,7 +123,7 @@
                aria-required="true"
                [attr.aria-invalid]="!!errors.lastName"
                aria-describedby="error-pt-last-name"
-               class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold shadow-sm transition-all" placeholder="Dupont">
+               class="w-full bg-surface-container-low dark:bg-surface-container-high border-none rounded-2xl py-4 px-5 text-sm font-semibold shadow-sm transition-all focus:ring-2 focus:ring-primary/20" placeholder="Dupont">
         <app-form-error id="error-pt-last-name" [error]="errors.lastName === 'REQUIRED'" translationKey="VALIDATION.REQUIRED"></app-form-error>
         <app-form-error [error]="errors.lastName === 'MIN'" translationKey="VALIDATION.LAST_NAME_MIN" [params]="{min: 2}"></app-form-error>
       </div>
@@ -125,7 +131,7 @@
         <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_FIRST_NAME' | translate }} *</label>
         <input [(ngModel)]="newPatient.firstName" 
                [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.firstName}"
-               class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all" placeholder="Jean">
+               class="w-full bg-surface-container-low dark:bg-surface-container-high border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Jean">
         <app-form-error [error]="errors.firstName === 'REQUIRED'" translationKey="VALIDATION.REQUIRED"></app-form-error>
         <app-form-error [error]="errors.firstName === 'MIN'" translationKey="VALIDATION.FIRST_NAME_MIN" [params]="{min: 2}"></app-form-error>
       </div>
@@ -140,7 +146,7 @@
                [attr.aria-invalid]="!!errors.phone"
                aria-describedby="error-pt-phone"
                [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.phone}"
-               class="w-full bg-surface-container-low border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-semibold shadow-sm transition-all" placeholder="06 12 34 56 78">
+               class="w-full bg-surface-container-low dark:bg-surface-container-high border-none rounded-2xl py-4 pl-12 pr-5 text-sm font-semibold shadow-sm transition-all focus:ring-2 focus:ring-primary/20" placeholder="06 12 34 56 78">
       </div>
       <app-form-error id="error-pt-phone" [error]="errors.phone" translationKey="VALIDATION.REQUIRED"></app-form-error>
     </div>
@@ -153,13 +159,13 @@
                [attr.aria-invalid]="!!errors.birthDate"
                aria-describedby="error-pt-birthDate"
                [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.birthDate}"
-               class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold shadow-sm transition-all">
+               class="w-full bg-surface-container-low dark:bg-surface-container-high border-none rounded-2xl py-4 px-5 text-sm font-semibold shadow-sm transition-all focus:ring-2 focus:ring-primary/20">
         <app-form-error id="error-pt-birthDate" [error]="errors.birthDate" [translationKey]="errors.birthDate === 'REQUIRED' ? 'VALIDATION.REQUIRED' : 'VALIDATION.FUTURE'"></app-form-error>
       </div>
       <div class="space-y-2">
         <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_GENDER' | translate }}</label>
         <div class="relative">
-          <select [(ngModel)]="newPatient.gender" class="w-full bg-surface-container-low border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
+          <select [(ngModel)]="newPatient.gender" class="w-full bg-surface-container-low dark:bg-surface-container-high border-2 border-transparent rounded-2xl py-4 px-5 text-sm font-semibold outline-none focus:border-primary/20 appearance-none transition-all">
             <option value="Masculin">{{ 'COMMON.GENDER_M' | translate }}</option>
             <option value="Féminin">{{ 'COMMON.GENDER_F' | translate }}</option>
           </select>
@@ -172,7 +178,7 @@
       <label class="text-[10px] uppercase font-black text-primary tracking-[0.2em] pl-1 opacity-70">{{ 'PATIENTS.MODAL_ADDRESS' | translate }} *</label>
       <textarea [(ngModel)]="newPatient.address" 
                 [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.address}"
-                class="w-full bg-surface-container-low border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all rows-2" placeholder="10 Rue de la République..."></textarea>
+                class="w-full bg-surface-container-low dark:bg-surface-container-high border-none rounded-2xl py-3 px-5 text-sm font-semibold outline-none shadow-sm transition-all focus:ring-2 focus:ring-primary/20 rows-2" placeholder="10 Rue de la République..."></textarea>
       <app-form-error [error]="errors.address === 'REQUIRED'" translationKey="VALIDATION.REQUIRED"></app-form-error>
       <app-form-error [error]="errors.address === 'MIN'" translationKey="VALIDATION.ADDRESS_MIN" [params]="{min: 10}"></app-form-error>
     </div>
@@ -182,7 +188,7 @@
       <div class="relative bg-surface-container-low rounded-2xl overflow-hidden shadow-sm"
            [ngClass]="{'ring-2 ring-error/50 border-error/50 bg-error/5': errors.emailFormat || errors.emailTaken}">
         <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/30">mail</span>
-        <input [(ngModel)]="newPatient.email" type="email" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:font-normal" placeholder="jean.dupont@email.com">
+        <input [(ngModel)]="newPatient.email" type="email" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:font-normal" placeholder="jean.dupont@email.com">
       </div>
       <app-form-error [error]="errors.emailFormat" translationKey="VALIDATION.INVALID_EMAIL"></app-form-error>
       <app-form-error [error]="errors.emailTaken" translationKey="VALIDATION.EMAIL_TAKEN"></app-form-error>

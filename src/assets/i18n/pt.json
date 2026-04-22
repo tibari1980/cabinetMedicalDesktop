@@ -329,7 +329,11 @@
     "MANAGE_QUEUE": "Gerir a fila de espera",
     "NO_PENDING": "Nenhum paciente em espera no momento.",
     "EMPTY_QUEUE": "Fila vazia",
-    "LIVE_ACTIVITY": "Fluxo de Atividade em Direto"
+    "LIVE_ACTIVITY": "Fluxo de Atividade em Direto",
+    "SUCCESS_TITLE": "Consulta Confirmada!",
+    "SUCCESS_SUBTITLE": "A agenda foi atualizada com sucesso.",
+    "PRINT_TICKET": "Imprimer Ticket",
+    "DOWNLOAD_PDF": "Descarregar PDF"
   },
   "AUDIT": {
     "LOGIN": "Ligação",

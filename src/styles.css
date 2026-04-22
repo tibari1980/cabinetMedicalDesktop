@@ -85,6 +85,12 @@
 .dark .ambient-glow {
   box-shadow: 0 40px 40px -20px rgba(0, 0, 0, 0.5);
 }
+.ambient-glow-soft {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+}
+.dark .ambient-glow-soft {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+}
 .dark input, .dark textarea, .dark select {
   color: var(--color-on-surface);
   background-color: var(--color-surface-container-low);
@@ -137,4 +143,78 @@ input, textarea {
   background: var(--color-outline-variant);
   border-radius: 10px;
   opacity: 0.3;
+}
+
+/* Hide number input spinners globally for a cleaner UI */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* Expert Print Styles */
+@media print {
+  /* Hide everything by default */
+  body * {
+    visibility: hidden !important;
+  }
+  
+  /* Reset background for print */
+  body, html, .dark, :root {
+    background: white !important;
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Only show the ticket container and its children */
+  #print-ticket-container, 
+  #print-ticket-container *,
+  #appointment-ticket, 
+  #appointment-ticket *,
+  .print-only,
+  .print-only * {
+    visibility: visible !important;
+  }
+
+  /* Position the ticket at the top left of the page */
+  #print-ticket-container {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    background: white !important;
+    z-index: 999999 !important;
+  }
+
+  #appointment-ticket {
+    border: none !important;
+    box-shadow: none !important;
+    width: 80mm !important;
+    padding: 10mm !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Force background colors and images to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide print-only container in non-print mode */
+  .no-print {
+    display: none !important;
+  }
 }

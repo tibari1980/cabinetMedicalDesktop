@@ -14,6 +14,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../../services/notification.service';
 import { DialogService } from '../../../services/dialog.service';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-dashboard',
@@ -59,6 +61,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.patientSearchTerm = term;
     if (!this.patientSearchTerm) {
       this.computedFilteredPatients = this.patients;
+      this.cdr.markForCheck();
       return;
     }
     const txt = this.patientSearchTerm.toLowerCase();
@@ -67,6 +70,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       p.lastName.toLowerCase().includes(txt) ||
       p.phone.includes(txt)
     );
+    this.cdr.markForCheck();
   }
 
   ngOnInit() {
@@ -201,6 +205,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     }
 
+    if (this.bookingStatus !== 'idle') return;
+    
     if (this.isNewPatient) {
       this.errors = {};
       if (!this.newPatient.firstName?.trim()) this.errors.firstName = true;
@@ -218,6 +224,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       if (Object.keys(this.errors).length > 0) {
         this.notificationService.error('VALIDATION.REQUIRED');
+        this.cdr.markForCheck();
         return;
       }
 
@@ -248,17 +255,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     this.bookingStatus = 'saving';
+    this.cdr.markForCheck();
 
     // Simulate small delay for "Wooow" effect and robustness
     setTimeout(() => {
       this.appointmentService.addAppointment(this.newApt as Appointment);
       this.bookingStatus = 'success';
-      
-      // Close after success animation
-      setTimeout(() => {
-        this.showModal = false;
-        this.bookingStatus = 'idle';
-      }, 1500);
+      this.cdr.markForCheck();
     }, 600);
   }
 
@@ -329,6 +332,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (confirmed) {
         this.billingService.generateInvoiceFromAppointment(apt);
         this.router.navigate(['/billing']);
+        this.cdr.markForCheck();
       }
     });
   }
@@ -339,6 +343,75 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   trackByPatientId(index: number, patient: Patient): string {
     return patient.id.toString();
+  }
+
+  printAppointment() {
+    window.print();
+  }
+
+  async downloadAppointmentPDF() {
+    const data = document.getElementById('appointment-ticket');
+    if (!data) {
+      this.notificationService.error('COMMON.ERROR');
+      return;
+    }
+
+    try {
+      this.notificationService.info('Calcul du rendu PDF...');
+      
+      const canvas = await html2canvas(data, {
+        scale: 3, // Higher scale for better quality
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+      
+      const imgWidth = 80;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      const pdf = new jsPDF('p', 'mm', [imgWidth, imgHeight]);
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgWidth, imgHeight);
+      
+      const fileName = `RDV-${(this.newApt.patientName || 'Patient').replace(/\s+/g, '_')}-${this.newApt.date}.pdf`;
+      pdf.save(fileName);
+      
+      this.notificationService.success('NOTIFICATIONS.SAVED_SUCCESS');
+    } catch (err) {
+      console.error('PDF Generation Error:', err);
+      this.notificationService.error('COMMON.ERROR');
+    }
+  }
+
+  closeModalAndReset() {
+    this.showModal = false;
+    this.bookingStatus = 'idle';
+    // Reset form
+    this.newApt = {
+      patientName: '',
+      date: new Date().toISOString().split('T')[0],
+      time: '',
+      type: AppointmentType.CONSULTATION,
+      fee: 0,
+      patientId: ''
+    };
+    this.isNewPatient = false;
+    this.cdr.markForCheck();
+  }
+
+  quickPrint(apt: Appointment) {
+    this.newApt = { ...apt };
+    this.cdr.detectChanges(); // Force update to fill the hidden ticket
+    setTimeout(() => {
+      this.printAppointment();
+    }, 100);
+  }
+
+  quickPDF(apt: Appointment) {
+    this.newApt = { ...apt };
+    this.cdr.detectChanges(); // Force update to fill the hidden ticket
+    setTimeout(() => {
+      this.downloadAppointmentPDF();
+    }, 100);
   }
 }
 

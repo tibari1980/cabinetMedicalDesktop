@@ -108,4 +108,60 @@ export class MedicalRecordService {
       }
     }
   }
+
+  async addAllergy(patientId: string, allergy: string) {
+    const records = this.recordsSubject.value;
+    const rec = records.find(r => r.patientId.toString() === patientId.toString());
+    if (rec) {
+      if (!rec.allergies.includes(allergy)) {
+        rec.allergies.push(allergy);
+        rec.lastUpdate = new Date().toISOString();
+        const encryptedData = await this.encryptionService.encrypt(rec);
+        await this.dbService.put('medical_records', { patientId, encryptedData });
+        this.recordsSubject.next([...records]);
+        this.auditService.log(this.authService.currentUserValue, AuditAction.EDIT_PATIENT, `Allergie ajoutée : ${allergy} pour patient ID: ${patientId}`);
+      }
+    }
+  }
+
+  async removeAllergy(patientId: string, allergy: string) {
+    const records = this.recordsSubject.value;
+    const rec = records.find(r => r.patientId.toString() === patientId.toString());
+    if (rec) {
+      rec.allergies = rec.allergies.filter(a => a !== allergy);
+      rec.lastUpdate = new Date().toISOString();
+      const encryptedData = await this.encryptionService.encrypt(rec);
+      await this.dbService.put('medical_records', { patientId, encryptedData });
+      this.recordsSubject.next([...records]);
+      this.auditService.log(this.authService.currentUserValue, AuditAction.EDIT_PATIENT, `Allergie supprimée : ${allergy} pour patient ID: ${patientId}`);
+    }
+  }
+
+  async addChronicDisease(patientId: string, disease: string) {
+    const records = this.recordsSubject.value;
+    const rec = records.find(r => r.patientId.toString() === patientId.toString());
+    if (rec) {
+      if (!rec.chronicDiseases.includes(disease)) {
+        rec.chronicDiseases.push(disease);
+        rec.lastUpdate = new Date().toISOString();
+        const encryptedData = await this.encryptionService.encrypt(rec);
+        await this.dbService.put('medical_records', { patientId, encryptedData });
+        this.recordsSubject.next([...records]);
+        this.auditService.log(this.authService.currentUserValue, AuditAction.EDIT_PATIENT, `Pathologie ajoutée : ${disease} pour patient ID: ${patientId}`);
+      }
+    }
+  }
+
+  async removeChronicDisease(patientId: string, disease: string) {
+    const records = this.recordsSubject.value;
+    const rec = records.find(r => r.patientId.toString() === patientId.toString());
+    if (rec) {
+      rec.chronicDiseases = rec.chronicDiseases.filter(d => d !== disease);
+      rec.lastUpdate = new Date().toISOString();
+      const encryptedData = await this.encryptionService.encrypt(rec);
+      await this.dbService.put('medical_records', { patientId, encryptedData });
+      this.recordsSubject.next([...records]);
+      this.auditService.log(this.authService.currentUserValue, AuditAction.EDIT_PATIENT, `Pathologie supprimée : ${disease} pour patient ID: ${patientId}`);
+    }
+  }
 }

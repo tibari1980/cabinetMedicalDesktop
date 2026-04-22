@@ -11,7 +11,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
       </div>
       
       <!-- Modal Glass Shell -->
-      <div [class]="'bg-surface-container-lowest/90 backdrop-blur-2xl w-full ' + maxWidth + ' rounded-[2.5rem] shadow-2xl relative overflow-hidden border border-white/20'"
+      <div [class]="'bg-surface-container-lowest dark:bg-[#1a1c1e] w-full ' + maxWidth + ' rounded-[2.5rem] shadow-2xl relative overflow-hidden border border-white/20 dark:border-white/5'"
            role="dialog"
            aria-modal="true"
            [attr.aria-labelledby]="modalTitleId"

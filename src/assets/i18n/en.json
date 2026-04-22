@@ -46,7 +46,8 @@
     "SECURITY_ACTIVE": "Active Security System",
     "NOTES": "Notes & Remarks",
     "AGE": "Age",
-    "BIRTH_DATE": "Date of Birth"
+    "BIRTH_DATE": "Date of Birth",
+    "DETAILS": "Details"
   },
   "PATIENTS": {
     "TITLE": "Patient Database",
@@ -80,6 +81,7 @@
   },
   "RECORDS": {
     "GENERATE_PRESCRIPTION": "Generate Prescription",
+    "ARCHIVED_PRESCRIPTIONS": "Archived Prescriptions",
     "NEW_CONSULTATION": "New Consultation",
     "ACTIVE_CONSULTATION": "Active Consultation - SOAP Note",
     "TEMPLATE_ASSISTANT": "Template Assistant",
@@ -104,7 +106,12 @@
     "CONSULTATION_HISTORY": "Consultation History",
     "NO_HISTORY": "No consultation history for this patient.",
     "DIAGNOSTIC": "Diagnosis",
-    "TREATMENT_PLAN": "Treatment / Plan"
+    "TREATMENT_PLAN": "Treatment / Plan",
+    "LATEST_VITALS": "Latest Vitals",
+    "PATIENT_INFO": "Patient Info",
+    "CONTACT_DETAILS": "Contact Details",
+    "HEALTH_SUMMARY": "Health Summary",
+    "DOCUMENTS": "Documents & Prescriptions"
   },
   "PRESCRIPTION": {
     "EDIT_TITLE": "Prescription Opening",
@@ -338,7 +345,11 @@
     "MANAGE_QUEUE": "Manage Queue",
     "NO_PENDING": "No patients waiting for now.",
     "EMPTY_QUEUE": "Empty queue",
-    "LIVE_ACTIVITY": "Live Activity Feed"
+    "LIVE_ACTIVITY": "Live Activity Feed",
+    "SUCCESS_TITLE": "Appointment Confirmed!",
+    "SUCCESS_SUBTITLE": "The agenda has been successfully updated.",
+    "PRINT_TICKET": "Print Ticket",
+    "DOWNLOAD_PDF": "Download PDF"
   },
   "AUDIT": {
     "LOGIN": "Login",
@@ -409,7 +420,17 @@
     "OFFLINE_READY": "Secure Local Mode (No connection)",
     "DATA_PROTECTED": "Data protected by AES-256",
     "INVALID_CREDENTIALS": "Incorrect username or password",
-    "HOURS_ERROR": "Opening hour must be before closing hour"
+    "HOURS_ERROR": "Opening hour must be before closing hour",
+    "TEMP_OUT_OF_RANGE": "The entered temperature is clinically improbable (30°C - 45°C).",
+    "BP_SYS_DIA_ERROR": "Systolic blood pressure must be higher than diastolic.",
+    "BP_SYS_OUT_OF_RANGE": "Systolic blood pressure is out of range (40-250 mmHg).",
+    "BP_DIA_OUT_OF_RANGE": "Diastolic blood pressure is out of range (40-150 mmHg).",
+    "WEIGHT_OUT_OF_RANGE": "Invalid weight (0-600 kg).",
+    "HEIGHT_OUT_OF_RANGE": "Invalid height (0-250 cm).",
+    "REQUIRED_DIAGNOSIS": "Please enter a diagnosis before validating.",
+    "REQUIRED_TREATMENT": "Please enter a treatment plan.",
+    "REQUIRED_CHIEF_COMPLAINT": "Please enter the chief complaint.",
+    "REQUIRED_PHYSICAL_EXAM": "Please enter the physical exam findings."
   },
   "NOTIFICATIONS": {
     "SAVED_SUCCESS": "Saved successfully",

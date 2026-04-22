@@ -44,7 +44,10 @@
     "RETURN_DASHBOARD": "Retour au Tableau de Bord",
     "PREVIOUS_PAGE": "Page Précédente",
     "SECURITY_ACTIVE": "Système de Sécurité Actif",
-    "NOTES": "Notes & Remarques"
+    "NOTES": "Notes & Remarques",
+    "DETAILS": "Détails",
+    "AGE": "Âge",
+    "BIRTH_DATE": "Date de Naissance"
   },
   "PATIENTS": {
     "TITLE": "Base Patients",
@@ -78,6 +81,7 @@
   },
   "RECORDS": {
     "GENERATE_PRESCRIPTION": "Générer Ordonnance",
+    "ARCHIVED_PRESCRIPTIONS": "Ordonnances Archivées",
     "NEW_CONSULTATION": "Nouvelle Consultation",
     "ACTIVE_CONSULTATION": "Consultation en cours - Note SOAP",
     "TEMPLATE_ASSISTANT": "Assistant Gabarits",
@@ -102,7 +106,12 @@
     "CONSULTATION_HISTORY": "Historique des Consultations",
     "NO_HISTORY": "Aucun historique de consultation pour ce patient.",
     "DIAGNOSTIC": "Diagnostic",
-    "TREATMENT_PLAN": "Traitement / Plan"
+    "TREATMENT_PLAN": "Traitement / Plan",
+    "LATEST_VITALS": "Dernières Constantes",
+    "PATIENT_INFO": "Informations Patient",
+    "CONTACT_DETAILS": "Coordonnées de Contact",
+    "HEALTH_SUMMARY": "Résumé Santé",
+    "DOCUMENTS": "Documents & Ordonnances"
   },
   "PRESCRIPTION": {
     "EDIT_TITLE": "Édition d'Ordonnance",
@@ -336,7 +345,11 @@
     "MANAGE_QUEUE": "Gérer la file d'attente",
     "NO_PENDING": "Aucun patient en attente pour le moment.",
     "EMPTY_QUEUE": "File vide",
-    "LIVE_ACTIVITY": "Flux d'Activité en Direct"
+    "LIVE_ACTIVITY": "Flux d'Activité en Direct",
+    "SUCCESS_TITLE": "Rendez-vous Confirmé !",
+    "SUCCESS_SUBTITLE": "L'agenda a été mis à jour avec succès.",
+    "PRINT_TICKET": "Imprimer le Ticket",
+    "DOWNLOAD_PDF": "Télécharger PDF"
   },
   "AUDIT": {
     "LOGIN": "Connexion",
@@ -407,7 +420,17 @@
     "OFFLINE_READY": "Mode Local Sécurisé (Sans connexion)",
     "DATA_PROTECTED": "Données protégées par AES-256",
     "INVALID_CREDENTIALS": "Identifiant ou mot de passe incorrect",
-    "HOURS_ERROR": "L'heure d'ouverture doit être avant l'heure de fermeture"
+    "HOURS_ERROR": "L'heure d'ouverture doit être avant l'heure de fermeture",
+    "TEMP_OUT_OF_RANGE": "La température saisie est cliniquement improbable (30°C - 45°C).",
+    "BP_SYS_DIA_ERROR": "La tension systolique doit être supérieure à la diastolique.",
+    "BP_SYS_OUT_OF_RANGE": "La tension systolique est hors limites (40-250 mmHg).",
+    "BP_DIA_OUT_OF_RANGE": "La tension diastolique est hors limites (40-150 mmHg).",
+    "WEIGHT_OUT_OF_RANGE": "Poids invalide (0-600 kg).",
+    "HEIGHT_OUT_OF_RANGE": "Taille invalide (0-250 cm).",
+    "REQUIRED_DIAGNOSIS": "Veuillez saisir un diagnostic avant de valider.",
+    "REQUIRED_TREATMENT": "Veuillez saisir un plan de traitement.",
+    "REQUIRED_CHIEF_COMPLAINT": "Veuillez saisir le motif de consultation.",
+    "REQUIRED_PHYSICAL_EXAM": "Veuillez saisir les résultats de l'examen physique."
   },
   "NOTIFICATIONS": {
     "SAVED_SUCCESS": "Enregistré avec succès",

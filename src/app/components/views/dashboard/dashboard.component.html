@@ -102,17 +102,27 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-col gap-1 items-end relative">
-            <button *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.SECRETARY])" 
-                    (click)="updateAptStatus(apt, 'Terminé')" aria-label="Marquer comme terminé" class="text-xs font-bold text-success bg-success/10 hover:bg-success/20 transition-colors px-3 py-1.5 rounded-lg no-print">
-              Terminer
-            </button>
-            <button *ngIf="apt.status === 'Terminé' && authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SECRETARY])" (click)="generateInvoice(apt)" aria-label="Générer la facture" class="text-[10px] uppercase font-bold text-tertiary bg-tertiary/10 hover:bg-tertiary/20 transition-colors px-3 py-1.5 rounded-lg no-print mt-1 tracking-widest flex items-center gap-1">
-              <span class="material-symbols-outlined text-[12px]">receipt_long</span> Facturer
-            </button>
-            <button (click)="updateAptStatus(apt, 'Annulé')" aria-label="Annuler le rendez-vous" class="text-[10px] uppercase font-bold text-error bg-error/10 hover:bg-error/20 transition-colors px-3 py-1.5 rounded-lg no-print mt-1 tracking-widest">
-              Annuler
-            </button>
+          <div class="flex flex-col items-end gap-3 no-print">
+            <!-- Groupe Documents -->
+            <div class="flex items-center bg-surface-container-high dark:bg-surface-container-highest rounded-2xl p-1 gap-0.5 border border-outline-variant/10 dark:border-white/5 shadow-sm">
+              <button (click)="quickPrint(apt); $event.stopPropagation()" class="w-9 h-9 flex items-center justify-center hover:bg-surface-container-highest dark:hover:bg-surface-container-low rounded-xl text-on-surface-variant dark:text-on-surface-variant transition-all group/btn" title="{{ 'COMMON.PRINT' | translate }}">
+                <span class="material-symbols-outlined text-lg group-hover/btn:scale-110 transition-transform">print</span>
+              </button>
+              <button (click)="quickPDF(apt); $event.stopPropagation()" class="w-9 h-9 flex items-center justify-center hover:bg-primary/10 rounded-xl text-primary dark:text-primary transition-all group/btn" title="{{ 'BILLING.DOWNLOAD_PDF' | translate }}">
+                <span class="material-symbols-outlined text-lg group-hover/btn:scale-110 transition-transform">picture_as_pdf</span>
+              </button>
+            </div>
+            
+            <!-- Groupe Workflow -->
+            <div class="flex flex-col gap-2 min-w-[100px]">
+              <button *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.SECRETARY])" 
+                      (click)="updateAptStatus(apt, 'Terminé')" class="px-4 py-2.5 bg-success text-white rounded-xl text-[11px] font-black shadow-lg shadow-success/20 hover:brightness-110 active:scale-95 transition-all text-center uppercase tracking-wider">
+                Terminer
+              </button>
+              <button (click)="updateAptStatus(apt, 'Annulé')" class="px-4 py-1.5 text-[10px] font-bold text-error/50 dark:text-error/80 hover:text-error hover:bg-error/5 rounded-lg transition-all text-center uppercase tracking-tighter">
+                Annuler
+              </button>
+            </div>
           </div>
         </div>
 
@@ -338,17 +348,86 @@
           <span class="material-symbols-outlined text-6xl">check_circle</span>
         </div>
         <div>
-          <h4 class="text-2xl font-black text-on-surface tracking-tight">Rendez-vous Confirmé !</h4>
-          <p class="text-on-surface-variant font-medium text-sm mt-1">L'agenda a été mis à jour avec succès.</p>
+          <h4 class="text-2xl font-black text-on-surface tracking-tight">{{ 'DASHBOARD.SUCCESS_TITLE' | translate }}</h4>
+          <p class="text-on-surface-variant font-medium text-sm mt-1">{{ 'DASHBOARD.SUCCESS_SUBTITLE' | translate }}</p>
+        </div>
+        
+        <!-- Expert Actions -->
+        <div class="flex gap-3 justify-center mt-4">
+          <button (click)="printAppointment()" class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-xl text-xs font-bold transition-all border border-outline-variant/10 group">
+            <span class="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">print</span>
+            {{ 'DASHBOARD.PRINT_TICKET' | translate }}
+          </button>
+          <button (click)="downloadAppointmentPDF()" class="flex items-center gap-2 px-5 py-2.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-bold transition-all border border-primary/10 group">
+            <span class="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">picture_as_pdf</span>
+            {{ 'DASHBOARD.DOWNLOAD_PDF' | translate }}
+          </button>
         </div>
       </div>
     </div>
   </div>
 
   <div modal-footer class="flex w-full gap-4">
-    <button (click)="showModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">Annuler</button>
-    <button (click)="submitAppointment()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow">Valider le Rendez-vous</button>
+    <ng-container *ngIf="bookingStatus !== 'success'">
+      <button (click)="showModal = false" [disabled]="bookingStatus !== 'idle'" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10 disabled:opacity-50">Annuler</button>
+      <button (click)="submitAppointment()" [disabled]="bookingStatus !== 'idle'" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all ambient-glow disabled:opacity-50 disabled:grayscale">Valider le Rendez-vous</button>
+    </ng-container>
+    <ng-container *ngIf="bookingStatus === 'success'">
+      <button (click)="closeModalAndReset()" class="w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-sm hover:opacity-90 active:scale-95 transition-all shadow-lg">Terminer et Fermer</button>
+    </ng-container>
   </div>
 </app-modal-shell>
+
+<!-- Hidden Print Template (Expert) -->
+<div id="print-ticket-container" class="fixed -left-[9999px] top-0">
+  <div id="appointment-ticket" class="p-8 bg-white text-black font-sans w-[80mm] leading-tight">
+    <!-- Header -->
+    <div class="text-center mb-6 border-b pb-4">
+      <img *ngIf="clinic?.logo" [src]="clinic.logo" class="w-12 h-12 mx-auto mb-2 object-contain">
+      <h1 class="text-sm font-black uppercase tracking-widest">{{ clinic?.name || 'MediFlow Clinic' }}</h1>
+      <p class="text-[8px] opacity-60 mt-1 uppercase font-bold">{{ clinic?.address }}</p>
+      <p class="text-[8px] opacity-60">{{ clinic?.phone }} • {{ clinic?.email }}</p>
+    </div>
+
+    <!-- Appointment Info -->
+    <div class="space-y-4 py-4 border-y border-dashed border-slate-300">
+      <div class="flex justify-between items-center">
+        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">Patient</span>
+        <span class="text-[10px] font-black">{{ newApt.patientName }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">Date & Heure</span>
+        <span class="text-[10px] font-black">{{ newApt.date | date:'dd/MM/yyyy' }} à {{ newApt.time }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">Consultation</span>
+        <span class="text-[10px] font-black">{{ newApt.type }}</span>
+      </div>
+    </div>
+
+    <!-- Total -->
+    <div class="mt-6 pt-4 flex justify-between items-end">
+      <div>
+        <p class="text-[7px] font-black uppercase text-slate-400">Total à régler</p>
+        <span class="text-2xl font-black">{{ newApt.fee }}</span>
+        <span class="text-xs font-bold ml-1">{{ clinic?.currency || 'DH' }}</span>
+      </div>
+      <div class="text-right">
+        <p class="text-[7px] font-black uppercase text-slate-400">Statut</p>
+        <p class="text-[10px] font-black text-green-600 uppercase">Confirmé</p>
+      </div>
+    </div>
+
+    <!-- Footer / QR -->
+    <div class="mt-8 text-center pt-6 border-t border-slate-100">
+      <div class="w-16 h-16 bg-slate-50 mx-auto mb-3 flex items-center justify-center rounded-lg border border-slate-100">
+         <span class="material-symbols-outlined text-slate-300 text-3xl">qr_code_2</span>
+      </div>
+      <p class="text-[7px] font-bold text-slate-300 tracking-[0.2em] uppercase mb-1">Authentifié MediFlow Pro</p>
+      <p class="text-[6px] text-slate-300 italic">Merci de votre confiance. Prenez soin de vous.</p>
+    </div>
   </div>
 </div>
+  </div>
+</div>
+
