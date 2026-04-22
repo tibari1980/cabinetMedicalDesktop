@@ -13,10 +13,10 @@
     </div>
     <div class="flex gap-3 items-center">
       <div class="mr-4 flex gap-3">
-        <!-- Sélecteur de médecin (bloqué si on est médecin, ouvert si on est secrétaire) -->
+        <!-- Médecin prescripteur -->
         <div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-xl border border-outline-variant/20">
           <span class="material-symbols-outlined text-sm text-tertiary">stethoscope</span>
-          <select aria-label="Médecin prescripteur" [(ngModel)]="selectedDoctorId" (change)="onDoctorChange()" [disabled]="isDoctor" class="bg-transparent border-none text-xs font-bold font-on-surface p-0 outline-none cursor-pointer disabled:opacity-50 appearance-none">
+          <select aria-label="Médecin prescripteur" [(ngModel)]="selectedDoctorId" (change)="onDoctorChange()" [disabled]="isDoctor || isDuplicate" class="bg-transparent border-none text-xs font-bold font-on-surface p-0 outline-none cursor-pointer disabled:opacity-50 appearance-none">
             <option *ngFor="let doc of doctors" [value]="doc.id">Dr. {{ doc.lastName }}</option>
           </select>
         </div>
@@ -29,117 +29,180 @@
           </select>
         </div>
       </div>
-      <button (click)="addItem()" class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high text-on-surface rounded-xl font-bold text-sm hover:brightness-95 transition-all">
-        <span class="material-symbols-outlined text-lg">add</span>
-        {{ 'PRESCRIPTION.ADD_LINE' | translate }}
-      </button>
-      <button (click)="saveAndPrint()" class="flex items-center gap-2 px-8 py-2.5 bg-primary text-white rounded-xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
-        <span class="material-symbols-outlined text-lg">print</span>
-        {{ 'PRESCRIPTION.PRINT' | translate }}
-      </button>
+
+      <!-- Contextual Actions -->
+      <ng-container *ngIf="!isDuplicate; else duplicateActions">
+        <button (click)="addItem()" class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high text-on-surface rounded-xl font-bold text-sm hover:brightness-95 transition-all">
+          <span class="material-symbols-outlined text-lg">add</span>
+          {{ 'PRESCRIPTION.ADD_LINE' | translate }}
+        </button>
+        <button (click)="saveAndPrint()" class="flex items-center gap-2 px-8 py-2.5 bg-primary text-white rounded-xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
+          <span class="material-symbols-outlined text-lg">print</span>
+          {{ 'PRESCRIPTION.PRINT' | translate }}
+        </button>
+      </ng-container>
+
+      <ng-template #duplicateActions>
+        <button (click)="downloadPDF()" class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high text-on-surface rounded-xl font-bold text-sm hover:brightness-95 transition-all">
+          <span class="material-symbols-outlined text-lg">download</span>
+          Télécharger
+        </button>
+        <button (click)="printExisting()" class="flex items-center gap-2 px-8 py-2.5 bg-primary text-white rounded-xl font-bold text-sm hover:brightness-110 shadow-lg shadow-primary/20 transition-all">
+          <span class="material-symbols-outlined text-lg">print_connect</span>
+          Réimprimer Duplicata
+        </button>
+      </ng-template>
     </div>
   </section>
 
-  <!-- FORM SECTION (Hidden when printing) -->
-  <section class="no-print bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 space-y-4">
+  <!-- FORM SECTION (Read-only if duplicate) -->
+  <section class="no-print bg-surface-container-lowest p-8 rounded-[2.5rem] shadow-sm border border-outline-variant/10 space-y-4" [class.opacity-80]="isDuplicate">
     <div *ngFor="let item of prescription.items; let i = index; trackBy: trackByItem" class="grid grid-cols-[1fr_2fr_1fr_40px] gap-4 items-end animate-fade-in pb-4 border-b border-outline-variant/5">
       <div class="space-y-1">
         <label for="rx-name-{{i}}" class="text-[10px] uppercase font-bold text-primary tracking-widest pl-1">{{ 'PRESCRIPTION.MEDICATION' | translate }}</label>
-        <input id="rx-name-{{i}}" [(ngModel)]="item.medicationName" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner" [placeholder]="'PRESCRIPTION.MED_PLACEHOLDER' | translate">
+        <input id="rx-name-{{i}}" [(ngModel)]="item.medicationName" [readonly]="isDuplicate" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none shadow-inner disabled:cursor-not-allowed" [placeholder]="'PRESCRIPTION.MED_PLACEHOLDER' | translate">
       </div>
       <div class="space-y-1">
         <label for="rx-dosage-{{i}}" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">{{ 'PRESCRIPTION.DOSAGE' | translate }}</label>
-        <input id="rx-dosage-{{i}}" [(ngModel)]="item.dosage" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" [placeholder]="'PRESCRIPTION.DOSAGE_PLACEHOLDER' | translate">
+        <input id="rx-dosage-{{i}}" [(ngModel)]="item.dosage" [readonly]="isDuplicate" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" [placeholder]="'PRESCRIPTION.DOSAGE_PLACEHOLDER' | translate">
       </div>
       <div class="space-y-1">
         <label for="rx-duration-{{i}}" class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest pl-1">{{ 'PRESCRIPTION.DURATION' | translate }}</label>
-        <input id="rx-duration-{{i}}" [(ngModel)]="item.duration" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" [placeholder]="'PRESCRIPTION.DURATION_PLACEHOLDER' | translate">
+        <input id="rx-duration-{{i}}" [(ngModel)]="item.duration" [readonly]="isDuplicate" class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm outline-none" [placeholder]="'PRESCRIPTION.DURATION_PLACEHOLDER' | translate">
       </div>
-      <button (click)="removeItem(i)" aria-label="Supprimer ce médicament" class="text-error/30 hover:text-error transition-colors p-2">
+      <button *ngIf="!isDuplicate" (click)="removeItem(i)" aria-label="Supprimer ce médicament" class="text-error/30 hover:text-error transition-colors p-2">
         <span class="material-symbols-outlined">delete</span>
       </button>
+      <div *ngIf="isDuplicate" class="flex items-center justify-center p-2 text-on-surface-variant/20">
+        <span class="material-symbols-outlined text-sm">lock</span>
+      </div>
     </div>
-  </section>
+  </section>ection>
 
-  <div class="print-only prescription-paper bg-surface-container-lowest mx-auto p-4 md:p-10 font-serif text-slate-900 border border-slate-100 shadow-2xl rounded-sm relative overflow-hidden"
+  <div class="print-only prescription-paper bg-white mx-auto font-serif text-slate-900 relative"
        [class.format-a4]="paperFormat === 'A4'" [class.format-a5]="paperFormat === 'A5'">
     
-    <!-- DUPLICATA WATERMARK -->
-    <div *ngIf="isDuplicate" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.04] rotate-[-35deg] z-0">
-      <span class="text-[120px] font-black border-[15px] border-slate-900 px-12 rounded-[60px] tracking-[15px] select-none">DUPLICATA</span>
+    <!-- DUPLICATA WATERMARK (Massive & Professional) -->
+    <div *ngIf="isDuplicate" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.015] rotate-[-25deg] z-0">
+      <span class="text-[220px] font-black tracking-[40px] select-none uppercase">DUPLICATA</span>
     </div>
 
-    <!-- Header -->
-    <header *ngIf="clinic" class="flex justify-between items-start border-b-2 border-primary pb-8 mb-10">
-      <div class="space-y-1">
-        <div class="flex items-center gap-3 mb-2">
-          <img *ngIf="clinic.logo" [src]="clinic.logo" class="w-12 h-12 object-contain">
-          <h1 class="text-2xl font-black text-slate-800 tracking-tighter">{{ clinic.name }}</h1>
+    <!-- 1. INSTITUTIONAL HEADER (Refined with 0.5cm top margin) -->
+    <header *ngIf="clinic" class="flex justify-between items-start pt-[0.5cm] px-10">
+      <div class="space-y-4 max-w-[65%]">
+        <div class="flex items-center gap-5">
+          <img *ngIf="clinic.logo" [src]="clinic.logo" class="w-14 h-14 object-contain grayscale">
+          <div class="border-l border-slate-200 pl-5">
+            <h1 class="text-2xl font-black text-slate-900 uppercase tracking-tight">{{ clinic.name }}</h1>
+            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-[0.3em]">Établissement de Santé</p>
+          </div>
         </div>
-        <p class="text-sm font-bold text-slate-600">DR. {{ prescription.doctorName | uppercase }}</p>
-        <p class="text-xs italic text-primary font-bold">{{ prescription.doctorSpecialty }}</p>
-        <div class="text-[10px] text-slate-400 leading-tight mt-2">
-          <p>{{ clinic.address }}</p>
-          <p>Tél: {{ clinic.phone }}</p>
+        
+        <div class="space-y-0.5 pt-2">
+          <p class="text-base font-black text-slate-800">DR. {{ prescription.doctorName }}</p>
+          <p class="text-xs italic text-slate-500 font-medium">{{ prescription.doctorSpecialty }}</p>
+          <div class="text-[10px] text-slate-400 font-medium leading-relaxed mt-3">
+            <p>{{ clinic.address }}</p>
+            <p>Tél : {{ clinic.phone }}</p>
+          </div>
         </div>
       </div>
-      <div class="text-right space-y-1">
-        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ 'PRESCRIPTION.DATE_LABEL' | translate }} {{ prescription.date | date:'dd / MM / yyyy' }}</p>
-        <div class="mt-8 relative">
-          <p class="text-xs font-bold text-slate-400">Patient:</p>
-          <p class="text-lg font-black text-slate-800">{{ patient.lastName | uppercase }} {{ patient.firstName }}</p>
-          <p class="text-[10px] text-slate-500 italic">{{ patient.birthDate | date:'dd/MM/yyyy' }} ({{ 'COMMON.GENDER_' + (patient.gender === 'Masculin' ? 'M' : 'F') | translate }})</p>
-          
-          <!-- Duplicata Badge -->
-          <div *ngIf="isDuplicate" class="absolute -right-8 -top-4 bg-slate-100 text-slate-400 px-4 py-1.5 rounded-xl border-2 border-slate-200 text-[10px] font-black uppercase tracking-[0.2em] rotate-12 shadow-sm">
-            DUPLICATA
+
+      <div class="text-right pt-2 relative">
+        <p class="text-xs font-black text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2">
+          Fait le : {{ prescription.date | date:'dd / MM / yyyy' }}
+        </p>
+        
+        <!-- Official Rubber Stamp Duplicata -->
+        <div *ngIf="isDuplicate" class="mt-8 relative inline-block">
+          <div class="border-4 border-error/20 px-6 py-2 rounded-xl rotate-[-8deg] flex flex-col items-center shadow-sm">
+            <span class="text-[10px] font-black text-error/30 uppercase tracking-[0.4em] mb-1">Document Archivé</span>
+            <span class="text-2xl font-black text-error/40 uppercase tracking-[0.2em]">DUPLICATA</span>
+            <div class="absolute -inset-1 border border-error/10 rounded-2xl"></div>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- Body -->
-    <main class="min-h-[400px]">
-      <div class="mb-8 text-center">
-        <h2 class="text-2xl font-serif italic border-b border-primary/20 inline-block px-8 pb-1 mb-4">{{ 'PRESCRIPTION.DOC_TITLE' | translate }}</h2>
+    <!-- 2. THE 5CM SPACER (Dynamic for multi-page scenarios) -->
+    <div style="min-height: 5cm;" class="flex-shrink-0"></div>
+
+    <!-- 3. PATIENT INFORMATION (Offset by 8cm as requested) -->
+    <section class="py-8 border-y border-slate-100 relative z-10 page-break-avoid" style="padding-left: 8cm;">
+      <div class="grid grid-cols-[100px_1fr] gap-y-4 items-baseline">
+        <span class="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">Patient :</span>
+        <p class="text-2xl font-black text-slate-900 tracking-tight">
+          {{ patient.lastName | uppercase }} <span class="font-normal text-slate-500 ml-2">{{ patient.firstName }}</span>
+        </p>
+
+        <span class="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">Détails :</span>
+        <div class="flex items-center gap-4">
+          <p class="text-xs font-bold text-slate-600">
+            {{ 'COMMON.GENDER_' + (patient.gender === 'Masculin' ? 'M' : 'F') | translate }} 
+          </p>
+          <span class="w-1 h-1 rounded-full bg-slate-200"></span>
+          <p class="text-xs font-bold text-slate-600">
+            {{ getPatientAge() }} ans
+          </p>
+          <span class="w-1 h-1 rounded-full bg-slate-200"></span>
+          <p class="text-xs font-bold text-slate-600 italic">
+            Né(e) le {{ patient.birthDate | date:'dd/MM/yyyy' }}
+          </p>
+        </div>
+
+        <span class="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">Adresse :</span>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-tight">
+          {{ patient.address || 'Non renseignée' }}
+        </p>
+      </div>
+    </section>
+
+    <!-- 4. MEDICAL BODY -->
+    <main class="min-h-[550px] px-12 pt-20 flex-grow">
+      <div class="mb-24 text-center page-break-avoid flex flex-col items-center">
+        <h2 class="text-4xl font-serif italic text-slate-800 tracking-wider px-16 pb-4">Ordonnance Médicale</h2>
+        <!-- Bold 6px Blue Line -->
+        <div class="h-[6px] bg-primary w-full shadow-sm rounded-full"></div>
       </div>
 
-      <div class="prescription-items-container space-y-12 pl-4">
-        <div *ngFor="let item of prescription.items" class="relative">
-          <div class="flex items-baseline gap-4 mb-2">
-            <span class="text-2xl font-black text-primary italic">Rp/</span>
-            <p class="text-xl font-black text-slate-800 tracking-tight">{{ item.medicationName }}</p>
-          </div>
-          <div class="pl-14 space-y-2">
-            <p class="text-base font-bold text-slate-600 italic leading-relaxed">{{ item.dosage }}</p>
-            <p class="text-sm text-slate-400 font-bold tracking-widest">——— {{ item.duration }}</p>
+      <div class="space-y-20 pl-8">
+        <div *ngFor="let item of prescription.items" class="relative page-break-avoid">
+          <div class="flex items-baseline gap-10 mb-6">
+            <span class="text-5xl font-light text-slate-200 italic select-none">Rp/</span>
+            <div class="space-y-3">
+              <p class="text-3xl font-black text-slate-900 tracking-tight">{{ item.medicationName }}</p>
+              <p class="text-xl font-bold text-slate-700 italic leading-relaxed">{{ item.dosage }}</p>
+              <p class="text-sm text-slate-400 font-bold uppercase tracking-[0.3em] pt-4 border-t border-slate-100 inline-block">{{ item.duration }}</p>
+            </div>
           </div>
         </div>
       </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="mt-12 flex justify-between items-end">
-      <div class="text-[9px] text-slate-300 italic max-w-[200px]">
+    <!-- 5. FOOTER (Sign & Stamp) -->
+    <footer class="mt-auto px-12 pb-16 flex justify-between items-end page-break-avoid">
+      <div class="text-[8px] text-slate-300 uppercase tracking-widest max-w-[300px] leading-loose border-l border-slate-100 pl-4">
         {{ 'PRESCRIPTION.PHARMACY_NOTE' | translate }}
+        <br>Validité de trois mois sauf mention contraire.
       </div>
-      <div class="text-center w-48 border-t border-slate-100 pt-4">
-        <p class="text-[9px] uppercase font-bold text-slate-400 mb-8 tracking-tighter">{{ 'PRESCRIPTION.SIGNATURE_STAMP' | translate }}</p>
-        <!-- Emplacement pour signature manuelle -->
-        <div class="h-20"></div>
-        <p class="text-xs font-bold text-slate-700">DR. {{ prescription.doctorName }}</p>
+      <div class="text-right">
+        <p class="text-[9px] uppercase font-black text-slate-400 mb-16 tracking-[0.3em]">Signature et Cachet</p>
+        <div class="space-y-1">
+          <p class="text-base font-black text-slate-800">DR. {{ prescription.doctorName }}</p>
+          <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">{{ prescription.doctorSpecialty }}</p>
+        </div>
       </div>
     </footer>
   </div>
 </div>
 
 <style>
-  /* Base Print Styles */
+  /* --- Professional Printing Styles --- */
   .print-only { display: none; }
 
   @media print {
     .no-print { display: none !important; }
-    .print-only { display: block !important; }
+    .print-only { display: flex !important; flex-direction: column; min-height: 100vh; }
     
     @page {
       margin: 0;
@@ -147,56 +210,40 @@
     }
 
     body, html {
-      height: 100%;
       margin: 0 !important;
       padding: 0 !important;
-      overflow: hidden !important;
       background: white !important;
     }
 
     .prescription-paper {
-      background: white !important;
-      color: black !important;
+      width: 100% !important;
+      padding: 0 !important;
       box-shadow: none !important;
       border: none !important;
-      padding: 20mm !important; /* Plus d'aération sur les bords */
-      margin: 0 auto;
-      visibility: visible !important;
-      max-height: 297mm; /* Force une seule page A4 */
-      overflow: hidden;
     }
 
-    .prescription-paper * {
-      visibility: visible !important;
-      color: black !important;
+    .page-break-avoid {
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
-    .format-a5 {
-      width: 148mm;
-      height: 210mm;
-    }
+    .format-a5 { width: 148mm; min-height: 210mm; }
+    .format-a4 { width: 210mm; min-height: 297mm; }
 
-    .format-a4 {
-      width: 210mm;
-      height: 297mm;
-    }
-
-    /* Aération des lignes de prescription */
-    .prescription-items-container {
-      margin-top: 4rem;
-      margin-bottom: 4rem;
-    }
-
-    header { border-bottom: 3px solid #00408b !important; padding-bottom: 2rem !important; } 
+    /* Colors for Print Integrity */
     .text-primary { color: #00408b !important; }
-    .text-slate-800, .text-slate-600, .text-slate-400 { color: black !important; }
+    .text-slate-900 { color: #000000 !important; }
+    .text-slate-600 { color: #333333 !important; }
   }
 
-  /* Screen visibility for preview */
+  /* --- Screen Preview Enhancement --- */
   @media screen {
     .prescription-paper {
-      max-width: 600px;
-      margin-top: 2rem;
+      max-width: 800px;
+      min-height: 1122px; /* A4 Ratio */
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+      margin: 2rem auto;
+      border-radius: 4px;
     }
   }
 </style>

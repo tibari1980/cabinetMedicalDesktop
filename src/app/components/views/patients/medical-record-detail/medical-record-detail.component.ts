@@ -21,6 +21,18 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
   record!: MedicalRecord;
   prescriptions: Prescription[] = [];
   activeConsultation: Consultation | null = null;
+  
+  // Pagination & Filtering (Senior Features)
+  consultationSearch: string = '';
+  consultationPage: number = 1;
+  consultationPerPage: number = 3;
+  
+  prescriptionSearch: string = '';
+  prescriptionPage: number = 1;
+  prescriptionPerPage: number = 4;
+
+  activeTab: 'medical' | 'profile' | 'documents' = 'medical';
+
   private sub!: Subscription;
 
   // Gabarits de consultation (Killer Feature: SOAP Assists)
@@ -82,6 +94,10 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
     public authService: AuthService
   ) {}
 
+  async openAddAllergyModal() {
+    this.addAllergy();
+  }
+
   async addAllergy() {
     const allergy = prompt('Entrez le nom de l\'allergie :');
     if (allergy?.trim()) {
@@ -96,6 +112,10 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
       await this.recordService.removeAllergy(this.patient.id.toString(), allergy);
       this.loadRecord(this.patient.id.toString());
     }
+  }
+
+  async openAddDiseaseModal() {
+    this.addChronicDisease();
   }
 
   async addChronicDisease() {
@@ -147,6 +167,61 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
       this.record = rec;
       this.prescriptions = this.prescriptionService.getPrescriptionsByPatientId(patientId);
     }
+  }
+
+  // Computed properties for Consultations
+  get filteredConsultations() {
+    if (!this.record?.consultations) return [];
+    let list = [...this.record.consultations];
+    
+    // Sort by date descending
+    list.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    // Filter
+    if (this.consultationSearch) {
+      const term = this.consultationSearch.toLowerCase();
+      list = list.filter(c => 
+        c.assessment.diagnosis.toLowerCase().includes(term) ||
+        c.subjective.chiefComplaint.toLowerCase().includes(term)
+      );
+    }
+    return list;
+  }
+
+  get paginatedConsultations() {
+    const start = (this.consultationPage - 1) * this.consultationPerPage;
+    return this.filteredConsultations.slice(start, start + this.consultationPerPage);
+  }
+
+  get totalConsultationPages() {
+    return Math.ceil(this.filteredConsultations.length / this.consultationPerPage) || 1;
+  }
+
+  // Computed properties for Prescriptions
+  get filteredPrescriptions() {
+    let list = [...this.prescriptions];
+    
+    // Sort by date descending
+    list.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    // Filter
+    if (this.prescriptionSearch) {
+      const term = this.prescriptionSearch.toLowerCase();
+      list = list.filter(p => 
+        p.items.some((i: any) => i.medicationName.toLowerCase().includes(term)) ||
+        p.doctorName.toLowerCase().includes(term)
+      );
+    }
+    return list;
+  }
+
+  get paginatedPrescriptions() {
+    const start = (this.prescriptionPage - 1) * this.prescriptionPerPage;
+    return this.filteredPrescriptions.slice(start, start + this.prescriptionPerPage);
+  }
+
+  get totalPrescriptionPages() {
+    return Math.ceil(this.filteredPrescriptions.length / this.prescriptionPerPage) || 1;
   }
 
   startNewConsultation() {

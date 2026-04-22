@@ -108,7 +108,61 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
     this.subs.forEach(s => s.unsubscribe());
   }
 
+  // --- Core Methods ---
+
+  /**
+   * Main action for new prescriptions: Save to history and trigger print
+   */
+  async saveAndPrint() {
+    if (!this.validatePrescription()) return;
+
+    try {
+      // Clean empty items before saving
+      this.prescription.items = this.prescription.items.filter(i => i.medicationName.trim() !== '');
+      
+      // Save to local storage service
+      await this.prescriptionService.addPrescription(this.prescription);
+      
+      this.notificationService.success('NOTIFICATIONS.PRESCRIPTION_SAVED');
+      this.triggerPrint();
+    } catch (error) {
+      this.notificationService.error('NOTIFICATIONS.SAVE_ERROR');
+    }
+  }
+
+  /**
+   * Action for duplicates: Just print without saving a new record
+   */
+  printExisting() {
+    this.triggerPrint();
+  }
+
+  /**
+   * Simulated Download (Professional UX)
+   */
+  downloadPDF() {
+    this.notificationService.info('Génération du PDF en cours...');
+    // We use the browser's print to PDF capability which is the most reliable
+    this.triggerPrint();
+  }
+
+  private triggerPrint() {
+    setTimeout(() => window.print(), 100);
+  }
+
+  private validatePrescription(): boolean {
+    const hasItems = this.prescription.items.some(i => i.medicationName.trim() !== '');
+    if (!hasItems) {
+      this.notificationService.warning('NOTIFICATIONS.REQUIRED_MEDICATION');
+      return false;
+    }
+    return true;
+  }
+
+  // --- UI Helpers ---
+
   addItem() {
+    if (this.isDuplicate) return; // Integrity check
     this.prescription.items.push({
       id: Math.random().toString(36).substr(2, 9),
       medicationName: '',
@@ -118,22 +172,24 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
   }
 
   removeItem(index: number) {
+    if (this.isDuplicate) return;
     this.prescription.items.splice(index, 1);
   }
 
-  saveAndPrint() {
-    // Filter out empty items
-    this.prescription.items = this.prescription.items.filter(i => i.medicationName.trim() !== '');
-    if (this.prescription.items.length > 0) {
-      this.prescriptionService.addPrescription(this.prescription);
-      window.print();
-    } else {
-      this.notificationService.warning('NOTIFICATIONS.REQUIRED_MEDICATION');
-    }
+  goBack() {
+    this.router.navigate(['/patients', this.patient?.id || '', 'record']);
   }
 
-  goBack() {
-    this.router.navigate(['/patients', this.patient.id, 'record']);
+  getPatientAge(): number {
+    if (!this.patient?.birthDate) return 0;
+    const birthDate = new Date(this.patient.birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
   }
 
   trackByItem(index: number, item: PrescriptionItem): string {
