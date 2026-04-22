@@ -22,6 +22,7 @@
     "SAVE": "Guardar alterações",
     "DELETE": "Eliminar",
     "EDIT": "Editar",
+    "LOGIN": "Entrar",
     "CLOSE": "Fechar",
     "VALIDATE": "Validar",
     "GENDER_M": "Masculino",
@@ -32,7 +33,6 @@
     "WARNING": "Aviso",
     "CONFIRMATION": "Confirmação",
     "CONFIRM": "Confirmar",
-    "SAVE": "Guardar",
     "PRINT": "Imprimir",
     "SEARCH": "Pesquisar...",
     "TOTAL": "Total",
@@ -421,5 +421,23 @@
     "GENERATE_INVOICE_CONFIRM": "Deseja gerar uma fatura para {{name}} no valor de {{amount}} {{currency}}?",
     "CONFIRM_FINISH_APT": "Deseja encerrar a consulta de {{name}}?",
     "CONFIRM_CANCEL_APT": "Tem certeza de que deseja cancelar o agendamento de {{name}}?"
+  },
+  "LANDING": {
+    "TITLE_PART1": "A Excelência na",
+    "TITLE_PART2": "Gestão Médica",
+    "SUBTITLE": "A solução SaaS de nova geração para clínicas modernas. Elegante, inteligente e concebida para a sua eficiência.",
+    "CTA_MAIN": "Aceder à minha Clínica",
+    "OFFLINE_READY": "100% Funcional Sem Ligação",
+    "FEATURE_PATIENTS_TITLE": "Pacientes",
+    "FEATURE_PATIENTS_DESC": "Prontuários médicos completos com histórico inteligente.",
+    "FEATURE_BILLING_TITLE": "Faturação",
+    "FEATURE_BILLING_DESC": "Gere faturas PDF num clique, mesmo offline.",
+    "FEATURE_ANALYTICS_TITLE": "Análises",
+    "FEATURE_ANALYTICS_DESC": "Siga o desempenho da sua clínica em tempo real.",
+    "FLOATING_RDV": "+12 Consultas Hoje",
+    "FLOATING_BILLING": "Faturação Automatizada",
+    "FOOTER_TEXT": "&copy; 2026 MediFlow Pro - O futuro da medicina digital.",
+    "TRUST_BADGE": "Confiança e Segurança Local",
+    "TRUST_DESC": "Os seus dados permanecem na sua máquina. Não é necessária nuvem."
   }
 }

@@ -22,6 +22,7 @@
     "SAVE": "Salva modifiche",
     "DELETE": "Elimina",
     "EDIT": "Modifica",
+    "LOGIN": "Accedi",
     "CLOSE": "Chiudi",
     "VALIDATE": "Validare",
     "GENDER_M": "Maschio",
@@ -46,7 +47,7 @@
   },
   "PATIENTS": {
     "TITLE": "Database Pazienti",
-    "SUBTITLE": "Gestione e storico delle schede pazienti",
+    "SUBTITLE": "Gestione e storico delle scheده pazienti",
     "ADD_NEW": "Nuovo Paziente",
     "SEARCH_PLACEHOLDER": "Cerca per nome, telefono, email...",
     "TABLE_IDENTITY": "Identità del Paziente",
@@ -93,7 +94,7 @@
     "SOAP_A_PLACEHOLDER": "Conclusione o Diagnosi principale",
     "SOAP_A_NOTES": "Note aggiuntive...",
     "SOAP_P_LABEL": "Piano (Trattamento, Follow-up)",
-    "SOAP_P_PLACEHOLDER": "Trattamento prescritto, esami richiesti...",
+    "SOAP_P_PLACEHOLDER": "Trattamento prescrito, esami richiesti...",
     "ALERTS_ALLERGIES": "Allarmi e Allergie",
     "NO_ALLERGIES": "Nessuna allergia nota",
     "CHRONIC_DISEASES": "Patologie Croniche",
@@ -262,7 +263,7 @@
   },
   "HELP": {
     "TITLE": "Centro Assistenza e Documentazione",
-    "SUBTITLE": "Guida completa per padroneggiare MediFlow Pro v2.0",
+    "SUBTITLE": "Guia completa per padroneggiare MediFlow Pro v2.0",
     "LOCAL_SUPPORT": "Supporto Locale Attivo",
     "TAB_MEDICAL": "Area Medica",
     "TAB_SECRETARY": "Segreteria",
@@ -359,7 +360,7 @@
     "CLOSING_HOUR": "Chiusura",
     "ADMIN_TITLE": "Account Amministratore",
     "ADMIN_SUBTITLE": "Crea il tuo accesso principale per gestire la clinica",
-    "ADMIN_INFO_TITLE": "Sei il Super Amministratore",
+    "ADMIN_INFO_TITLE": "Sei le Super Amministratore",
     "ADMIN_INFO_BODY": "Questo account avrà accesso completo a tutte le funzionalità. Potrai poi creare account per il tuo team.",
     "FIRST_NAME": "Nome",
     "LAST_NAME": "Cognome",
@@ -420,5 +421,23 @@
     "GENERATE_INVOICE_CONFIRM": "Vuoi generare una fattura per {{name}} per un importo di {{amount}} {{currency}}?",
     "CONFIRM_FINISH_APT": "Vuoi chiudere la consulenza per {{name}}?",
     "CONFIRM_CANCEL_APT": "Sei sicuro di voler annullare l'appuntamento per {{name}}?"
+  },
+  "LANDING": {
+    "TITLE_PART1": "L'Eccellenza nella",
+    "TITLE_PART2": "Gestione Medica",
+    "SUBTITLE": "La soluzione SaaS di nuova generazione per studi medici moderni. Elegante, intelligente e progettata per la tua efficienza.",
+    "CTA_MAIN": "Accedi al mio Studio",
+    "OFFLINE_READY": "100% Funzionale Senza Connessione",
+    "FEATURE_PATIENTS_TITLE": "Pazienti",
+    "FEATURE_PATIENTS_DESC": "Cartelle cliniche complete con storico intelligente.",
+    "FEATURE_BILLING_TITLE": "Fatturazione",
+    "FEATURE_BILLING_DESC": "Genera fatture PDF in un clic, anche offline.",
+    "FEATURE_ANALYTICS_TITLE": "Analisi",
+    "FEATURE_ANALYTICS_DESC": "Segui le prestazioni del tuo studio in tempo reale.",
+    "FLOATING_RDV": "+12 Appuntamenti Oggi",
+    "FLOATING_BILLING": "Fatturazione Automatizzata",
+    "FOOTER_TEXT": "&copy; 2026 MediFlow Pro - Il futuro della medicina digitale.",
+    "TRUST_BADGE": "Fiducia e Sicurezza Locale",
+    "TRUST_DESC": "I tuoi dati rimangono sulla tua macchina. Nessun cloud richiesto."
   }
 }

@@ -67,10 +67,10 @@
               </div>
             </div>
             <div class="text-right flex items-center gap-2">
-              <span class="text-[9px] font-extrabold bg-tertiary-container text-tertiary px-3 py-1 rounded-full uppercase">{{ 'CALENDAR.STATUS_' + (apt.status === 'Confirmé' ? 'CONFIRMED' : (apt.status === 'Terminé' ? 'DONE' : 'CANCELLED')) | translate }}</span>
-              <div class="flex opacity-0 group-hover/card:opacity-100 transition-opacity bg-surface-container-lowest/50 backdrop-blur-md rounded-xl p-1 gap-1">
-                <button (click)="updateAptStatus(apt, 'Terminé', $event)" aria-label="Marquer comme terminé" class="material-symbols-outlined text-sm p-1.5 hover:bg-success/20 text-success rounded-lg transition-colors">check_circle</button>
-                <button (click)="updateAptStatus(apt, 'Annulé', $event)" aria-label="Annuler ce rendez-vous" class="material-symbols-outlined text-sm p-1.5 hover:bg-error/20 text-error rounded-lg transition-colors">cancel</button>
+              <span class="text-[9px] font-black bg-white/20 text-white px-3 py-1 rounded-full uppercase tracking-widest border border-white/10">{{ 'CALENDAR.STATUS_' + (apt.status === 'Confirmé' ? 'CONFIRMED' : (apt.status === 'Terminé' ? 'DONE' : 'CANCELLED')) | translate }}</span>
+              <div class="flex opacity-0 group-hover/card:opacity-100 transition-opacity bg-white/10 backdrop-blur-md rounded-xl p-1 gap-1">
+                <button (click)="updateAptStatus(apt, 'Terminé', $event)" aria-label="Marquer comme terminé" class="material-symbols-outlined text-sm p-1.5 hover:bg-white/20 text-white rounded-lg transition-colors">check_circle</button>
+                <button (click)="updateAptStatus(apt, 'Annulé', $event)" aria-label="Annuler ce rendez-vous" class="material-symbols-outlined text-sm p-1.5 hover:bg-white/20 text-white rounded-lg transition-colors">cancel</button>
               </div>
             </div>
           </div>

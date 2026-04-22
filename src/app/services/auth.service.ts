@@ -17,6 +17,9 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   public currentUser$: Observable<User | null>;
 
+  private isInitializedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isInitialized$: Observable<boolean>;
+
   constructor(
     private router: Router,
     private auditService: AuditService,
@@ -25,40 +28,50 @@ export class AuthService {
   ) {
     this.users$ = this.usersSubject.asObservable();
     this.currentUser$ = this.currentUserSubject.asObservable();
+    this.isInitialized$ = this.isInitializedSubject.asObservable();
     this.initStaff();
   }
 
   private async initStaff() {
-    // FORCE DEMO MODE: Mark setup as complete
-    localStorage.setItem('mf_setup_complete', 'true');
-    
-    // 1. Try IndexedDB
-    let users: User[] = await this.dbService.getAll<User>('users');
+    try {
+      // FORCE DEMO MODE: Mark setup as complete
+      localStorage.setItem('mf_setup_complete', 'true');
+      
+      // 1. Try IndexedDB
+      let users: User[] = await this.dbService.getAll<User>('users');
 
-    // 2. Fallback to localStorage (Migration)
-    if (users.length === 0) {
-      const savedUsers = localStorage.getItem('mf_users');
-      if (savedUsers) {
-        users = JSON.parse(savedUsers);
-        // Migrer vers IndexedDB
-        for (const u of users) {
-          await this.dbService.put('users', u);
-        }
-        localStorage.removeItem('mf_users');
-      } else {
-        // Init with Demo Users
-        users = this.getDemoUsers();
-        for (const u of users) {
-          await this.dbService.put('users', u);
+      // 2. Fallback to localStorage (Migration)
+      if (users.length === 0) {
+        const savedUsers = localStorage.getItem('mf_users');
+        if (savedUsers) {
+          users = JSON.parse(savedUsers);
+          // Migrer vers IndexedDB
+          for (const u of users) {
+            await this.dbService.put('users', u);
+          }
+          localStorage.removeItem('mf_users');
+        } else {
+          // Init with Demo Users
+          users = this.getDemoUsers();
+          for (const u of users) {
+            await this.dbService.put('users', u);
+          }
         }
       }
-    }
 
-    this.usersSubject.next(users);
+      this.usersSubject.next(users);
 
-    const savedUser = localStorage.getItem('mf_session');
-    if (savedUser) {
-      this.currentUserSubject.next(JSON.parse(savedUser));
+      const savedUser = localStorage.getItem('mf_session');
+      if (savedUser) {
+        this.currentUserSubject.next(JSON.parse(savedUser));
+      }
+      
+      this.isInitializedSubject.next(true);
+    } catch (error) {
+      console.error('AuthService initialization failed:', error);
+      // Even if it fails, we should notify that initialization is "done" (even if empty)
+      this.usersSubject.next(this.getDemoUsers()); 
+      this.isInitializedSubject.next(true);
     }
   }
 

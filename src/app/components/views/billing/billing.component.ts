@@ -102,4 +102,16 @@ export class BillingComponent implements OnInit {
     if(!this.selectedInvoice) return 0;
     return this.selectedInvoice.totalTTC - this.selectedInvoice.amountModifier;
   }
+
+  calculateAge(birthDate: string | undefined): number | string {
+    if (!birthDate) return '-';
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  }
 }

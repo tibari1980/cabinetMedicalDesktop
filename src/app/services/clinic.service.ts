@@ -15,7 +15,7 @@ export class ClinicService {
     phone: '',
     email: '',
     version: 'v2.0.0 PRO',
-    logo: '',
+    logo: 'assets/logo.png',
     openingHour: 8,
     closingHour: 18,
     country: 'FR',

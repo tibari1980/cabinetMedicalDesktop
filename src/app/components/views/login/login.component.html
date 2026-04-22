@@ -1,90 +1,100 @@
-<div class="min-h-screen bg-slate-50 flex items-center justify-center p-6 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=2000');">
-  <div class="absolute inset-0 bg-primary/10 backdrop-blur-sm"></div>
-  
-  <div class="relative w-full max-w-md animate-fade-in-up">
-    <!-- Brand -->
-    <div class="text-center mb-10">
-      <div class="inline-flex items-center justify-center w-20 h-20 bg-surface-container-lowest rounded-3xl shadow-xl mb-4 ambient-glow">
-        <span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+<div class="login-container">
+  <!-- Immersive Background Layer -->
+  <div class="bg-orb p1"></div>
+  <div class="bg-orb p2"></div>
+  <div class="bg-orb p3"></div>
+  <div class="glass-mesh"></div>
+
+  <div class="login-content">
+    <!-- Brand Identity -->
+    <div class="brand-section animate-item">
+      <div class="logo-box">
+        <img src="assets/logo.png" alt="MediFlow Logo" class="main-logo-img">
       </div>
-      <h1 class="text-4xl font-extrabold text-on-surface tracking-tight">MediFlow</h1>
-      <p class="text-on-surface-variant font-medium mt-2">{{ 'AUTH.SUBTITLE' | translate }}</p>
+      <h1 class="brand-name">MediFlow</h1>
+      <p class="brand-tagline">{{ 'AUTH.SUBTITLE' | translate }}</p>
     </div>
 
-    <!-- Login Card -->
-    <div class="glass-panel p-10 rounded-[2.5rem] shadow-2xl border border-white/50 bg-surface-container-lowest/70 backdrop-blur-xl">
-      <h2 class="text-2xl font-bold text-on-surface mb-8 text-center">{{ 'AUTH.LOGIN_TITLE' | translate }}</h2>
+    <!-- Main Login Card -->
+    <div class="glass-card animate-item delay-1" role="main">
+      <h2 class="form-title">{{ 'AUTH.LOGIN_TITLE' | translate }}</h2>
       
-      <form (submit)="onSubmit()" class="space-y-6">
-        <div class="space-y-2">
-          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">{{ 'AUTH.USERNAME_LABEL' | translate }}</label>
-          <div [ngClass]="{'border-error/50 ring-2 ring-error/10 bg-error/5': errors.username}"
-               class="relative bg-surface-container-lowest/50 border border-outline-variant/20 rounded-2xl overflow-hidden shadow-sm transition-all group/field">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 focus-within:text-primary transition-colors">person</span>
+      <form (submit)="onSubmit()" class="login-form" novalidate>
+        <!-- Username Field -->
+        <div class="input-group">
+          <label for="username" class="input-label">{{ 'AUTH.USERNAME_LABEL' | translate }}</label>
+          <div class="input-wrapper" [class.error]="errors.username">
+            <span class="material-symbols-outlined field-icon" aria-hidden="true">person</span>
             <input [(ngModel)]="username" name="username" type="text"
-                   class="w-full bg-transparent border-none py-4 pl-12 pr-4 text-sm focus:ring-0 outline-none transition-all placeholder:text-on-surface-variant/30 text-on-surface font-bold"
+                   id="username"
+                   class="login-input"
+                   [attr.aria-invalid]="!!errors.username"
+                   [attr.aria-describedby]="errors.username ? 'username-error' : null"
                    [placeholder]="'AUTH.USERNAME_PLACEHOLDER' | translate">
           </div>
-          <p *ngIf="errors.username" class="text-[10px] font-bold text-error mt-1 pl-1 animate-fade-in">{{ 'VALIDATION.REQUIRED' | translate }}</p>
+          <p *ngIf="errors.username" id="username-error" class="text-[10px] font-bold text-red-500 mt-2 pl-2" role="alert">{{ 'VALIDATION.REQUIRED' | translate }}</p>
         </div>
 
-        <div class="space-y-2">
-          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest pl-1">{{ 'AUTH.PASSWORD_LABEL' | translate }}</label>
-          <div [ngClass]="{'border-error/50 ring-2 ring-error/10 bg-error/5': errors.password}"
-               class="relative bg-surface-container-lowest/50 border border-outline-variant/20 rounded-2xl overflow-hidden shadow-sm transition-all group/field">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50 focus-within:text-primary transition-colors">lock</span>
+        <!-- Password Field -->
+        <div class="input-group">
+          <label for="password" class="input-label">{{ 'AUTH.PASSWORD_LABEL' | translate }}</label>
+          <div class="input-wrapper" [class.error]="errors.password">
+            <span class="material-symbols-outlined field-icon" aria-hidden="true">lock</span>
             <input [(ngModel)]="password" name="password" [type]="hidePassword ? 'password' : 'text'"
-                   class="w-full bg-transparent border-none py-4 pl-12 pr-12 text-sm focus:ring-0 outline-none transition-all placeholder:text-on-surface-variant/30 text-on-surface font-bold"
+                   id="password"
+                   class="login-input"
+                   [attr.aria-invalid]="!!errors.password"
+                   [attr.aria-describedby]="errors.password ? 'password-error' : null"
                    placeholder="••••••••">
-            <button type="button" (click)="hidePassword = !hidePassword"
-                    class="absolute border-none bg-none outline-none right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors focus:outline-none">
-              <span class="material-symbols-outlined text-[20px]">{{ hidePassword ? 'visibility_off' : 'visibility' }}</span>
+            <button type="button" (click)="hidePassword = !hidePassword" class="toggle-pass" [attr.aria-label]="hidePassword ? 'Afficher le mot de passe' : 'Masquer le mot de passe'">
+              <span class="material-symbols-outlined" aria-hidden="true">{{ hidePassword ? 'visibility_off' : 'visibility' }}</span>
             </button>
           </div>
-          <p *ngIf="errors.password" class="text-[10px] font-bold text-error mt-1 pl-1 animate-fade-in">{{ 'VALIDATION.REQUIRED' | translate }}</p>
+          <p *ngIf="errors.password" id="password-error" class="text-[10px] font-bold text-red-500 mt-2 pl-2" role="alert">{{ 'VALIDATION.REQUIRED' | translate }}</p>
         </div>
 
-        <div *ngIf="error" class="bg-error/10 text-error text-xs font-bold p-4 rounded-xl flex items-center gap-3 animate-shake border border-error/10">
-          <span class="material-symbols-outlined text-sm">error</span>
+        <!-- Error Messaging -->
+        <div *ngIf="error" class="error-alert" role="alert">
+          <span class="material-symbols-outlined" aria-hidden="true">error</span>
           {{ error | translate }}
         </div>
 
-        <button type="submit" 
-                class="w-full bg-primary text-white py-4 rounded-2xl font-bold hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
-          {{ 'AUTH.LOGIN_BUTTON' | translate }}
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        <!-- Submit Action -->
+        <button type="submit" class="btn-submit">
+          <span>{{ 'AUTH.LOGIN_BUTTON' | translate }}</span>
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
         </button>
       </form>
 
-      <!-- Quick Session Selector for Demo -->
-      <div class="mt-8 pt-6 border-t border-outline-variant/10">
-        <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest text-center mb-4 text-primary">{{ 'AUTH.DEMO_MODE' | translate }}</p>
-        <div class="grid grid-cols-2 gap-3">
-          <button (click)="selectDemoUser('dr.miller')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
-            👨‍⚕️ {{ 'AUTH.DEMO_DOCTOR' | translate }}
+      <!-- Quick Session Selector (Demo Mode) -->
+      <div class="demo-section" role="region" aria-label="Sélecteur de session de démonstration">
+        <p class="demo-title">{{ 'AUTH.DEMO_MODE' | translate }}</p>
+        <div class="demo-grid">
+          <button type="button" (click)="selectDemoUser('dr.miller')" class="demo-btn" aria-label="Se connecter en tant que Médecin">
+            <span aria-hidden="true">👨‍⚕️</span> {{ 'AUTH.DEMO_DOCTOR' | translate }}
           </button>
-          <button (click)="selectDemoUser('amine.b')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
-            👩‍💼 {{ 'AUTH.DEMO_SECRETARY' | translate }}
+          <button type="button" (click)="selectDemoUser('amine.b')" class="demo-btn" aria-label="Se connecter en tant que Secrétaire">
+            <span aria-hidden="true">👩‍💼</span> {{ 'AUTH.DEMO_SECRETARY' | translate }}
           </button>
-          <button (click)="selectDemoUser('admin.sophie')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
-            🔐 {{ 'AUTH.DEMO_ADMIN' | translate }}
+          <button type="button" (click)="selectDemoUser('admin.sophie')" class="demo-btn" aria-label="Se connecter en tant qu'Administrateur">
+            <span aria-hidden="true">🔐</span> {{ 'AUTH.DEMO_ADMIN' | translate }}
           </button>
-          <button (click)="selectDemoUser('superadmin')" class="text-[10px] font-bold py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-primary">
-            🌐 {{ 'AUTH.DEMO_SUPERADMIN' | translate }}
+          <button type="button" (click)="selectDemoUser('superadmin')" class="demo-btn" aria-label="Se connecter en tant que Super Administrateur">
+            <span aria-hidden="true">🌐</span> {{ 'AUTH.DEMO_SUPERADMIN' | translate }}
           </button>
         </div>
       </div>
     </div>
 
-    <div class="flex justify-center mt-6">
-      <button routerLink="/help" class="flex items-center gap-2 text-[10px] font-black uppercase text-primary tracking-[0.2em] bg-surface-container-lowest/50 px-4 py-2 rounded-full hover:bg-surface-container-lowest transition-all shadow-sm">
-        <span class="material-symbols-outlined text-[14px]">help_center</span>
+    <!-- Footer Links -->
+    <div class="login-footer animate-item delay-2">
+      <button routerLink="/help" class="btn-help">
+        <span class="material-symbols-outlined">help_center</span>
         {{ 'AUTH.USER_GUIDE' | translate }}
       </button>
+      <p class="footer-copy">
+        {{ 'AUTH.FOOTER' | translate }}
+      </p>
     </div>
-
-    <p class="text-center mt-8 text-on-surface-variant/60 text-[11px] font-medium">
-      {{ 'AUTH.FOOTER' | translate }}
-    </p>
   </div>
 </div>

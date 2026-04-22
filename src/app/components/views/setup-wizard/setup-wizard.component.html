@@ -97,7 +97,7 @@
           </div>
         </div>
 
-        <div class="form-row two-cols">
+        <div class="form-row three-cols">
           <div class="form-group">
             <label class="field-label">{{ 'SETUP.PHONE' | translate }}</label>
             <div class="input-wrapper">
@@ -110,6 +110,13 @@
             <div class="input-wrapper">
               <span class="material-symbols-outlined input-icon">mail</span>
               <input [(ngModel)]="clinicInfo.email" type="email" placeholder="contact@cabinet.fr">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="field-label">{{ 'SETUP.WEBSITE' | translate }}</label>
+            <div class="input-wrapper">
+              <span class="material-symbols-outlined input-icon">public</span>
+              <input [(ngModel)]="clinicInfo.website" type="text" [placeholder]="'SETUP.WEBSITE_PH' | translate">
             </div>
           </div>
         </div>
@@ -274,6 +281,10 @@
               <div class="recap-item" *ngIf="clinicInfo.email">
                 <span class="recap-label">{{ 'SETUP.EMAIL' | translate }}</span>
                 <span class="recap-value">{{ clinicInfo.email }}</span>
+              </div>
+              <div class="recap-item" *ngIf="clinicInfo.website">
+                <span class="recap-label">{{ 'SETUP.WEBSITE' | translate }}</span>
+                <span class="recap-value">{{ clinicInfo.website }}</span>
               </div>
               <div class="recap-item">
                 <span class="recap-label">{{ 'SETUP.COUNTRY' | translate }}</span>

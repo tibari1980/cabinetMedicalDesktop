@@ -1,26 +1,33 @@
-<header class="sticky top-0 w-full z-40 glass-panel flex items-center justify-between px-8 py-3 border-b border-outline-variant/10 ambient-glow h-20">
+<header class="sticky top-0 w-full z-40 glass-panel flex items-center justify-between px-8 py-3 border-b border-outline-variant/10 ambient-glow h-20" role="banner">
   <div class="flex items-center gap-6 flex-1">
-    <button routerLink="/dashboard" class="p-2.5 text-primary hover:bg-primary/5 rounded-2xl transition-all group flex items-center justify-center shrink-0" title="Retour au Dashboard">
-      <span class="material-symbols-outlined group-hover:scale-110 transition-transform text-2xl">home</span>
+    <button routerLink="/dashboard" type="button" class="p-2.5 text-primary hover:bg-primary/5 rounded-2xl transition-all group flex items-center justify-center shrink-0" aria-label="Retour au Tableau de Bord">
+      <span class="material-symbols-outlined group-hover:scale-110 transition-transform text-2xl" aria-hidden="true">home</span>
     </button>
     
     <!-- Transparent Click-Outside Overlay -->
-    <div *ngIf="showSearchResults" class="fixed inset-0 z-10" (click)="closeSearch()"></div>
+    <div *ngIf="showSearchResults" class="fixed inset-0 z-10" (click)="closeSearch()" aria-hidden="true"></div>
 
     <!-- Search Input Container -->
-    <div class="relative group w-full max-w-xl z-20">
-      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary transition-colors">search</span>
+    <div class="relative group w-full max-w-xl z-20" role="search">
+      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" aria-hidden="true">search</span>
       <input [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
+             id="main-search-input"
              class="w-full bg-surface-container-low border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium transition-all" 
-             [placeholder]="'NAVBAR.SEARCH_PLACEHOLDER' | translate" type="text"/>
+             [placeholder]="'NAVBAR.SEARCH_PLACEHOLDER' | translate" 
+             type="text"
+             aria-label="Rechercher des patients, dossiers ou factures"
+             [attr.aria-expanded]="showSearchResults"
+             aria-owns="search-results-listbox"
+             aria-autocomplete="list"/>
       
       <!-- Premium Search Results Dropdown -->
-      <div *ngIf="showSearchResults" class="absolute top-full left-0 right-0 mt-3 bg-surface-container-lowest/90 backdrop-blur-3xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden z-[100] animate-scale-up origin-top">
+      <div *ngIf="showSearchResults" id="search-results-listbox" role="listbox" class="absolute top-full left-0 right-0 mt-3 bg-surface-container-lowest/90 backdrop-blur-3xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden z-[100] animate-scale-up origin-top">
         <div class="p-2 max-h-[450px] overflow-y-auto custom-scrollbar">
           <div *ngFor="let result of (results$ | async)" 
+               role="option"
                (click)="selectResult(result)"
                class="flex items-center gap-4 p-4 hover:bg-primary/10 rounded-2xl transition-all cursor-pointer group/item">
-            <div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary group-hover/item:scale-110 transition-transform">
+            <div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary group-hover/item:scale-110 transition-transform" aria-hidden="true">
               <span class="material-symbols-outlined">{{ result.icon }}</span>
             </div>
             <div class="flex-1">
@@ -29,106 +36,95 @@
             </div>
             <div class="flex items-center gap-3">
               <span class="px-2 py-0.5 rounded-lg bg-surface-container-high text-[9px] font-black uppercase tracking-widest text-on-surface-variant opacity-40 group-hover/item:bg-primary/10 group-hover/item:text-primary transition-colors">{{ result.type }}</span>
-              <span class="material-symbols-outlined text-primary opacity-0 group-hover/item:opacity-100 transition-opacity translate-x-2 group-hover/item:translate-x-0 transition-transform">chevron_right</span>
+              <span class="material-symbols-outlined text-primary opacity-0 group-hover/item:opacity-100 transition-opacity translate-x-2 group-hover/item:translate-x-0 transition-transform" aria-hidden="true">chevron_right</span>
             </div>
           </div>
 
           <!-- No results state -->
-          <div *ngIf="(results$ | async)?.length === 0" class="p-12 text-center">
-            <div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mx-auto mb-4 text-on-surface-variant/20">
+          <div *ngIf="(results$ | async)?.length === 0" class="p-12 text-center" role="status">
+            <div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mx-auto mb-4 text-on-surface-variant/20" aria-hidden="true">
               <span class="material-symbols-outlined text-4xl">find_in_page</span>
             </div>
             <p class="text-sm font-bold text-on-surface opacity-80">Aucun résultat pour "{{ searchTerm }}"</p>
-            <p class="text-xs text-on-surface-variant opacity-50 mt-1">Vérifiez l'orthographe ou essayez un autre terme.</p>
-          </div>
-        </div>
-        
-        <div class="p-3 bg-surface-container-low/40 border-t border-outline-variant/10 text-center flex items-center justify-center gap-4">
-          <div class="flex items-center gap-1.5 opacity-40">
-            <span class="px-1.5 py-0.5 bg-on-surface/5 rounded text-[8px] font-bold">Shift</span>
-            <span class="px-1.5 py-0.5 bg-on-surface/5 rounded text-[8px] font-bold">F</span>
-            <span class="text-[9px] font-bold uppercase tracking-widest">{{ 'NAVBAR.SEARCH_RAPIDE' | translate }}</span>
-          </div>
-          <div class="w-[1px] h-3 bg-on-surface/10"></div>
-          <div class="flex items-center gap-1.5 opacity-40">
-            <span class="px-1.5 py-0.5 bg-on-surface/5 rounded text-[8px] font-bold">Esc</span>
-            <span class="text-[9px] font-bold uppercase tracking-widest">{{ 'NAVBAR.FERMER' | translate }}</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Mode Local Sécurisé Indicator -->
-    <div class="hidden lg:flex items-center gap-2 px-4 py-2 bg-success/5 border border-success/10 rounded-xl whitespace-nowrap">
-      <span class="relative flex h-2 w-2">
+    <div class="hidden lg:flex items-center gap-2 px-4 py-2 bg-success/5 border border-success/10 rounded-xl whitespace-nowrap" role="note" aria-label="État de la connexion : Mode Local Sécurisé">
+      <span class="relative flex h-2 w-2" aria-hidden="true">
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
         <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
       </span>
-      <span class="text-[10px] font-black uppercase tracking-widest text-success opacity-80 cursor-default" title="Vos données sont stockées en toute sécurité sur cet appareil, même sans connexion internet.">Local Sécurisé</span>
-      <span class="material-symbols-outlined text-success opacity-40 text-sm">shield</span>
+      <span class="text-[10px] font-black uppercase tracking-widest text-success opacity-80 cursor-default">Local Sécurisé</span>
+      <span class="material-symbols-outlined text-success opacity-40 text-sm" aria-hidden="true">shield</span>
     </div>
   </div>
   
   <div class="flex items-center gap-3">
     <!-- Language Selector Dropdown -->
     <div class="relative">
-      <button (click)="showLangMenu = !showLangMenu" aria-label="Changer la langue" class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all group overflow-hidden relative">
+      <button type="button" (click)="showLangMenu = !showLangMenu" aria-label="Changer la langue" [attr.aria-expanded]="showLangMenu" class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all group overflow-hidden relative">
         <span class="text-[10px] font-black uppercase tracking-tighter">{{ languageService.getCurrentLang() }}</span>
-        <span class="material-symbols-outlined text-[14px] opacity-40">language</span>
+        <span class="material-symbols-outlined text-[14px] opacity-40" aria-hidden="true">language</span>
       </button>
 
       <!-- Transparent Overlay to Close Menu -->
-      <div *ngIf="showLangMenu" class="fixed inset-0 z-10 cursor-default" (click)="showLangMenu = false"></div>
+      <div *ngIf="showLangMenu" class="fixed inset-0 z-10 cursor-default" (click)="showLangMenu = false" aria-hidden="true"></div>
 
       <!-- Premium Language Menu -->
-      <div *ngIf="showLangMenu" class="absolute top-full right-0 mt-3 bg-surface-container-lowest/90 backdrop-blur-3xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden z-[100] animate-scale-up origin-top min-w-[170px]">
+      <div *ngIf="showLangMenu" class="absolute top-full right-0 mt-3 bg-surface-container-lowest/90 backdrop-blur-3xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden z-[100] animate-scale-up origin-top min-w-[170px]" role="menu">
         <div class="p-2 space-y-1">
           <button *ngFor="let lang of languages" 
+                  type="button"
+                  role="menuitemradio"
+                  [attr.aria-checked]="languageService.getCurrentLang() === lang.code"
                   (click)="switchLanguage(lang.code)"
                   [ngClass]="{'bg-primary/5': languageService.getCurrentLang() === lang.code}"
                   class="w-full flex items-center gap-3 p-3 hover:bg-primary/10 rounded-2xl transition-all group/item text-left">
-            <div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-[10px] font-black group-hover/item:scale-110 transition-transform">
+            <div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-[10px] font-black group-hover/item:scale-110 transition-transform" aria-hidden="true">
               {{ lang.flag }}
             </div>
             <span class="text-xs font-bold text-on-surface flex-1" [class.text-primary]="languageService.getCurrentLang() === lang.code">{{ lang.label }}</span>
-            <span class="material-symbols-outlined text-primary text-sm transition-all" 
+            <span class="material-symbols-outlined text-primary text-sm transition-all" aria-hidden="true"
                   [class.opacity-100]="languageService.getCurrentLang() === lang.code"
                   [class.opacity-0]="languageService.getCurrentLang() !== lang.code">check_circle</span>
           </button>
         </div>
       </div>
     </div>
-    <button (click)="themeService.toggleDarkMode()" aria-label="Basculer le mode sombre" class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">
-      <span class="material-symbols-outlined text-xl" *ngIf="!(themeService.isDarkMode$ | async)">dark_mode</span>
-      <span class="material-symbols-outlined text-xl" *ngIf="themeService.isDarkMode$ | async">light_mode</span>
+    <button type="button" (click)="themeService.toggleDarkMode()" aria-label="Basculer le mode sombre ou clair" class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">
+      <span class="material-symbols-outlined text-xl" *ngIf="!(themeService.isDarkMode$ | async)" aria-hidden="true">dark_mode</span>
+      <span class="material-symbols-outlined text-xl" *ngIf="themeService.isDarkMode$ | async" aria-hidden="true">light_mode</span>
     </button>
-    <button (click)="showNotifications()" aria-label="Voir les notifications" class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all relative">
-      <span class="material-symbols-outlined text-xl">notifications</span>
+    <button type="button" (click)="showNotifications()" aria-label="Voir les notifications" class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all relative">
+      <span class="material-symbols-outlined text-xl" aria-hidden="true">notifications</span>
       <span class="absolute top-3 right-3 w-2 h-2 bg-error rounded-full border-2 border-surface shadow-sm"></span>
     </button>
-    <button *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])" routerLink="/admin" aria-label="Ouvrir les paramètres" class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">
-      <span class="material-symbols-outlined text-xl">settings</span>
+    <button type="button" *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])" routerLink="/admin" aria-label="Ouvrir les paramètres d'administration" class="p-2.5 text-on-surface-variant hover:bg-surface-container-high rounded-2xl transition-all">
+      <span class="material-symbols-outlined text-xl" aria-hidden="true">settings</span>
     </button>
-    <div class="h-10 w-[1px] bg-outline-variant/10 mx-2"></div>
-    <div class="flex items-center gap-3 px-2 group cursor-pointer relative" (click)="openChangePassword()">
+    <div class="h-10 w-[1px] bg-outline-variant/10 mx-2" aria-hidden="true"></div>
+    <div class="flex items-center gap-3 px-2 group cursor-pointer relative" (click)="openChangePassword()" role="button" aria-label="Mon profil et sécurité">
       <div class="text-right hidden md:block">
         <p class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors text-ellipsis max-w-[120px] overflow-hidden whitespace-nowrap">{{ authService.currentUserValue?.firstName }} {{ authService.currentUserValue?.lastName }}</p>
         <p class="text-[10px] text-on-surface-variant font-label tracking-widest uppercase flex items-center justify-end gap-1">
           {{ authService.currentUserValue?.role }}
-          <span class="material-symbols-outlined text-[12px]">lock_reset</span>
+          <span class="material-symbols-outlined text-[12px]" aria-hidden="true">lock_reset</span>
         </p>
       </div>
-      <div class="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden bg-primary-container text-primary flex items-center justify-center font-black group-hover:scale-105 transition-transform text-xs">
+      <div class="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden bg-primary-container text-primary flex items-center justify-center font-black group-hover:scale-105 transition-transform text-xs" aria-hidden="true">
         {{ authService.currentUserValue?.firstName?.[0] }}{{ authService.currentUserValue?.lastName?.[0] }}
       </div>
     </div>
   </div>
 </header>
 
-<!-- MODALE MON PROFIL & SÉCURITÉ (Premium Glassmorphism Edition) -->
-<div *ngIf="showChangePasswordModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+<!-- MODALE MON PROFIL & SÉCURITÉ -->
+<div *ngIf="showChangePasswordModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="modal-profile-title">
   <!-- Immersive Radial Overlay -->
-  <div class="absolute inset-0 bg-on-surface/30 backdrop-blur-[10px] animate-fade-in transition-all" (click)="showChangePasswordModal = false">
+  <div class="absolute inset-0 bg-on-surface/30 backdrop-blur-[10px] animate-fade-in transition-all" (click)="showChangePasswordModal = false" aria-hidden="true">
     <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-tertiary/5"></div>
   </div>
   
@@ -136,16 +132,16 @@
   <div class="bg-surface-container-lowest/90 backdrop-blur-2xl w-full max-w-xl rounded-[2.5rem] shadow-2xl relative animate-scale-up overflow-hidden border border-white/20">
     <div class="p-8 border-b border-outline-variant/10 flex justify-between items-center relative z-10">
       <div class="flex items-center gap-4">
-        <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl shadow-inner border border-primary/5">
+        <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl shadow-inner border border-primary/5" aria-hidden="true">
           {{ editUser.firstName?.[0] }}{{ editUser.lastName?.[0] }}
         </div>
         <div>
-          <h3 class="text-2xl font-black text-on-surface tracking-tight">Mon Profil Pro</h3>
+          <h3 id="modal-profile-title" class="text-2xl font-black text-on-surface tracking-tight">Mon Profil Pro</h3>
           <p class="text-xs text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 opacity-60">Session : {{ editUser.username }}</p>
         </div>
       </div>
-      <button (click)="showChangePasswordModal = false" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
-        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">close</span>
+      <button (click)="showChangePasswordModal = false" type="button" aria-label="Fermer la modale" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-error/10 hover:text-error transition-all group">
+        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform" aria-hidden="true">close</span>
       </button>
     </div>
 
@@ -155,12 +151,12 @@
         <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-4">Identité & Rôle <span class="h-[1px] flex-1 bg-primary/10"></span></h4>
         <div class="grid grid-cols-2 gap-5">
           <div class="space-y-2">
-            <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Prénom</label>
-            <input [(ngModel)]="editUser.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all">
+            <label for="edit-firstname" class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Prénom</label>
+            <input id="edit-firstname" [(ngModel)]="editUser.firstName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all">
           </div>
           <div class="space-y-2">
-            <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Nom</label>
-            <input [(ngModel)]="editUser.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all">
+            <label for="edit-lastname" class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Nom</label>
+            <input id="edit-lastname" [(ngModel)]="editUser.lastName" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all">
           </div>
         </div>
       </div>
@@ -169,8 +165,8 @@
         <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-4">Coordonnées Pro <span class="h-[1px] flex-1 bg-primary/10"></span></h4>
         <div class="grid grid-cols-1 gap-5">
           <div class="space-y-2">
-            <label class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Email Professionnel</label>
-            <input [(ngModel)]="editUser.email" type="email" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all">
+            <label for="edit-email" class="text-[10px] uppercase font-black text-on-surface-variant tracking-[0.2em] pl-1 opacity-70">Email Professionnel</label>
+            <input id="edit-email" [(ngModel)]="editUser.email" type="email" class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-5 text-sm font-semibold outline-none shadow-sm focus:ring-2 focus:ring-primary/10 transition-all">
           </div>
         </div>
       </div>
@@ -178,10 +174,10 @@
       <div class="space-y-4">
         <h4 class="text-[10px] font-black uppercase tracking-[0.3em] text-error flex items-center gap-4">Sécurité Accès <span class="h-[1px] flex-1 bg-error/10"></span></h4>
         <div class="space-y-2">
-          <label class="text-[10px] uppercase font-black text-error tracking-[0.2em] pl-1 opacity-70">Nouveau mot de passe</label>
+          <label for="edit-password" class="text-[10px] uppercase font-black text-error tracking-[0.2em] pl-1 opacity-70">Nouveau mot de passe</label>
           <div class="relative bg-error/5 rounded-2xl overflow-hidden shadow-sm border border-error/10">
-            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-error/30 text-sm">lock_reset</span>
-            <input [(ngModel)]="editUser.password" type="password" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-error/10 transition-all" placeholder="Laissez vide pour conserver">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-error/30 text-sm" aria-hidden="true">lock_reset</span>
+            <input id="edit-password" [(ngModel)]="editUser.password" type="password" class="w-full bg-transparent border-none py-4 pl-12 pr-5 text-sm font-semibold outline-none focus:ring-2 focus:ring-error/10 transition-all" placeholder="Laissez vide pour conserver">
           </div>
         </div>
       </div>
@@ -189,8 +185,8 @@
 
     <!-- Final Actions -->
     <div class="p-8 bg-surface-container-low/40 backdrop-blur-xl flex gap-4 relative z-10 border-t border-outline-variant/10">
-      <button (click)="showChangePasswordModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">Annuler</button>
-      <button (click)="saveProfile()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all">Sauvegarder</button>
+      <button type="button" (click)="showChangePasswordModal = false" class="flex-1 py-4 text-sm font-bold text-on-surface-variant hover:bg-surface-container-highest rounded-2xl transition-all border border-transparent hover:border-outline-variant/10">Annuler</button>
+      <button type="button" (click)="saveProfile()" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-xl shadow-primary/30 hover:shadow-primary/40 hover:brightness-110 active:scale-95 transition-all">Sauvegarder</button>
     </div>
   </div>
 </div>

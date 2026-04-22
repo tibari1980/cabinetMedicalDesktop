@@ -6,65 +6,75 @@
   <div class="glass-mesh"></div>
 
   <!-- Navbar -->
-  <nav class="landing-nav animate-item">
+  <nav class="landing-nav animate-item" role="navigation" aria-label="Navigation principale">
     <div class="logo-area">
       <div class="logo-box">
-        <span class="material-symbols-outlined">medical_services</span>
+        <img src="assets/logo.png" alt="MediFlow Logo" class="main-logo-img">
       </div>
       <span class="logo-text">MediFlow</span>
     </div>
     <div class="nav-links">
-      <button (click)="goToLogin()" class="btn-login-outline">
+      <div class="lang-selector" role="group" aria-label="Sélection de la langue">
+        <button *ngFor="let lang of ['fr', 'en', 'ar', 'es', 'it', 'pt']" 
+                type="button"
+                (click)="changeLanguage(lang)"
+                [class.active]="languageService.getCurrentLang() === lang"
+                [attr.aria-pressed]="languageService.getCurrentLang() === lang"
+                [attr.aria-label]="'Changer la langue en ' + lang.toUpperCase()"
+                class="lang-btn">
+          {{ lang.toUpperCase() }}
+        </button>
+      </div>
+      <button type="button" (click)="goToLogin()" class="btn-login-outline" [attr.aria-label]="'COMMON.LOGIN' | translate">
         {{ 'COMMON.LOGIN' | translate }}
       </button>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <main class="hero-section">
+  <main id="main-content" class="hero-section">
     <div class="hero-content">
-      <div class="badge animate-item">
-        <span class="pulse"></span>
+      <div class="badge animate-item" role="status">
+        <span class="pulse" aria-hidden="true"></span>
         {{ 'DASHBOARD.LIVE_ACTIVITY' | translate }}
       </div>
       
       <h1 class="hero-title animate-item">
-        L'Excellence de la <br>
-        <span class="gradient-text">Gestion Médicale</span>
+        {{ 'LANDING.TITLE_PART1' | translate }} <br>
+        <span class="gradient-text">{{ 'LANDING.TITLE_PART2' | translate }}</span>
       </h1>
       
       <p class="hero-subtitle animate-item">
-        La solution SaaS nouvelle génération pour les cabinets médicaux modernes. 
-        Épurée, intelligente et conçue pour votre efficacité.
+        {{ 'LANDING.SUBTITLE' | translate }}
       </p>
 
       <div class="hero-actions animate-item">
-        <button (click)="goToLogin()" class="btn-hero-primary shadow-glow">
-          <span>Accéder à mon Cabinet</span>
-          <span class="material-symbols-outlined">chevron_right</span>
+        <button type="button" (click)="goToLogin()" class="btn-hero-primary shadow-glow">
+          <span>{{ 'LANDING.CTA_MAIN' | translate }}</span>
+          <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
         </button>
-        <div class="offline-badge">
-          <span class="material-symbols-outlined">cloud_off</span>
-          100% Fonctionnel Sans Connexion
+        <div class="offline-badge" role="note">
+          <span class="material-symbols-outlined" aria-hidden="true">cloud_off</span>
+          {{ 'LANDING.OFFLINE_READY' | translate }}
         </div>
       </div>
     </div>
 
     <!-- 3D Perspective Visual -->
-    <div class="hero-visual animate-item" [style.transform]="get3DTransform()">
+    <div class="hero-visual animate-item" [style.transform]="get3DTransform()" aria-hidden="true">
       <div class="card-3d">
         <div class="card-inner">
-          <img src="/C:/Users/Pc/.gemini/antigravity/brain/27b83c5f-0b17-47d0-af73-b076daa0c1a6/mediflow_hero_image_1776856636949.png" 
-               alt="MediFlow App Preview" class="app-preview shadow-2xl">
+          <img src="assets/images/mediflow_hero.png" 
+               alt="Aperçu de l'interface MediFlow sur un écran professionnel" class="app-preview shadow-2xl">
           
           <!-- Floating UI Elements -->
           <div class="floating-ui f1">
              <span class="material-symbols-outlined">schedule</span>
-             <span>+12 RDV Aujourd'hui</span>
+             <span>{{ 'LANDING.FLOATING_RDV' | translate }}</span>
           </div>
           <div class="floating-ui f2">
              <span class="material-symbols-outlined">payments</span>
-             <span>Facturation Automatisée</span>
+             <span>{{ 'LANDING.FLOATING_BILLING' | translate }}</span>
           </div>
         </div>
       </div>
@@ -73,26 +83,51 @@
   </main>
 
   <!-- Features Section -->
-  <section class="features-grid">
-    <div class="feature-card animate-item">
-      <span class="material-symbols-outlined icon">diversity_1</span>
-      <h3>Patients</h3>
-      <p>Dossiers médicaux complets avec historique intelligent.</p>
+  <section class="features-section animate-item" aria-labelledby="features-title">
+    <div class="section-header">
+      <h2 id="features-title" class="section-title">{{ 'LANDING.FEATURES_MAIN_TITLE' | translate }}</h2>
+      <p class="section-subtitle">{{ 'LANDING.FEATURES_SUBTITLE' | translate }}</p>
     </div>
-    <div class="feature-card animate-item">
-      <span class="material-symbols-outlined icon">clinical_notes</span>
-      <h3>Facturation</h3>
-      <p>Générez vos factures PDF en un clic, même hors-ligne.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="material-symbols-outlined icon" aria-hidden="true">diversity_1</span>
+        <h3>{{ 'LANDING.FEATURE_PATIENTS_TITLE' | translate }}</h3>
+        <p>{{ 'LANDING.FEATURE_PATIENTS_DESC' | translate }}</p>
+      </div>
+      <div class="feature-card">
+        <span class="material-symbols-outlined icon" aria-hidden="true">calendar_month</span>
+        <h3>{{ 'LANDING.FEATURE_AGENDA_TITLE' | translate }}</h3>
+        <p>{{ 'LANDING.FEATURE_AGENDA_DESC' | translate }}</p>
+      </div>
+      <div class="feature-card">
+        <span class="material-symbols-outlined icon" aria-hidden="true">clinical_notes</span>
+        <h3>{{ 'LANDING.FEATURE_BILLING_TITLE' | translate }}</h3>
+        <p>{{ 'LANDING.FEATURE_BILLING_DESC' | translate }}</p>
+      </div>
+      <div class="feature-card">
+        <span class="material-symbols-outlined icon" aria-hidden="true">analytics</span>
+        <h3>{{ 'LANDING.FEATURE_ANALYTICS_TITLE' | translate }}</h3>
+        <p>{{ 'LANDING.FEATURE_ANALYTICS_DESC' | translate }}</p>
+      </div>
     </div>
-    <div class="feature-card animate-item">
-      <span class="material-symbols-outlined icon">analytics</span>
-      <h3>Analyses</h3>
-      <p>Suivez les performances de votre cabinet en temps réel.</p>
+  </section>
+
+  <!-- Trust Section -->
+  <section class="trust-section animate-item">
+    <div class="trust-content">
+      <div class="trust-icon" aria-hidden="true">
+        <span class="material-symbols-outlined">shield_lock</span>
+      </div>
+      <div class="trust-text">
+        <h2>{{ 'LANDING.TRUST_BADGE' | translate }}</h2>
+        <p>{{ 'LANDING.TRUST_DESC' | translate }}</p>
+      </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="landing-footer animate-item">
-    <p>&copy; 2026 MediFlow Pro - L'avenir de la médecine numérique.</p>
+  <footer class="landing-footer animate-item" role="contentinfo">
+    <p>{{ 'LANDING.FOOTER_TEXT' | translate }}</p>
   </footer>
 </div>

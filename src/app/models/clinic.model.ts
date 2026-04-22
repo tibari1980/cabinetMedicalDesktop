@@ -3,6 +3,7 @@ export interface ClinicInfo {
   address?: string;
   phone?: string;
   email?: string;
+  website?: string;
   logo?: string;
   version?: string;
   openingHour: number; // ex: 8 pour 08:00

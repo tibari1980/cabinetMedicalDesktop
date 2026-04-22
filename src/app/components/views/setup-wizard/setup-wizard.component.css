@@ -412,7 +412,8 @@
   gap: 1rem;
 }
 
-.form-row.two-cols > .form-group {
+.form-row.two-cols > .form-group,
+.form-row.three-cols > .form-group {
   flex: 1;
 }
 

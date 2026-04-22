@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { AuthService } from '../../../services/auth.service';
+import { LanguageService } from '../../../services/language.service';
+import { combineLatest } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-landing',
@@ -26,15 +29,22 @@ export class LandingComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    public languageService: LanguageService
   ) {}
 
   ngOnInit() {
-    // If already logged in, offer to go to dashboard
-    const user = this.authService.currentUserValue;
-    if (user) {
-      // Potentially redirect or show a different CTA
-    }
+    // Wait for auth initialization before checking user state
+    combineLatest([
+      this.authService.isInitialized$,
+      this.authService.currentUser$
+    ]).pipe(
+      filter(([initialized, _]) => initialized === true)
+    ).subscribe(([_, user]) => {
+      if (user) {
+        this.router.navigate(['/dashboard']);
+      }
+    });
   }
 
   onMouseMove(event: MouseEvent) {
@@ -49,5 +59,9 @@ export class LandingComponent implements OnInit {
 
   goToLogin() {
     this.router.navigate(['/login']);
+  }
+
+  changeLanguage(lang: string) {
+    this.languageService.setLanguage(lang);
   }
 }

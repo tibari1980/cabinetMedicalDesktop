@@ -1,25 +1,27 @@
-<aside class="h-screen w-64 fixed left-0 bg-surface-container-low flex flex-col py-8 px-4 space-y-2 z-50 border-r border-outline-variant/10">
-  <div class="mb-8 px-4 cursor-pointer group" *ngIf="clinicService.clinic$ | async as clinic" routerLink="/dashboard">
+<aside class="h-screen w-64 fixed left-0 bg-surface-container-low flex flex-col py-8 px-4 space-y-2 z-50 border-r border-outline-variant/10" role="complementary" aria-label="Menu latéral">
+  <div class="mb-8 px-4 cursor-pointer group" *ngIf="clinicService.clinic$ | async as clinic" routerLink="/dashboard" role="link" [attr.aria-label]="'Retour au tableau de bord de ' + clinic.name">
     <div class="flex items-center gap-3 mb-2">
-      <img *ngIf="clinic.logo" [src]="clinic.logo" class="w-10 h-10 object-contain rounded-lg group-hover:scale-110 transition-all shadow-sm">
+      <img *ngIf="clinic.logo" [src]="clinic.logo" [alt]="'Logo de ' + clinic.name" class="w-10 h-10 object-contain rounded-lg group-hover:scale-110 transition-all shadow-sm">
       <h1 class="text-2xl font-extrabold text-primary tracking-tight truncate group-hover:text-primary-container transition-colors">{{ clinic.name }}</h1>
     </div>
     <p class="text-[10px] text-on-surface-variant font-label uppercase tracking-widest mt-1">Édition Professionnelle</p>
   </div>
   
-  <nav class="flex-1 space-y-1">
+  <nav class="flex-1 space-y-1" aria-label="Navigation principale">
     <!-- Dashboard: Accessible to ALL -->
     <a routerLink="/dashboard" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaDash="routerLinkActive"
+       [attr.aria-current]="rlaDash.isActive ? 'page' : null"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true"
             [style.font-variation-settings]="getIconSettings(rlaDash.isActive)">dashboard</span>
       <span class="text-sm">{{ 'SIDEBAR.DASHBOARD' | translate }}</span>
     </a>
 
     <!-- Calendar: Accessible to ALL -->
     <a routerLink="/calendar" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaCalendar="routerLinkActive"
+       [attr.aria-current]="rlaCalendar.isActive ? 'page' : null"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true"
             [style.font-variation-settings]="getIconSettings(rlaCalendar.isActive)">calendar_month</span>
       <span class="text-sm">{{ 'SIDEBAR.AGENDA' | translate }}</span>
     </a>
@@ -27,8 +29,9 @@
     <!-- Patients: Pro & Secretary -->
     <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.SECRETARY])"
        routerLink="/patients" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaPatients="routerLinkActive"
+       [attr.aria-current]="rlaPatients.isActive ? 'page' : null"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true"
             [style.font-variation-settings]="getIconSettings(rlaPatients.isActive)">person_search</span>
       <span class="text-sm">{{ 'SIDEBAR.PATIENTS' | translate }}</span>
     </a>
@@ -36,8 +39,9 @@
     <!-- Records: Doctors & Admins only -->
     <a *ngIf="authService.hasRole([UserRole.DOCTOR, UserRole.SUPER_ADMIN, UserRole.ADMIN])"
        routerLink="/records" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaRecords="routerLinkActive"
+       [attr.aria-current]="rlaRecords.isActive ? 'page' : null"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true"
             [style.font-variation-settings]="getIconSettings(rlaRecords.isActive)">assignment</span>
       <span class="text-sm">{{ 'SIDEBAR.RECORDS' | translate }}</span>
     </a>
@@ -45,8 +49,9 @@
     <!-- Admin: Super Admin & Admin -->
     <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])"
        routerLink="/admin" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaAdmin="routerLinkActive"
+       [attr.aria-current]="rlaAdmin.isActive ? 'page' : null"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true"
             [style.font-variation-settings]="getIconSettings(rlaAdmin.isActive)">groups</span>
       <span class="text-sm">{{ 'SIDEBAR.STAFF' | translate }}</span>
     </a>
@@ -54,8 +59,9 @@
     <!-- Settings: SaaS Parameters (SUPER_ADMIN ONLY) -->
     <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN])"
        routerLink="/settings" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaSettings="routerLinkActive"
+       [attr.aria-current]="rlaSettings.isActive ? 'page' : null"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true"
             [style.font-variation-settings]="getIconSettings(rlaSettings.isActive)">tune</span>
       <span class="text-sm">{{ 'SIDEBAR.SETTINGS' | translate }}</span>
     </a>
@@ -63,8 +69,9 @@
     <!-- Performance: Super Admin & Admin -->
     <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])"
        routerLink="/performance" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaPerf="routerLinkActive"
+       [attr.aria-current]="rlaPerf.isActive ? 'page' : null"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true"
             [style.font-variation-settings]="getIconSettings(rlaPerf.isActive)">insights</span>
       <span class="text-sm">{{ 'SIDEBAR.PERFORMANCE' | translate }}</span>
     </a>
@@ -72,8 +79,9 @@
     <!-- Billing: Super Admin, Admin, Secretary -->
     <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.SECRETARY])"
        routerLink="/billing" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaBilling="routerLinkActive"
+       [attr.aria-current]="rlaBilling.isActive ? 'page' : null"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true"
             [style.font-variation-settings]="getIconSettings(rlaBilling.isActive)">receipt_long</span>
       <span class="text-sm">{{ 'SIDEBAR.FACTURATION' | translate }}</span>
     </a>
@@ -81,8 +89,9 @@
     <!-- Traceability: Super Admin & Admin -->
     <a *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])"
        routerLink="/traceability" routerLinkActive="bg-surface-container-lowest text-primary font-semibold ambient-glow" #rlaTrace="routerLinkActive"
+       [attr.aria-current]="rlaTrace.isActive ? 'page' : null"
        class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:bg-surface-container-lowest/50 group cursor-pointer text-on-surface-variant">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110"
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true"
             [style.font-variation-settings]="getIconSettings(rlaTrace.isActive)">history</span>
       <span class="text-sm">{{ 'SIDEBAR.TRAÇABILITÉ' | translate }}</span>
     </a>
@@ -90,8 +99,8 @@
   
   <div class="pt-4 border-t border-outline-variant/10 space-y-1">
     <div class="px-4 py-2 mb-2">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold text-xs">
+      <div class="flex items-center gap-3" role="note" aria-label="Utilisateur connecté">
+        <div class="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold text-xs" aria-hidden="true">
           {{ authService.currentUserValue?.firstName?.[0] }}{{ authService.currentUserValue?.lastName?.[0] }}
         </div>
         <div class="overflow-hidden">
@@ -106,13 +115,13 @@
       </div>
     </div>
     
-    <a routerLink="/help" class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-highest transition-all cursor-pointer group">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110">help_center</span>
+    <a routerLink="/help" class="text-on-surface-variant flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-highest transition-all cursor-pointer group" aria-label="Consulter la documentation">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true">help_center</span>
       <span class="text-sm font-semibold">Documentation</span>
     </a>
     
-    <a (click)="authService.logout()" class="text-error flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-error-container/20 transition-all cursor-pointer group">
-      <span class="material-symbols-outlined transition-transform group-hover:scale-110">logout</span>
+    <a (click)="authService.logout()" class="text-error flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-error-container/20 transition-all cursor-pointer group" role="button" aria-label="Se déconnecter de la session">
+      <span class="material-symbols-outlined transition-transform group-hover:scale-110" aria-hidden="true">logout</span>
       <span class="text-sm font-semibold">Déconnexion</span>
     </a>
   </div>

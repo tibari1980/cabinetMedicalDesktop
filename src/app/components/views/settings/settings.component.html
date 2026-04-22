@@ -71,9 +71,30 @@
 
           <div class="space-y-2">
             <label for="st-address" class="text-[10px] uppercase font-black text-on-surface-variant/70 tracking-[0.2em] ml-1">{{ 'SETTINGS.ADDRESS_LABEL' | translate }}</label>
-            <textarea id="st-address" [(ngModel)]="clinicInfo.address" rows="3"
+            <textarea id="st-address" [(ngModel)]="clinicInfo.address" rows="2"
                       class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-6 text-sm font-bold transition-all shadow-sm resize-none" 
                       [placeholder]="'SETTINGS.ADDRESS_PLACEHOLDER' | translate"></textarea>
+          </div>
+
+          <div class="space-y-2">
+            <label for="st-phone" class="text-[10px] uppercase font-black text-on-surface-variant/70 tracking-[0.2em] ml-1">{{ 'SETTINGS.PHONE_LABEL' | translate }}</label>
+            <input id="st-phone" [(ngModel)]="clinicInfo.phone" 
+                   class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-6 text-sm font-bold shadow-sm transition-all" 
+                   [placeholder]="'SETTINGS.PHONE_PLACEHOLDER' | translate">
+          </div>
+
+          <div class="space-y-2">
+            <label for="st-email" class="text-[10px] uppercase font-black text-on-surface-variant/70 tracking-[0.2em] ml-1">{{ 'SETTINGS.EMAIL_LABEL' | translate }}</label>
+            <input id="st-email" [(ngModel)]="clinicInfo.email" 
+                   class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-6 text-sm font-bold shadow-sm transition-all" 
+                   [placeholder]="'SETTINGS.EMAIL_PLACEHOLDER' | translate">
+          </div>
+
+          <div class="space-y-2">
+            <label for="st-website" class="text-[10px] uppercase font-black text-on-surface-variant/70 tracking-[0.2em] ml-1">{{ 'SETTINGS.WEBSITE_LABEL' | translate }}</label>
+            <input id="st-website" [(ngModel)]="clinicInfo.website" 
+                   class="w-full bg-surface-container-low border-none rounded-2xl py-4 px-6 text-sm font-bold shadow-sm transition-all" 
+                   [placeholder]="'SETTINGS.WEBSITE_PLACEHOLDER' | translate">
           </div>
         </div>
       </div>

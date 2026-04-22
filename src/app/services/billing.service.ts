@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { Invoice } from '../models/invoice.model';
 import { ClinicService } from './clinic.service';
 import { Appointment } from '../models/appointment.model';
@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { AuditAction, AuditCategory } from '../models/audit.model';
 
 import { DatabaseService } from './database.service';
+import { PatientService } from './patient.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class BillingService {
     private clinicService: ClinicService,
     private auditService: AuditService,
     private authService: AuthService,
-    private dbService: DatabaseService
+    private dbService: DatabaseService,
+    private patientService: PatientService
   ) {
     this.loadInvoices();
   }
@@ -61,12 +63,17 @@ export class BillingService {
     const totalTTC = apt.fee || 0;
     const amountModifier = Number((totalTTC / (1 + (taxRate / 100))).toFixed(2));
 
+    const patient = await firstValueFrom(this.patientService.getPatientById(apt.patientId));
+
     const newInvoice: Invoice = {
       id: invoiceId,
       date: new Date().toISOString(),
       patientId: apt.patientId,
       patientName: apt.patientName,
-      patientAddress: patientAddress,
+      patientAddress: patient?.address || patientAddress,
+      patientPhone: patient?.phone,
+      patientEmail: patient?.email,
+      patientBirthDate: patient?.birthDate,
       appointmentId: apt.id.toString(),
       amountModifier: amountModifier,
       taxRate: taxRate,

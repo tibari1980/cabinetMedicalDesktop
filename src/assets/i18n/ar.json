@@ -22,6 +22,7 @@
     "SAVE": "حفظ التغييرات",
     "DELETE": "حذف",
     "EDIT": "تعديل",
+    "LOGIN": "تسجيل الدخول",
     "CLOSE": "إغلاق",
     "VALIDATE": "تحقق",
     "GENDER_M": "ذكر",
@@ -32,7 +33,6 @@
     "WARNING": "تحذير",
     "CONFIRMATION": "تأكيد",
     "CONFIRM": "تأكيد",
-    "SAVE": "حفظ",
     "PRINT": "طباعة",
     "SEARCH": "بحث...",
     "TOTAL": "الإجمالي",
@@ -421,5 +421,23 @@
     "GENERATE_INVOICE_CONFIRM": "هل تريد إنشاء فاتورة لـ {{name}} بمبلغ {{amount}} {{currency}}؟",
     "CONFIRM_FINISH_APT": "هل تريد إنهاء جلسة المريض {{name}}؟",
     "CONFIRM_CANCEL_APT": "هل أنت متأكد من رغبتك في إلغاء موعد المريض {{name}}؟"
+  },
+  "LANDING": {
+    "TITLE_PART1": "التميز في",
+    "TITLE_PART2": "الإدارة الطبية",
+    "SUBTITLE": "حل SaaS من الجيل الجديد للعيادات الطبية الحديثة. أنيق، ذكي ومصمم لفعاليتك.",
+    "CTA_MAIN": "الولوج إلى عيادتي",
+    "OFFLINE_READY": "100% يعمل بدون اتصال",
+    "FEATURE_PATIENTS_TITLE": "المرضى",
+    "FEATURE_PATIENTS_DESC": "ملفات طبية كاملة مع تاريخ ذكي.",
+    "FEATURE_BILLING_TITLE": "الفواتير",
+    "FEATURE_BILLING_DESC": "أنشئ فواتير PDF بنقرة واحدة، حتى بدون اتصال.",
+    "FEATURE_ANALYTICS_TITLE": "التحليلات",
+    "FEATURE_ANALYTICS_DESC": "تابع أداء عيادتك في الوقت الفعلي.",
+    "FLOATING_RDV": "+12 موعد اليوم",
+    "FLOATING_BILLING": "فواتير مؤتمتة",
+    "FOOTER_TEXT": "&copy; 2026 MediFlow Pro - مستقبل الطب الرقمي.",
+    "TRUST_BADGE": "الثقة والأمان المحلي",
+    "TRUST_DESC": "بياناتك تبقى على جهازك. لا حاجة للسحابة."
   }
 }
