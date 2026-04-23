@@ -95,10 +95,12 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   async openAddAllergyModal() {
+    if (!this.authService.canPerformConsultation()) return;
     this.addAllergy();
   }
 
   async addAllergy() {
+    if (!this.authService.canPerformConsultation()) return;
     const allergy = prompt('Entrez le nom de l\'allergie :');
     if (allergy?.trim()) {
       await this.recordService.addAllergy(this.patient.id.toString(), allergy.trim());
@@ -108,6 +110,7 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
   }
 
   async removeAllergy(allergy: string) {
+    if (!this.authService.canPerformConsultation()) return;
     if (confirm(`Supprimer l'allergie "${allergy}" ?`)) {
       await this.recordService.removeAllergy(this.patient.id.toString(), allergy);
       this.loadRecord(this.patient.id.toString());
@@ -115,10 +118,12 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
   }
 
   async openAddDiseaseModal() {
+    if (!this.authService.canPerformConsultation()) return;
     this.addChronicDisease();
   }
 
   async addChronicDisease() {
+    if (!this.authService.canPerformConsultation()) return;
     const disease = prompt('Entrez la pathologie :');
     if (disease?.trim()) {
       await this.recordService.addChronicDisease(this.patient.id.toString(), disease.trim());
@@ -128,6 +133,7 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
   }
 
   async removeChronicDisease(disease: string) {
+    if (!this.authService.canPerformConsultation()) return;
     if (confirm(`Supprimer la pathologie "${disease}" ?`)) {
       await this.recordService.removeChronicDisease(this.patient.id.toString(), disease);
       this.loadRecord(this.patient.id.toString());
@@ -136,14 +142,20 @@ export class MedicalRecordDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
+    
+    // Default tab for Secretary is Profile (Fiche Patient)
+    if (this.authService.isSecretary()) {
+      this.activeTab = 'profile';
+    }
+
     if (id) {
       this.sub = this.patientService.getPatientById(id).subscribe(p => {
         if (p) {
           this.patient = p;
           this.loadRecord(id);
           
-          // Auto-start consultation if requested via query param
-          if (this.route.snapshot.queryParamMap.get('startConsultation') === 'true') {
+          // Auto-start consultation if requested via query param (only for DOCTOR/SUPER_ADMIN)
+          if (this.route.snapshot.queryParamMap.get('startConsultation') === 'true' && this.authService.canPerformConsultation()) {
             this.startNewConsultation();
           }
         } else {

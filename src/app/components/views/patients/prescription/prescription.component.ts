@@ -67,12 +67,12 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
     const user = this.authService.currentUserValue;
     
     if (user) {
-      this.isDoctor = user.role === UserRole.DOCTOR;
+      this.isDoctor = user.role === UserRole.DOCTOR || user.role === UserRole.SUPER_ADMIN;
       if (this.isDoctor) {
         this.selectedDoctorId = user.id;
         this.updateDoctorInfo(user);
       } else if (this.doctors.length > 0) {
-        // Sélectionne le premier docteur par défaut si c'est une secrétaire
+        // Sélectionne le premier docteur par défaut si c'est une secrétaire (pour les duplicatas uniquement)
         this.selectedDoctorId = this.doctors[0].id;
         this.updateDoctorInfo(this.doctors[0]);
       }
@@ -88,6 +88,12 @@ export class PrescriptionComponent implements OnInit, OnDestroy {
         this.selectedDoctorId = this.doctors.find(d => `${d.firstName} ${d.lastName}` === this.prescription.doctorName)?.id || this.selectedDoctorId;
       }
     } else {
+      // ONLY DOCTOR/SUPER_ADMIN can create NEW prescriptions
+      if (!this.authService.canPerformConsultation()) {
+        this.notificationService.error('Erreur : Autorisation insuffisante pour créer une ordonnance.');
+        this.router.navigate(['/patients', id, 'record']);
+        return;
+      }
       this.addItem();
     }
   }

@@ -222,8 +222,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       }
 
+      const patientFields = [
+        { key: 'firstName', label: 'COMMON.FIRST_NAME' },
+        { key: 'lastName', label: 'COMMON.LAST_NAME' },
+        { key: 'phone', label: 'SETUP.PHONE' }
+      ];
+
       if (Object.keys(this.errors).length > 0) {
-        this.notificationService.error('VALIDATION.REQUIRED');
+        if (this.errors.emailFormat) {
+          this.notificationService.error('VALIDATION.INVALID_EMAIL');
+        } else if (this.errors.emailTaken) {
+          this.notificationService.error('VALIDATION.EMAIL_TAKEN');
+        } else {
+          const firstMissingField = patientFields.find(f => this.errors[f.key]);
+          if (firstMissingField) {
+            this.notificationService.showRequiredFieldError(firstMissingField.label);
+          } else {
+            this.notificationService.error('VALIDATION.FORM_ERRORS');
+          }
+        }
         this.cdr.markForCheck();
         return;
       }

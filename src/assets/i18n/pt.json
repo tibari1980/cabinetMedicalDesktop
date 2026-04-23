@@ -43,7 +43,10 @@
     "404_RECOVER": "pode retomar o seu trabalho com um único clique.",
     "RETURN_DASHBOARD": "Voltar ao Painel",
     "PREVIOUS_PAGE": "Página Anterior",
-    "SECURITY_ACTIVE": "Sistema de Segurança Ativo"
+    "SECURITY_ACTIVE": "Sistema de Segurança Ativo",
+    "FIRST_NAME": "Nome",
+    "LAST_NAME": "Sobrenome",
+    "BIRTH_DATE": "Data de Nascimento"
   },
   "PATIENTS": {
     "TITLE": "Base de Dados de Pacientes",
@@ -68,7 +71,7 @@
     "MODAL_GENDER": "Género",
     "MODAL_ADDRESS": "Morada Postal",
     "MODAL_ADDRESS_PLACEHOLDER": "Residência, Rua, Cidade...",
-    "MODAL_EMAIL": "Email (opcional)",
+    "MODAL_EMAIL": "Email",
     "MODAL_EMAIL_PLACEHOLDER": "email@exemplo.com",
     "MODAL_SUBMIT": "Registar Prontuário",
     "MODAL_SEARCH_PATIENT": "Digite nome ou número...",
@@ -389,6 +392,9 @@
   },
   "VALIDATION": {
     "REQUIRED": "Campo obrigatório",
+    "FIELD_REQUIRED": "O campo '{{field}}' é obrigatório",
+    "REQUIRED_FIELDS": "Por favor, preencha todos os campos obrigatórios",
+    "FORM_ERRORS": "Por favor, corrija os erros no formulário",
     "INVALID_EMAIL": "Formato de e-mail inválido (ex: nome@dominio.com)",
     "EMAIL_TAKEN": "Este endereço de e-mail já está em uso",
     "USERNAME_TAKEN": "Este nome de usuário já está em uso",

@@ -47,7 +47,10 @@
     "NOTES": "Notes & Remarks",
     "AGE": "Age",
     "BIRTH_DATE": "Date of Birth",
-    "DETAILS": "Details"
+    "FIRST_NAME": "First Name",
+    "LAST_NAME": "Last Name",
+    "DETAILS": "Details",
+    "DATE": "Date"
   },
   "PATIENTS": {
     "TITLE": "Patient Database",
@@ -72,12 +75,13 @@
     "MODAL_GENDER": "Gender",
     "MODAL_ADDRESS": "Address",
     "MODAL_ADDRESS_PLACEHOLDER": "Residence, Street, City...",
-    "MODAL_EMAIL": "Email (optional)",
+    "MODAL_EMAIL": "Email",
     "MODAL_EMAIL_PLACEHOLDER": "email@example.com",
     "MODAL_SEARCH_PATIENT": "Type name or number...",
     "MODAL_CHOOSE_LIST": "Choose from list...",
     "PATIENT_UNKNOWN": "Unknown Patient",
-    "MODAL_SUBMIT": "Register Patient"
+    "MODAL_SUBMIT": "Register Patient",
+    "PATIENT": "Patient"
   },
   "RECORDS": {
     "GENERATE_PRESCRIPTION": "Generate Prescription",
@@ -407,6 +411,9 @@
   },
   "VALIDATION": {
     "REQUIRED": "This field is required",
+    "FIELD_REQUIRED": "The field '{{field}}' is required",
+    "REQUIRED_FIELDS": "Please fill in all required fields",
+    "FORM_ERRORS": "Please fix the errors in the form",
     "INVALID_EMAIL": "Invalid email format (ex: name@domain.com)",
     "EMAIL_TAKEN": "This email address is already in use",
     "USERNAME_TAKEN": "This username is already taken",

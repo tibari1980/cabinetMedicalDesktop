@@ -119,8 +119,10 @@ export class PatientsComponent implements OnInit, OnDestroy {
       this.errors.address = 'MIN';
     }
     
-    // Email Validation (Format + Uniqueness)
-    if (this.newPatient.email) {
+    // Email Validation (Mandatory + Format + Uniqueness)
+    if (!this.newPatient.email?.trim()) {
+      this.errors.email = 'REQUIRED';
+    } else {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(this.newPatient.email)) {
         this.errors.emailFormat = true;
@@ -129,11 +131,28 @@ export class PatientsComponent implements OnInit, OnDestroy {
       }
     }
 
+    const fields: { key: string, label: string }[] = [
+      { key: 'lastName', label: 'PATIENTS.MODAL_LAST_NAME' },
+      { key: 'firstName', label: 'PATIENTS.MODAL_FIRST_NAME' },
+      { key: 'phone', label: 'PATIENTS.MODAL_PHONE' },
+      { key: 'birthDate', label: 'PATIENTS.MODAL_BIRTH_DATE' },
+      { key: 'address', label: 'PATIENTS.MODAL_ADDRESS' },
+      { key: 'email', label: 'PATIENTS.MODAL_EMAIL' }
+    ];
+
     if (Object.keys(this.errors).length > 0) {
-      if (this.errors.emailTaken) {
+      if (this.errors.emailFormat) {
+        this.notificationService.error('VALIDATION.INVALID_EMAIL');
+      } else if (this.errors.emailTaken) {
         this.notificationService.error('VALIDATION.EMAIL_TAKEN');
       } else {
-        this.notificationService.error('COMMON.ERROR');
+        // Find the first REQUIRED field and show its specific error
+        const firstMissingField = fields.find(f => this.errors[f.key] === 'REQUIRED');
+        if (firstMissingField) {
+          this.notificationService.showRequiredFieldError(firstMissingField.label);
+        } else {
+          this.notificationService.error('VALIDATION.FORM_ERRORS');
+        }
       }
       this.cdr.markForCheck();
       return;

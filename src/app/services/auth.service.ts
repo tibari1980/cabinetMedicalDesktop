@@ -184,6 +184,30 @@ export class AuthService {
     return !!this.currentUserValue;
   }
 
+  isDoctor(): boolean {
+    return this.currentUserValue?.role === UserRole.DOCTOR;
+  }
+
+  isSuperAdmin(): boolean {
+    return this.currentUserValue?.role === UserRole.SUPER_ADMIN;
+  }
+
+  isSecretary(): boolean {
+    return this.currentUserValue?.role === UserRole.SECRETARY;
+  }
+
+  isAdmin(): boolean {
+    return this.currentUserValue?.role === UserRole.ADMIN;
+  }
+
+  /**
+   * Only DOCTOR and SUPER_ADMIN can access sensitive medical records and consultations.
+   */
+  canPerformConsultation(): boolean {
+    const role = this.currentUserValue?.role;
+    return role === UserRole.DOCTOR || role === UserRole.SUPER_ADMIN;
+  }
+
   /**
    * Senior Hierarchy Logic: 
    * - SUPER_ADMIN can manage everyone.

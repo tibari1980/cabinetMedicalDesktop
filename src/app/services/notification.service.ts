@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 export type NotificationType = 'success' | 'error' | 'info' | 'warning';
 
@@ -24,7 +25,7 @@ export class NotificationService {
   private notificationSubject = new Subject<Notification>();
   public notifications$ = this.notificationSubject.asObservable();
 
-  constructor() {}
+  constructor(private translateService: TranslateService) {}
 
   show(notification: Omit<Notification, 'id'>) {
     const id = Math.random().toString(36).substring(2, 9);
@@ -45,6 +46,17 @@ export class NotificationService {
 
   warning(message: string, title: string = 'COMMON.WARNING', params?: any) {
     this.show({ type: 'warning', title, message, duration: 5000, params });
+  }
+
+  /**
+   * Special error for required fields that shows the field name
+   */
+  showRequiredFieldError(fieldLabelKey: string) {
+    this.translateService.get(fieldLabelKey).subscribe(fieldName => {
+      // Remove any trailing * or (optionnel) from label if present
+      const cleanLabel = fieldName.replace(/\*/g, '').trim();
+      this.error('VALIDATION.FIELD_REQUIRED', 'COMMON.ERROR', { field: cleanLabel });
+    });
   }
 
   confirm(message: string, onConfirm: () => void, options: { title?: string, confirmLabel?: string, cancelLabel?: string, onCancel?: () => void, params?: any } = {}) {

@@ -58,7 +58,11 @@ export class SettingsComponent {
     }
 
     if (Object.keys(this.errors).length > 0) {
-      this.notificationService.error('VALIDATION.REQUIRED');
+      if (this.errors.name === 'REQUIRED') {
+        this.notificationService.showRequiredFieldError('SETTINGS.STRUCTURE_NAME');
+      } else {
+        this.notificationService.error('VALIDATION.FORM_ERRORS');
+      }
       return;
     }
 

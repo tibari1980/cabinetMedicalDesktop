@@ -47,7 +47,10 @@
     "NOTES": "Notes & Remarques",
     "DETAILS": "Détails",
     "AGE": "Âge",
-    "BIRTH_DATE": "Date de Naissance"
+    "BIRTH_DATE": "Date de Naissance",
+    "FIRST_NAME": "Prénom",
+    "LAST_NAME": "Nom",
+    "DATE": "Date"
   },
   "PATIENTS": {
     "TITLE": "Base Patients",
@@ -70,14 +73,15 @@
     "MODAL_GENDER": "Genre",
     "MODAL_ADDRESS": "Adresse Postale",
     "MODAL_ADDRESS_PLACEHOLDER": "Résidence, Rue, Ville...",
-    "MODAL_EMAIL": "Email (optionnel)",
+    "MODAL_EMAIL": "Email",
     "MODAL_EMAIL_PLACEHOLDER": "email@exemple.com",
     "MODAL_SUBMIT": "Enregistrer le Dossier",
     "MODAL_EDIT_TITLE": "Modifier la Fiche",
     "MODAL_EDIT_SUBTITLE": "Mise à jour des coordonnées",
     "MODAL_SEARCH_PATIENT": "Tapez le nom ou numéro...",
     "MODAL_CHOOSE_LIST": "Choisir dans la liste...",
-    "PATIENT_UNKNOWN": "Patient Inconnu"
+    "PATIENT_UNKNOWN": "Patient Inconnu",
+    "PATIENT": "Patient"
   },
   "RECORDS": {
     "GENERATE_PRESCRIPTION": "Générer Ordonnance",
@@ -407,6 +411,9 @@
   },
   "VALIDATION": {
     "REQUIRED": "Ce champ est obligatoire",
+    "FIELD_REQUIRED": "Le champ '{{field}}' est obligatoire",
+    "REQUIRED_FIELDS": "Veuillez remplir tous les champs obligatoires",
+    "FORM_ERRORS": "Veuillez corriger les erreurs dans le formulaire",
     "INVALID_EMAIL": "Format d'email invalide (ex: nom@domaine.com)",
     "EMAIL_TAKEN": "Cette adresse email est déjà utilisée",
     "USERNAME_TAKEN": "Cet identifiant est déjà utilisé",

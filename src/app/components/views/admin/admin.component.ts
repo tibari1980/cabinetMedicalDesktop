@@ -128,8 +128,26 @@ export class AdminComponent {
       return;
     }
 
+    const fields = [
+      { key: 'firstName', label: 'COMMON.FIRST_NAME' },
+      { key: 'lastName', label: 'COMMON.LAST_NAME' },
+      { key: 'username', label: 'ADMIN.USERNAME' },
+      { key: 'email', label: 'ADMIN.PRO_EMAIL' }
+    ];
+
     if (Object.keys(this.errors).length > 0) {
-      this.notificationService.error('VALIDATION.REQUIRED');
+      if (this.errors.usernameTaken) {
+        this.notificationService.error('VALIDATION.USERNAME_TAKEN');
+      } else if (this.errors.emailTaken) {
+        this.notificationService.error('VALIDATION.EMAIL_TAKEN');
+      } else {
+        const firstMissingField = fields.find(f => this.errors[f.key] === 'REQUIRED');
+        if (firstMissingField) {
+          this.notificationService.showRequiredFieldError(firstMissingField.label);
+        } else {
+          this.notificationService.error('VALIDATION.FORM_ERRORS');
+        }
+      }
       return;
     }
     

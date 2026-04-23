@@ -80,7 +80,8 @@
                 <button (click)="viewInvoice(inv)" class="w-10 h-10 flex items-center justify-center bg-surface-container-highest hover:bg-primary/10 text-primary rounded-2xl transition-all shadow-sm" [title]="'COMMON.PRINT' | translate">
                   <span class="material-symbols-outlined text-lg">print</span>
                 </button>
-                <button (click)="deleteInvoice(inv.id)" class="w-10 h-10 flex items-center justify-center bg-surface-container-highest hover:bg-error/10 text-error rounded-2xl transition-all shadow-sm" title="Supprimer">
+                <button *ngIf="authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN])" 
+                        (click)="deleteInvoice(inv.id)" class="w-10 h-10 flex items-center justify-center bg-surface-container-highest hover:bg-error/10 text-error rounded-2xl transition-all shadow-sm" title="Supprimer">
                   <span class="material-symbols-outlined text-lg">delete</span>
                 </button>
               </div>
@@ -94,170 +95,183 @@
 <!-- ============================================== -->
 <!-- A4 PRINT INVOICE PREVIEW (PREMIUM EDITION) -->
 <!-- ============================================== -->
+<!-- ============================================== -->
+<!-- PREMIUM INSTITUTIONAL INVOICE PREVIEW (V3 - PRESCRIPTION STYLE) -->
+<!-- ============================================== -->
 <div *ngIf="selectedInvoice" class="fixed inset-0 z-[200] overflow-y-auto bg-slate-900/40 backdrop-blur-md p-4 md:p-12 flex justify-center 
-     print:p-0 print:bg-white print:block print:-m-0">
+     print:p-0 print:bg-white print:block print:-m-0 print-content">
   
   <!-- Floating Actions Control -->
   <div class="fixed top-8 right-12 flex flex-col gap-3 z-[210] print:hidden animate-fade-in">
-    <button (click)="closeInvoice()" class="bg-white w-14 h-14 rounded-2xl shadow-2xl text-slate-400 hover:text-error transition-all hover:scale-105 flex items-center justify-center border border-slate-100">
+    <button (click)="printInvoice()" 
+            class="w-14 h-14 bg-primary text-white rounded-2xl flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all group">
+      <span class="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform">print</span>
+    </button>
+    <button (click)="closeInvoice()" 
+            class="w-14 h-14 bg-surface-container-highest text-on-surface rounded-2xl flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all">
       <span class="material-symbols-outlined text-2xl">close</span>
     </button>
-    <button (click)="printInvoice()" class="bg-primary w-14 h-14 rounded-2xl shadow-2xl text-white hover:brightness-110 transition-all hover:scale-105 flex items-center justify-center" [title]="'COMMON.PRINT' | translate">
-      <span class="material-symbols-outlined text-2xl">print</span>
-    </button>
-    <button *ngIf="selectedInvoice.status === 'PENDING' && authService.hasRole([UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.SECRETARY])" 
-            (click)="markAsPaid(selectedInvoice)" class="bg-success w-14 h-14 rounded-2xl shadow-2xl text-white hover:brightness-110 transition-all hover:scale-105 flex items-center justify-center" [title]="'BILLING.MARK_AS_PAID' | translate">
-      <span class="material-symbols-outlined text-2xl">payments</span>
-    </button>
   </div>
-  <!-- Premium Invoice Template (Vibrant Blue Edition) -->
-  <div class="invoice-paper w-full max-w-[210mm] min-h-[297mm] relative animate-scale-up origin-top 
-       font-sans print:shadow-none print:w-full print:h-full print:max-w-none print:overflow-hidden box-border mx-auto">
+
+  <!-- Institutional Invoice Template -->
+  <div class="invoice-paper printable-document w-full max-w-[210mm] min-h-[297mm] bg-white relative animate-scale-up origin-top 
+       font-serif text-slate-900 print:shadow-none print:w-full print:h-full print:max-w-none print:overflow-hidden box-border mx-auto flex flex-col shadow-2xl">
     
-    <!-- Decorative Header Bar -->
-    <div class="invoice-top-bar print:block"></div>
-
-    <div class="invoice-body">
-      <!-- Header Section -->
-      <header class="header-main flex justify-between items-start">
-        <div class="company-branding text-left max-w-[60%]">
-          <div class="flex items-center gap-4 mb-4">
-            <div *ngIf="clinic.logo" class="w-[64px] h-[64px] flex items-center justify-center">
-              <img [src]="clinic.logo" class="company-logo max-h-full">
-            </div>
-            <div *ngIf="!clinic.logo" class="w-[64px] h-[64px] bg-sky-100 rounded-2xl flex items-center justify-center text-sky-600">
-              <span class="material-symbols-outlined text-4xl">medical_services</span>
-            </div>
-            <h1 class="company-name-text text-2xl font-black text-sky-900">{{ clinic.name }}</h1>
-          </div>
-          
-          <div class="clinic-details-text space-y-1">
-            <p class="text-[11px] font-bold text-slate-600 flex items-center gap-2" *ngIf="clinic.address">
-              <span class="material-symbols-outlined text-[14px]">location_on</span>
-              {{ clinic.address }}
-            </p>
-            <p class="text-[11px] font-bold text-slate-600 flex items-center gap-2" *ngIf="clinic.phone">
-              <span class="material-symbols-outlined text-[14px]">call</span>
-              {{ clinic.phone }}
-            </p>
-            <p class="text-[11px] font-bold text-slate-600 flex items-center gap-2" *ngIf="clinic.email">
-              <span class="material-symbols-outlined text-[14px]">mail</span>
-              {{ clinic.email }}
-            </p>
-            <p class="text-[11px] font-bold text-slate-600 flex items-center gap-2" *ngIf="clinic.website">
-              <span class="material-symbols-outlined text-[14px]">public</span>
-              {{ clinic.website }}
-            </p>
-          </div>
-        </div>
-
-        <div class="invoice-meta text-right">
-          <div class="invoice-no-box mb-2">
-            <span class="invoice-no-label">{{ 'BILLING.INV_NUMBER' | translate }}</span>
-            <span class="invoice-no-value">{{ selectedInvoice.id }}</span>
-          </div>
-          <div class="invoice-date text-xs font-bold text-slate-500">
-            {{ selectedInvoice.date | date:'dd MMMM yyyy' }}
-          </div>
-        </div>
-      </header>
-
-      <div class="section-line"></div>
-
-      <!-- Patient Info Section -->
-      <div class="billing-to-section mt-10">
-        <span class="billing-label uppercase tracking-widest text-sky-600 font-black text-[10px]">{{ 'BILLING.BILL_TO' | translate }}</span>
-        <div class="grid grid-cols-2 gap-8 mt-4">
-          <div class="space-y-2">
-            <h3 class="client-name text-lg font-black text-slate-900 uppercase tracking-tighter">{{ selectedInvoice.patientName }}</h3>
-            <p class="client-detail flex items-center gap-2" *ngIf="selectedInvoice.patientAddress">
-              <span class="material-symbols-outlined text-[14px] text-slate-400">location_on</span>
-              {{ selectedInvoice.patientAddress }}
-            </p>
-            <p class="client-detail flex items-center gap-2" *ngIf="selectedInvoice.patientPhone">
-              <span class="material-symbols-outlined text-[14px] text-slate-400">call</span>
-              {{ selectedInvoice.patientPhone }}
-            </p>
-          </div>
-          <div class="space-y-2 text-right border-l-2 border-sky-50 pl-8">
-            <div *ngIf="selectedInvoice.patientBirthDate" class="flex flex-col items-end">
-              <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ 'COMMON.BIRTH_DATE' | translate }}</span>
-              <span class="text-sm font-bold text-slate-700">{{ selectedInvoice.patientBirthDate | date:'dd/MM/yyyy' }}</span>
-            </div>
-            <div class="flex flex-col items-end mt-2">
-              <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ 'COMMON.AGE' | translate }}</span>
-              <span class="text-sm font-bold text-slate-700">{{ calculateAge(selectedInvoice.patientBirthDate) }} ans</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Table Section -->
-      <table class="product-table">
-        <thead>
-          <tr>
-            <th class="w-1/2">Product</th>
-            <th class="text-center">Price</th>
-            <th class="text-center">Qty</th>
-            <th class="text-right">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ selectedInvoice.description || 'Medical Consultation' }}</td>
-            <td class="text-center">{{ selectedInvoice.amountModifier | number:'1.2-2' }} {{ clinic.currency || '$' }}</td>
-            <td class="text-center">1</td>
-            <td class="text-right">{{ selectedInvoice.amountModifier | number:'1.2-2' }} {{ clinic.currency || '$' }}</td>
-          </tr>
-          <!-- Placeholder rows for visual consistency with template -->
-          <tr *ngFor="let i of [1,2,3,4]">
-            <td class="opacity-0">-</td>
-            <td class="text-center opacity-0">$0.00</td>
-            <td class="text-center opacity-0">0</td>
-            <td class="text-right opacity-0">$0.00</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="summary-line"></div>
-
-      <!-- Summary Area -->
-      <div class="summary-grid">
-        <div class="summary-row">
-          <span class="tax-label">Tax</span>
-          <span class="tax-value">{{ selectedInvoice.taxRate | number:'1.2-2' }}%</span>
-        </div>
-        <div class="total-bar">
-          <span class="total-label">Total</span>
-          <span class="total-value">{{ selectedInvoice.totalTTC | number:'1.2-2' }} {{ clinic.currency || '$' }}</span>
-        </div>
-      </div>
-
-      <div class="summary-line mt-8"></div>
-
-      <!-- Terms and Conditions -->
-      <div class="terms-section mt-8">
-        <span class="terms-title">TERMS & CONDITIONS:</span>
-        <p class="terms-text mt-2">
-          {{ 'BILLING.VAT_EXEMPT_NOTE' | translate }}
-          {{ 'BILLING.PAYMENT_NOTE' | translate }}
-          This document is a certified medical invoice generated via MediFlow Pro. 
-          Please keep this for your medical records.
-        </p>
-      </div>
+    <!-- PAID / PENDING WATERMARK -->
+    <div *ngIf="selectedInvoice.status === 'PAID'" class="absolute inset-0 flex items-center justify-center rotate-[-25deg] z-0">
+      <span class="document-watermark text-[200px] text-success">PAYÉE</span>
     </div>
 
-    <!-- Footer Bar -->
-    <footer class="invoice-footer-bar print:block">
-      <div class="social-icons">
-        <div class="social-icon"><span class="material-symbols-outlined text-[12px]">public</span></div>
-        <div class="social-icon"><span class="material-symbols-outlined text-[12px]">share</span></div>
-        <div class="social-icon"><span class="material-symbols-outlined text-[12px]">chat</span></div>
+    <!-- 1. INSTITUTIONAL HEADER -->
+    <header *ngIf="clinic" class="flex justify-between items-start pt-[1.5cm] px-12 relative z-10">
+      <div class="space-y-4 max-w-[65%]">
+        <div class="flex items-center gap-6">
+          <img *ngIf="clinic.logo" [src]="clinic.logo" class="w-20 h-20 object-contain grayscale">
+          <div class="border-l-2 border-slate-200 pl-6">
+            <h1 class="text-2xl font-black text-slate-900 uppercase tracking-tight">{{ clinic.name }}</h1>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.4em]">Établissement de Santé Agrée</p>
+          </div>
+        </div>
+        
+        <div class="space-y-1 pt-2">
+          <div class="text-[11px] text-slate-500 font-medium leading-relaxed">
+            <p>{{ clinic.address }}</p>
+            <p>Tél : {{ clinic.phone }} • Email : {{ clinic.email }}</p>
+            <p *ngIf="clinic.legalIds?.siret" class="mt-1 opacity-60 italic">SIRET : {{ clinic.legalIds.siret }}</p>
+          </div>
+        </div>
       </div>
-      <div class="footer-handle" *ngIf="clinic.email">{{ clinic.email }}</div>
-      <div class="footer-website" *ngIf="clinic.website">{{ clinic.website }}</div>
-      <div class="footer-website" *ngIf="!clinic.website">www.mediflow-clinic.com</div>
-    </footer>
 
+      <div class="text-right pt-2 relative">
+        <div class="inline-block border-b-2 border-slate-900 pb-2 mb-4">
+          <p class="text-sm font-black text-slate-900 uppercase tracking-[0.2em]">
+            {{ 'BILLING.DOC_TITLE' | translate }} {{ selectedInvoice.id }}
+          </p>
+        </div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">
+          Fait le : {{ selectedInvoice.date | date:'dd / MM / yyyy' }}
+        </p>
+
+        <!-- Status Stamp -->
+        <div class="mt-8">
+          <div *ngIf="selectedInvoice.status === 'PAID'" class="inline-block rubber-stamp border-success text-success rotate-[-8deg] shadow-sm">
+            PAYÉE
+          </div>
+          <div *ngIf="selectedInvoice.status === 'PENDING'" class="inline-block rubber-stamp border-warning text-warning rotate-[-8deg] shadow-sm">
+            EN ATTENTE
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. THE 4CM SPACER -->
+    <div style="min-height: 4cm;" class="flex-shrink-0"></div>
+
+    <!-- 3. PATIENT INFORMATION (8cm Offset) -->
+    <section class="py-10 border-y border-slate-100 relative z-10" style="padding-left: 8cm;">
+      <div class="grid grid-cols-[140px_1fr] gap-y-4 items-baseline">
+        <span class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">{{ 'BILLING.BILL_TO' | translate }} :</span>
+        <p class="text-3xl font-black text-slate-900 tracking-tight uppercase">
+          {{ selectedInvoice.patientName }}
+        </p>
+
+        <span class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">{{ 'COMMON.DETAILS' | translate }} :</span>
+        <div class="flex items-center gap-4">
+          <p class="text-xs font-bold text-slate-600">
+            {{ calculateAge(selectedInvoice.patientBirthDate) }} ans
+          </p>
+          <span class="w-1.5 h-1.5 rounded-full bg-slate-200"></span>
+          <p class="text-xs font-bold text-slate-600 italic">
+            Né(e) le {{ selectedInvoice.patientBirthDate | date:'dd/MM/yyyy' }}
+          </p>
+        </div>
+
+        <span class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">{{ 'SETTINGS.ADDRESS_LABEL' | translate }} :</span>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-tight leading-relaxed">
+          {{ selectedInvoice.patientAddress || 'Adresse non renseignée' }}
+        </p>
+      </div>
+    </section>
+
+    <!-- 4. INVOICE BODY -->
+    <main class="px-12 pt-20 flex-grow">
+      <div class="mb-24 flex flex-col items-center">
+        <h2 class="text-4xl font-serif italic text-slate-800 tracking-widest uppercase mb-4">{{ 'BILLING.DOC_TITLE' | translate }}</h2>
+        <div class="institutional-line w-full"></div>
+      </div>
+
+      <div class="mt-12 overflow-hidden">
+        <table class="w-full">
+          <thead>
+            <tr class="border-b-2 border-slate-900 text-[11px] font-black uppercase tracking-[0.3em] text-slate-400">
+              <th class="py-6 text-left">{{ 'BILLING.DESCRIPTION' | translate }}</th>
+              <th class="py-6 text-center w-40">{{ 'BILLING.AMOUNT' | translate }} (HT)</th>
+              <th class="py-6 text-center w-32">TVA</th>
+              <th class="py-6 text-right w-48">{{ 'BILLING.TOTAL_TTC' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody class="text-slate-800">
+            <tr class="border-b border-slate-100">
+              <td class="py-10">
+                <p class="text-2xl font-black tracking-tight text-slate-900 leading-none">
+                  {{ selectedInvoice.description || 'Consultation Médicale' }}
+                </p>
+                <p class="text-[10px] text-slate-400 font-bold uppercase mt-3 tracking-[0.1em]">Acte Clinique Professionnel</p>
+              </td>
+              <td class="py-10 text-center text-lg font-bold text-slate-600">
+                {{ selectedInvoice.amountModifier | number:'1.2-2' }} {{ clinic.currency }}
+              </td>
+              <td class="py-10 text-center text-lg font-bold text-slate-400">
+                {{ selectedInvoice.taxRate }}%
+              </td>
+              <td class="py-10 text-right text-3xl font-black text-slate-900">
+                {{ selectedInvoice.totalTTC | number:'1.2-2' }} <span class="text-lg">{{ clinic.currency }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Totals Table -->
+        <div class="mt-20 ml-auto w-96 space-y-4">
+          <div class="flex justify-between text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] px-4">
+            <span>{{ 'BILLING.TOTAL_HT' | translate }}</span>
+            <span>{{ selectedInvoice.amountModifier | number:'1.2-2' }} {{ clinic.currency }}</span>
+          </div>
+          <div class="flex justify-between text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] px-4">
+            <span>{{ 'BILLING.VAT' | translate }} ({{ selectedInvoice.taxRate }}%)</span>
+            <span>{{ tvaAmount | number:'1.2-2' }} {{ clinic.currency }}</span>
+          </div>
+          <div class="flex justify-between items-center p-8 bg-slate-900 text-white rounded-[2.5rem] shadow-2xl shadow-slate-900/20 transform translate-x-4">
+            <span class="text-base font-black uppercase tracking-[0.3em]">{{ 'COMMON.TOTAL' | translate }}</span>
+            <span class="text-4xl font-black">{{ selectedInvoice.totalTTC | number:'1.2-2' }} {{ clinic.currency }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legal Notes -->
+      <div class="mt-32 p-10 bg-slate-50 rounded-[2.5rem] border border-slate-100 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-2 h-full bg-slate-200"></div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-4">Cadre Légal & Réglementaire</p>
+        <p class="text-[11px] text-slate-500 leading-loose italic">
+          {{ 'BILLING.VAT_EXEMPT_NOTE' | translate }}<br>
+          {{ 'BILLING.PAYMENT_NOTE' | translate }}
+        </p>
+        <p class="text-[10px] font-bold text-primary mt-6 tracking-widest uppercase">Merci pour votre confiance en {{ clinic.name }}</p>
+      </div>
+    </main>
+
+    <!-- 5. FOOTER -->
+    <footer class="mt-auto px-12 pb-20 flex justify-between items-end">
+      <div class="space-y-1">
+        <p class="text-[9px] text-slate-300 uppercase tracking-[0.4em] font-black">Document de santé certifié</p>
+        <p class="text-[9px] text-slate-300 uppercase tracking-[0.4em] font-bold">{{ clinic.website || 'www.mediflow-clinic.com' }}</p>
+      </div>
+      <div class="text-right">
+        <p class="text-[11px] uppercase font-black text-slate-400 mb-20 tracking-[0.4em]">Signature & Cachet de l'établissement</p>
+        <div class="h-px w-64 bg-slate-100 ml-auto mb-6"></div>
+        <p class="text-lg font-black text-slate-900 uppercase tracking-tight">{{ clinic.name }}</p>
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Direction Administrative</p>
+      </div>
+    </footer>
   </div>
 </div>

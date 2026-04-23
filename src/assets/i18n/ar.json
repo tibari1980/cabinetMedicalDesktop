@@ -43,7 +43,10 @@
     "404_RECOVER": "يمكنك استئناف عملك بنقرة واحدة.",
     "RETURN_DASHBOARD": "العودة إلى لوحة القيادة",
     "PREVIOUS_PAGE": "الصفحة السابقة",
-    "SECURITY_ACTIVE": "نظام الأمان نشط"
+    "SECURITY_ACTIVE": "نظام الأمان نشط",
+    "FIRST_NAME": "الاسم الشخصي",
+    "LAST_NAME": "الاسم العائلي",
+    "BIRTH_DATE": "تاريخ الازدياد"
   },
   "PATIENTS": {
     "TITLE": "قاعدة بيانات المرضى",
@@ -68,7 +71,7 @@
     "MODAL_GENDER": "الجنس",
     "MODAL_ADDRESS": "العنوان البريدي",
     "MODAL_ADDRESS_PLACEHOLDER": "السكن، الشارع، المدينة...",
-    "MODAL_EMAIL": "البريد الإلكتروني (اختياري)",
+    "MODAL_EMAIL": "البريد الإلكتروني",
     "MODAL_EMAIL_PLACEHOLDER": "email@example.com",
     "MODAL_SUBMIT": "تسجيل الملف",
     "MODAL_SEARCH_PATIENT": "اكتب الاسم أو الرقم...",
@@ -389,6 +392,9 @@
   },
   "VALIDATION": {
     "REQUIRED": "هذا الحقل مطلوب",
+    "FIELD_REQUIRED": "الحقل '{{field}}' مطلوب",
+    "REQUIRED_FIELDS": "يرجى ملء جميع الحقول المطلوبة",
+    "FORM_ERRORS": "يرجى تصحيح الأخطاء في النموذج",
     "INVALID_EMAIL": "تنسيق بريد إلكتروني غير صالح (مثال: name@domain.com)",
     "EMAIL_TAKEN": "عنوان البريد الإلكتروني هذا مستخدم بالفعل",
     "USERNAME_TAKEN": "اسم المستخدم هذا مأخوذ بالفعل",
